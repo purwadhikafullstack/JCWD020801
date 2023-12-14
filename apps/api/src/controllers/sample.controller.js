@@ -1,5 +1,6 @@
 import Sample from '../models/sample.model';
 
+
 export const getSampleData = async () => {
   return await Sample.findAll();
 };
