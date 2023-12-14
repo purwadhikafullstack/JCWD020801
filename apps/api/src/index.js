@@ -61,6 +61,8 @@ const main = () => {
   serveWebProjectBuildResult(app);
 
   app.listen(PORT, (err) => {
+    //sync on off
+    // DB.sequelize.sync({force: true})
     if (err) {
       console.log(`ERROR: ${err}`);
     } else {
