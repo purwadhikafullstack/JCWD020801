@@ -10,14 +10,13 @@ export default class Customer extends Model {
 export const init = (sequelize) => {
   Customer.init(
     {
-      name: {
+      firstname: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      username: {
+      lastname: {
         type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
+        allowNull: true,
       },
       email: {
         type: DataTypes.STRING,
@@ -26,7 +25,7 @@ export const init = (sequelize) => {
       },
       password: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       profile_picture: {
         type: DataTypes.STRING,
@@ -34,11 +33,12 @@ export const init = (sequelize) => {
       },
       birthdate: {
         type: DataTypes.DATE,
-        allowNull: false,
+        allowNull: true,
       },
       referral_code: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
       },
       isVerified: {
         type: DataTypes.BOOLEAN,
@@ -55,6 +55,10 @@ export const init = (sequelize) => {
         allowNull: false,
         defaultValue: false,
       },
+      firebaseUID: {
+        type: DataTypes.STRING,
+        allowNull: true
+      }
     },
     {
       sequelize,

@@ -1,4 +1,145 @@
+/* Font */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700,800&display=swap');
+
+/* Tailwind CSS */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/*  */
+html {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* User Adress: Add new button */
+.button_wrap {
+  position: relative;
+  width: 150px;
+  height: 40px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  border: 1px solid #00916d;
+  background-color: #00a67c;
+  overflow: hidden;
+}
+
+.button_wrap,
+.button__icon,
+.button__text {
+  transition: all 0.3s;
+}
+
+.button_wrap .button__text {
+  transform: translateX(22px);
+  color: #fff;
+  font-weight: 600;
+}
+
+.button_wrap .button__icon {
+  position: absolute;
+  transform: translateX(109px);
+  height: 100%;
+  width: 39px;
+  background-color: #00916d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button_wrap .svg {
+  width: 20px;
+  fill: #fff;
+}
+
+.button_wrap:hover {
+  background: #17795e;
+}
+
+.button_wrap:hover .button__text {
+  color: transparent;
+}
+
+.button_wrap:hover .button__icon {
+  width: 148px;
+  transform: translateX(0);
+}
+
+.button_wrap:active .button__icon {
+  background-color: #146c54;
+}
+
+.button_wrap:active {
+  border: 1px solid #146c54;
+}
+
+/* Shopping Cart: checkout button */
+.cssbuttons-io-button {
+  background: #00a67c;
+  color: white;
+  padding: 0.35em;
+  padding-left: 1.2em;
+  font-size: 17px;
+  border-radius: 0.9em;
+  border: none;
+  display: flex;
+  align-items: center;
+  box-shadow: inset 0 0 1.6em -0.6em #008d69;
+  overflow: hidden;
+  position: relative;
+  height: 2.8em;
+  padding-right: 3.3em;
+  cursor: pointer;
+}
+
+.cssbuttons-io-button .icon {
+  background: white;
+  margin-left: 1em;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.2em;
+  width: 2.2em;
+  border-radius: 0.7em;
+  box-shadow: 0.1em 0.1em 0.6em 0.2em #008d69;
+  right: 0.3em;
+  transition: all 0.3s;
+}
+
+.cssbuttons-io-button:hover .icon {
+  width: calc(100% - 0.6em);
+}
+
+.cssbuttons-io-button .icon svg {
+  width: 1.1em;
+  transition: transform 0.3s;
+  color: #00a67c;
+}
+
+.cssbuttons-io-button:hover .icon svg {
+  transform: translateX(0.1em);
+}
+
+.cssbuttons-io-button:active .icon {
+  transform: scale(0.95);
+}
+
+/* Shopping cart: scrollbar */
+#shopping-cart-scroll::-webkit-scrollbar {
+  width: 7px;
+  cursor: pointer;
+  /*background-color: rgba(229, 231, 235, var(--bg-opacity));*/
+}
+#shopping-cart-scroll::-webkit-scrollbar-track {
+  background-color: #e1e5eb;
+  cursor: pointer;
+  /*background: red;*/
+}
+#shopping-cart-scroll::-webkit-scrollbar-thumb {
+  cursor: pointer;
+  background-color: #a0aec0;
+  border-radius: 10px;
+
+  /*outline: 1px solid slategrey;*/
+}
