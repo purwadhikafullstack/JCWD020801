@@ -10,8 +10,8 @@ import {
     Checkbox,
 } from "@material-tailwind/react";
 
-export default function ({open, handleOpen}) {
-    
+export default function ({ open, handleOpen }) {
+
     return (
         <>
             <Dialog
@@ -23,7 +23,7 @@ export default function ({open, handleOpen}) {
                 <Card className="mx-auto w-full max-w-[24rem]">
                     <CardBody className="flex flex-col gap-4">
                         <Typography variant="h4" color="blue-gray">
-                        Find Your Account
+                            Find Your Account
                         </Typography>
                         <Typography
                             className="mb-3 font-normal"
