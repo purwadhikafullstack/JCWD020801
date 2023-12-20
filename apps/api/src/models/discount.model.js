@@ -9,12 +9,12 @@ export default class Discount extends Model {
 export const init = (sequelize) => {
   Discount.init(
     {
-      type: {
+      value: {
         type: DataTypes.ENUM,
         values: ['percentage', 'nominal'],
         allowNull: false,
       },
-      value: {
+      amount: {
         type: DataTypes.DECIMAL,
         allowNull: false,
       },
