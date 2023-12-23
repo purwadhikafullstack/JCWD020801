@@ -25,6 +25,10 @@ export const init = (sequelize) => {
       },
       password: {
         type: DataTypes.STRING,
+        allowNull: true,
+      },
+      verification_code: {
+        type: DataTypes.STRING,
         allowNull: false,
       },
       profile_picture: {
