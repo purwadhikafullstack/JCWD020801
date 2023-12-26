@@ -15,7 +15,7 @@ import { Dialog, DialogBody, DialogFooter, DialogHeader } from '@material-tailwi
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
-import { setData } from '../../../redux/customerSlice';
+import { setData } from '../../redux/customerSlice';
 
 export const UserSignIn = () => {
     const navigate = useNavigate();
