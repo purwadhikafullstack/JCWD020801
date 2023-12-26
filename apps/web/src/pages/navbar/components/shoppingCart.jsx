@@ -1,155 +1,173 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import dummyProduct from "../../../assets/navbar/bowl.png"
 import PropTypes from 'prop-types';
-import { convertToIDR } from '../../../functions/functions';
+import { useDispatch, useSelector } from 'react-redux';
+import { MinusIcon, PlusIcon } from '@heroicons/react/24/outline';
+import {
+  addToCart,
+  removeFromCart,
+  subtractQuantity,
+} from '../../../../redux/cartSlice';
 
-const productList = [
-    { name: "Family Tree Farms Jumbo Ultra-Premium Blueberries, Case", price: "67000", img: dummyProduct },
-    { name: "Family Tree Farms", price: "5000", img: dummyProduct },
-    { name: "Family Tree Farms Jumbo Ultra Premium Blueberries, Case, Ultra-Premium Blueberries,", price: "45000", img: dummyProduct },
-    { name: "Family Tree Farms Jumbo Ultra Premium Blueberries, Case", price: "32000", img: dummyProduct },
-    { name: "Family Tree Farms Jumbo Ultra Premium Blueberries, Case", price: "26000", img: dummyProduct },
-    { name: "Family Tree Farms Jumbo Ultra Premium Blueberries, Case", price: "17000", img: dummyProduct },
-    { name: "Family Tree Farms Jumbo Ultra Premium Blueberries, Case", price: "45000", img: dummyProduct },
-    { name: "Family Tree Farms Jumbo Ultra Premium Blueberries, Case", price: "45000", img: dummyProduct },
-]
+const convertToIDR = (price) => {
+  let newPrice = price.toLocaleString('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    minimumFractionDigits: 0,
+  });
 
-const truncateProductName = (productName) => {
-    const maxLength = 55;
-    if (productName.length > maxLength) {
-        return productName.substring(0, maxLength) + "...";
-    }
-    return productName;
+  return newPrice;
 };
 
 export const ShoppingCart = ({ isOpenCart, toggleOpenCart }) => {
-    return (
-        <AnimatePresence>
-            {isOpenCart && (
-                <>
-                    <div className="fixed top-0 left-0 w-full h-full bg-black opacity-40 z-40"></div>
+  const carts = useSelector((state) => state.cart.data);
+  const total = carts.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0,
+  );
+  const dispatch = useDispatch();
+  const addQty = (itemId) => {
+    dispatch(addToCart({ id: itemId, quantity: 1 }));
+  };
+  const subtractQty = (itemId) => {
+    dispatch(subtractQuantity({ id: itemId, quantity: 1 }));
+  };
 
-                    <motion.div
-                        initial={{ opacity: 0, x: 50 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: 50 }}
-                        transition={{ duration: 0.3 }}
-                        className="z-50 absolute right-0 top-0 h-screen shadow-md w-[26rem]"
-                    >
-                        <div className="static flex flex-col bg-white">
-                            <div className="flex justify-between items-center border-b border-[#D9D9D9] px-[1.4rem] py-[0.7rem]">
-                                <div className="flex gap-2.5 items-center">
-                                    <span className="text-[18px] font-semibold text-[#343538] whitespace-pre">
-                                        My Cart
-                                    </span>
-                                    <div className="flex items-center rounded-full bg-[#00A67C] px-[1rem] py-[0.2rem]">
-                                        <span className="text-white font-medium">12</span>
-                                    </div>
-                                </div>
-                                <div
-                                    className="cursor-pointer rounded-lg p-2 hover:bg-gray-200"
-                                    onClick={toggleOpenCart}
-                                >
-                                    <svg
-                                        width="15"
-                                        height="15"
-                                        viewBox="0 0 18 18"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <path
-                                            fillRule="evenodd"
-                                            clipRule="evenodd"
-                                            d="M17.5638 2.06405C17.6707 1.95728 17.7555 1.83051 17.8134 1.69096C17.8713 1.55142 17.9012 1.40183 17.9013 1.25075C17.9014 1.09967 17.8717 0.950053 17.814 0.810437C17.7562 0.670821 17.6716 0.543943 17.5648 0.437047C17.458 0.330151 17.3313 0.24533 17.1917 0.187428C17.0522 0.129527 16.9026 0.099677 16.7515 0.0995841C16.6004 0.0994912 16.4508 0.129157 16.3112 0.186887C16.1716 0.244618 16.0447 0.329282 15.9378 0.436047L8.9998 7.37405L2.0638 0.436047C1.84792 0.22016 1.55511 0.098877 1.2498 0.098877C0.944493 0.098877 0.651689 0.22016 0.435802 0.436047C0.219916 0.651933 0.0986328 0.944738 0.0986328 1.25005C0.0986328 1.55536 0.219916 1.84816 0.435802 2.06405L7.3738 9.00005L0.435802 15.936C0.328906 16.0429 0.244112 16.1698 0.18626 16.3095C0.128409 16.4492 0.0986328 16.5989 0.0986328 16.75C0.0986328 16.9012 0.128409 17.0509 0.18626 17.1906C0.244112 17.3302 0.328906 17.4571 0.435802 17.564C0.651689 17.7799 0.944493 17.9012 1.2498 17.9012C1.40098 17.9012 1.55067 17.8714 1.69034 17.8136C1.83 17.7557 1.95691 17.6709 2.0638 17.564L8.9998 10.626L15.9378 17.564C16.1537 17.7797 16.4464 17.9007 16.7515 17.9005C17.0566 17.9003 17.3492 17.7789 17.5648 17.563C17.7804 17.3472 17.9015 17.0545 17.9013 16.7493C17.9011 16.4442 17.7797 16.1517 17.5638 15.936L10.6258 9.00005L17.5638 2.06405Z"
-                                            fill="#343538"
-                                        />
-                                    </svg>
-                                </div>
-                            </div>
-                            {/* Product List */}
-                            <div
-                                className="shadow-inner flex flex-col px-[1.4rem] divide-y-[1px] divide-[#E4E4E4] py-2 overflow-y-auto h-[80vh]"
-                                id="shopping-cart-scroll"
-                            >
-                                {/* map here */}
-                                {productList.map((item) => (
-                                    <div
-                                        className="flex justify-start gap-4 py-[0.8rem]"
-                                        key="item"
-                                    >
-                                        <div className="flex shrink-0 items-center">
-                                            <img
-                                                src={item.img}
-                                                alt=""
-                                                className="h-full w-[6rem] object-cover rounded-lg"
-                                            />
-                                        </div>
-                                        <div className="flex flex-col gap-1">
-                                            <span className="text-[14px] font-medium">
-                                                Rp {convertToIDR(item.price)}
-                                            </span>
-                                            <span className="text-[14px] font-medium text-gray-700 cursor-pointer hover:underline hover:text-black transition delay-50 ease-in-out">
-                                                {truncateProductName(item.name)}
-                                            </span>
-                                            <div className="mt-1 flex gap-1 items-center gap-[0.6rem]">
-                                                <div className="rounded-full border border-[#B2B2B2] h-[1.8rem] w-[1.8rem] flex items-center justify-center hover:bg-[#00A67C] group cursor-pointer transition delay-50 ease-in-out hover:border-[#00A67C]">
-                                                    <span className="font-light pb-1 text-[20px] text-gray-950 group-hover:text-white">
-                                                        -
-                                                    </span>
-                                                </div>
-                                                <span className="text-[16px]">0</span>
-                                                <div className="rounded-full border border-[#B2B2B2] h-[1.8rem] w-[1.8rem] flex items-center justify-center hover:bg-[#00A67C] group cursor-pointer transition delay-50 ease-in-out hover:border-[#00A67C]">
-                                                    <span className="font-light pb-1 text-[20px] text-gray-950 group-hover:text-white">
-                                                        +
-                                                    </span>
-                                                </div>
-                                                <span className="text-[14px] underline ml-1 text-gray-600 cursor-pointer hover:text-[#00A67C]">
-                                                    Remove
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                            {/* Checkout */}
-                            <div className="rounded-t-xl border-t border-[#D9D9D9] px-[1.4rem] py-[0.7rem] fixed bottom-0 bg-white w-[26rem]">
-                                <div className="flex flex-col gap-2.5">
-                                    <div className="justify-between flex items-center px-1">
-                                        <span className="font-medium text-gray-800">Total</span>
-                                        <span className="font-bold text-[#343538] text-[17px]">
-                                            Rp 218.000
-                                        </span>
-                                    </div>
-                                    <div className="">
-                                        <button className="cssbuttons-io-button w-full font-semibold">
-                                            Go to Checkout
-                                            <div className="icon">
-                                                <svg
-                                                    height="24"
-                                                    width="24"
-                                                    viewBox="0 0 24 24"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                >
-                                                    <path d="M0 0h24v24H0z" fill="none"></path>
-                                                    <path
-                                                        d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"
-                                                        fill="currentColor"
-                                                    ></path>
-                                                </svg>
-                                            </div>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
+  const removeProduct = (itemId) => {
+    dispatch(removeFromCart({ id: itemId }));
+  };
+
+  return (
+    <AnimatePresence>
+      {isOpenCart && (
+        <>
+          <div className="fixed top-0 left-0 w-full h-full bg-black opacity-40 z-40"></div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 50 }}
+            transition={{ duration: 0.3 }}
+            className="z-50 absolute right-0 top-0 h-screen shadow-md w-[26rem]"
+          >
+            <div className="static flex flex-col bg-white">
+              <div className="flex justify-between items-center border-b border-[#D9D9D9] px-[1.4rem] py-[0.7rem]">
+                <div className="flex gap-2.5 items-center">
+                  <span className="text-[18px] font-semibold text-[#343538] whitespace-pre">
+                    My Cart
+                  </span>
+                  <div className="flex items-center rounded-full bg-[#00A67C] px-[1rem] py-[0.2rem]">
+                    <span className="text-white font-medium">12</span>
+                  </div>
+                </div>
+                <div
+                  className="cursor-pointer rounded-lg p-2 hover:bg-gray-200"
+                  onClick={toggleOpenCart}
+                >
+                  <svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 18 18"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                      d="M17.5638 2.06405C17.6707 1.95728 17.7555 1.83051 17.8134 1.69096C17.8713 1.55142 17.9012 1.40183 17.9013 1.25075C17.9014 1.09967 17.8717 0.950053 17.814 0.810437C17.7562 0.670821 17.6716 0.543943 17.5648 0.437047C17.458 0.330151 17.3313 0.24533 17.1917 0.187428C17.0522 0.129527 16.9026 0.099677 16.7515 0.0995841C16.6004 0.0994912 16.4508 0.129157 16.3112 0.186887C16.1716 0.244618 16.0447 0.329282 15.9378 0.436047L8.9998 7.37405L2.0638 0.436047C1.84792 0.22016 1.55511 0.098877 1.2498 0.098877C0.944493 0.098877 0.651689 0.22016 0.435802 0.436047C0.219916 0.651933 0.0986328 0.944738 0.0986328 1.25005C0.0986328 1.55536 0.219916 1.84816 0.435802 2.06405L7.3738 9.00005L0.435802 15.936C0.328906 16.0429 0.244112 16.1698 0.18626 16.3095C0.128409 16.4492 0.0986328 16.5989 0.0986328 16.75C0.0986328 16.9012 0.128409 17.0509 0.18626 17.1906C0.244112 17.3302 0.328906 17.4571 0.435802 17.564C0.651689 17.7799 0.944493 17.9012 1.2498 17.9012C1.40098 17.9012 1.55067 17.8714 1.69034 17.8136C1.83 17.7557 1.95691 17.6709 2.0638 17.564L8.9998 10.626L15.9378 17.564C16.1537 17.7797 16.4464 17.9007 16.7515 17.9005C17.0566 17.9003 17.3492 17.7789 17.5648 17.563C17.7804 17.3472 17.9015 17.0545 17.9013 16.7493C17.9011 16.4442 17.7797 16.1517 17.5638 15.936L10.6258 9.00005L17.5638 2.06405Z"
+                      fill="#343538"
+                    />
+                  </svg>
+                </div>
+              </div>
+              {/* Product List */}
+              <div
+                className="shadow-inner flex flex-col px-[1.4rem] divide-y-[1px] divide-[#E4E4E4] py-2 overflow-y-auto h-[80vh]"
+                id="shopping-cart-scroll"
+              >
+                {/* map here */}
+                {carts.map((item) => (
+                  <div
+                    className="flex justify-start gap-4 py-[0.8rem]"
+                    key={item.id}
+                  >
+                    <div className="flex shrink-0 items-center">
+                      <img
+                        src={item.img}
+                        alt=""
+                        className="h-full w-[6rem] object-cover rounded-lg"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <span className="text-[14px] font-medium">
+                        {convertToIDR(item.price)}
+                      </span>
+                      <span className="text-[14px] font-medium text-gray-700 cursor-pointer hover:underline hover:text-black transition delay-50 ease-in-out line-clamp-2">
+                        {item.name}
+                      </span>
+                      <div className="mt-1 flex items-center">
+                        <div
+                          className="mx-3 rounded-full border border-[#B2B2B2] h-[1.8rem] w-[1.8rem] flex items-center justify-center hover:bg-[#00A67C] group cursor-pointer transition delay-50 ease-in-out hover:border-[#00A67C]"
+                          onClick={() => subtractQty(item.id)}
+                        >
+                          <MinusIcon className=" text-gray-900 group-hover:text-white w-5 h-5" />
                         </div>
-                    </motion.div>
-                </>
-            )}
-        </AnimatePresence>
-    );
+                        <p className="text-[16px]">{item.quantity}</p>
+                        <div
+                          onClick={() => addQty(item.id)}
+                          className="mx-3 rounded-full border border-[#B2B2B2] h-[1.8rem] w-[1.8rem] flex items-center justify-center hover:bg-[#00A67C] group cursor-pointer transition delay-50 ease-in-out hover:border-[#00A67C]"
+                        >
+                          <PlusIcon className="text-gray-900 group-hover:text-white w-4 h-4" />
+                        </div>
+                        <div
+                          className="text-[14px]  text-gray-600 cursor-pointer hover:text-[#00A67C]"
+                          onClick={() => removeProduct(item.id)}
+                        >
+                          <p>Remove</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {/* Checkout */}
+              <div className="rounded-t-xl border-t border-[#D9D9D9] px-[1.4rem] py-[0.7rem] fixed bottom-0 bg-white w-[26rem]">
+                <div className="flex flex-col gap-2.5">
+                  <div className="justify-between flex items-center px-1">
+                    <span className="font-medium text-gray-800">Total</span>
+                    <span className="font-bold text-[#343538] text-[17px]">
+                      {convertToIDR(total)}
+                    </span>
+                  </div>
+                  <div className="">
+                    <button className="cssbuttons-io-button w-full font-semibold">
+                      Go to Checkout
+                      <div className="icon">
+                        <svg
+                          height="24"
+                          width="24"
+                          viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path d="M0 0h24v24H0z" fill="none"></path>
+                          <path
+                            d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"
+                            fill="currentColor"
+                          ></path>
+                        </svg>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
+  );
 };
 
 ShoppingCart.propTypes = {
-    isOpenCart: PropTypes.bool.isRequired,
-    toggleOpenCart: PropTypes.func.isRequired,
+  isOpenCart: PropTypes.bool.isRequired,
+  toggleOpenCart: PropTypes.func.isRequired,
 };
