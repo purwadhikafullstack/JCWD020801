@@ -48,7 +48,7 @@ export const userRegister = async (req, res) => {
             let payload = { id: result.id }
             const token = jwt.sign(payload, process.env.KEY_JWT, { expiresIn: `1h` })
 
-            const filePath = path.join(__dirname, '../../src/template_verify.html');
+            const filePath = path.join(__dirname, '../../src/templates/template_verify.html');
             const data = fs.readFileSync(filePath, 'utf-8');
             const tempCompile = await handlebars.compile(data)
             const tempResult = tempCompile({ firstname: firstname, link: `http://localhost:5173/verify/${token}` })
@@ -60,17 +60,26 @@ export const userRegister = async (req, res) => {
                 html: tempResult
             })
 
+            await Customer.update({
+                verificationSentAt: new Date()
+            }, {
+                where: {
+                    id: result.id
+                }
+            })
+
         } else {
             console.log("Email is already registered");
             return res.status(400).send({ message: "User is already exist" })
         }
-        return res.status(200).send({ message: "Successfully register new User" })
+        return res.status(200).send({ message: "Successfully register new User, please check your email for verification" })
 
     } catch (error) {
         console.log(error);
         return res.status(400).send({ message: error.message })
     }
 }
+
 
 export const userRegisterWithGoogle = async (req, res) => {
     try {
@@ -82,6 +91,8 @@ export const userRegisterWithGoogle = async (req, res) => {
                 firebaseUID: googleUserData?.uid
             }
         });
+
+        console.log(findUser);
 
         if (findUser == null) {
             // Generate Referral code
@@ -116,23 +127,16 @@ export const userRegisterWithGoogle = async (req, res) => {
             let payload = { id: result.id }
             const token = jwt.sign(payload, process.env.KEY_JWT, { expiresIn: `1h` })
 
-            // 
-            const filePath = path.join(__dirname, '../../src/template_verify.html');
-            const data = fs.readFileSync(filePath, 'utf-8');
-            const tempCompile = await handlebars.compile(data)
-            const tempResult = tempCompile({ firstname: googleUserData.displayName, link: `http://localhost:5173/verify/${token}` })
+            return res.status(200).send({ message: "Successfully registering new user with Google Account", result: result, token })
 
-            await transporter.sendMail({
-                from: 'thoby.athayaa@gmail.com',
-                to: googleUserData.email,
-                subject: 'Fresh Finds - Email Verification',
-                html: tempResult
-            })
-        } else {
+        } else if (findUser) {
+            // jwt
+            let payload = { id: findUser.id }
+            const token = jwt.sign(payload, process.env.KEY_JWT, { expiresIn: `1h` })
+
             console.log("Google account is already registered");
-            return res.status(400).send({ message: "Google account is already registered" })
+            return res.status(200).send({ message: "Success Signing in with Google Account", result: findUser, token })
         }
-        return res.status(200).send({ message: "Successfully registering new user with Google Account" })
 
     } catch (error) {
         console.log(error);
@@ -143,6 +147,21 @@ export const userRegisterWithGoogle = async (req, res) => {
 export const userVerification = async (req, res) => {
     try {
         const { password } = req.body
+
+        const user = await Customer.findOne({
+            where: {
+                id: req.user.id
+            }
+        })
+
+        console.log('User data:219', user);
+
+        const verificationSentTime = user.verificationSentAt;
+        const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000) //1 hour ago
+
+        if (!verificationSentTime || verificationSentTime < oneHourAgo) {
+            return res.status(400).send({ message: "Verification link has expired or is invalid" });
+        }
 
         const salt = await bcrypt.genSalt(10);
         const hashPassword = await bcrypt.hash(password, salt)
@@ -155,7 +174,143 @@ export const userVerification = async (req, res) => {
                 id: req.user.id
             }
         });
-        res.status(200).send({ message: "User verification success" })
+        res.status(200).send({ message: "Account verification success!" })
+    } catch (error) {
+        console.log(error);
+        res.status(400).send({ message: error.message })
+    }
+}
+
+export const userReverification = async (req, res) => {
+    try {
+        const { email } = req.query
+
+        const findUser = await Customer.findOne({
+            where: {
+                email,
+                isVerified: false,
+                socialRegister: false
+            }
+        })
+
+        console.log('FindUser', findUser);
+
+        if (!findUser) {
+            return res.status(400).send({
+                message: "Email not found or already verified"
+            })
+        }
+
+        if (findUser.isVerified === true) {
+            return res.status(400).send({
+                message: "Your account is already verified, please Sign in instead"
+            })
+        }
+
+        const verificationSentTime = findUser.verificationSentAt;
+        const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000); // 1 hour ago
+
+        if (!verificationSentTime || verificationSentTime < oneHourAgo) {
+            // let payload = { id: findUser.id }
+            const token = jwt.sign({ id: findUser.id }, process.env.KEY_JWT, { expiresIn: `1h` })
+
+            const filePath = path.join(__dirname, '../../src/templates/template_verify.html');
+            const data = fs.readFileSync(filePath, 'utf-8');
+            const tempCompile = await handlebars.compile(data)
+            const tempResult = tempCompile({ firstname: findUser.firstname, link: `http://localhost:5173/verify/${token}` })
+
+            await findUser.update({ verificationSentAt: new Date() })
+
+            await transporter.sendMail({
+                from: 'thoby.athayaa@gmail.com',
+                to: email,
+                subject: 'Fresh Finds - Email Verification',
+                html: tempResult
+            })
+            return res.status(200).send({ message: "Verification link has been sent to your email." })
+
+        } else {
+            return res.status(400).send({ message: "Verification email has already been sent recently" })
+        }
+
+    } catch (error) {
+        console.log(error);
+        res.status(400).send({ message: error.message })
+    }
+}
+
+export const resetPassword = async (req, res) => {
+    try {
+        const { email, password } = req.query
+
+        const result = await Customer.findOne({
+            where: {
+                email,
+                socialRegister: false
+            }
+        })
+
+        if (!result) {
+            return res.status(400).send({
+                message: "User not found"
+            })
+        }
+
+        const isPasswordValid = await bcrypt.compare(password, result.password);
+        if (!isPasswordValid) {
+            return res.status(400).send({
+                message: "Incorrect password"
+            })
+        }
+
+        const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
+
+        if (result.lastPasswordReset > oneHourAgo) {
+            return res.status(400).send({
+                message: "Password reset can only be done once per request within an hour"
+            })
+        }
+
+        await result.update({ lastPasswordReset: new Date() })
+
+        let payload = { id: result.id }
+        const token = jwt.sign(payload, process.env.KEY_JWT, { expiresIn: `1h` })
+
+        const filePath = path.join(__dirname, '../../src/templates/template_reset_password_user.html');
+        const data = fs.readFileSync(filePath, 'utf-8');
+        const tempCompile = await handlebars.compile(data)
+        const tempResult = tempCompile({ email: email, link: `http://localhost:5173/user-reset-password/${token}` })
+
+        await transporter.sendMail({
+            from: 'thoby.athayaa@gmail.com',
+            to: email,
+            subject: 'Fresh Finds - Reset Password',
+            html: tempResult
+        })
+
+
+        res.status(200).send({ message: "Reset password link has been sent to your email" })
+    } catch (error) {
+        console.log(error);
+        res.status(400).send({ message: error.message })
+    }
+}
+
+export const resetPasswordVerification = async (req, res) => {
+    try {
+        const { password } = req.body
+
+        const salt = await bcrypt.genSalt(10);
+        const hashPassword = await bcrypt.hash(password, salt)
+
+        await Customer.update({
+            password: hashPassword
+        }, {
+            where: {
+                id: req.user.id
+            }
+        })
+        res.status(200).send({ message: "Reset password success" })
     } catch (error) {
         console.log(error);
         res.status(400).send({ message: error.message })
@@ -167,6 +322,7 @@ export const userLogin = async (req, res) => {
         let dataLoginUser;
         const { email, password } = req.query
         console.log(req.query);
+        console.log(dataLoginUser);
 
         dataLoginUser = await Customer.findOne({
             where: {
@@ -174,9 +330,17 @@ export const userLogin = async (req, res) => {
             }
         })
 
+        console.log(dataLoginUser);
+
         if (dataLoginUser == null) {
             return res.status(401).send({
                 message: "User not found"
+            })
+        }
+
+        if (dataLoginUser.password == null) {
+            return res.status(400).send({
+                message: "Your account is not verified, Please verify "
             })
         }
 
@@ -198,6 +362,16 @@ export const userLogin = async (req, res) => {
                 message: "Your account is not verified."
             })
         }
+    } catch (error) {
+        console.log(error);
+        res.status(400).send({ message: error.message })
+    }
+}
+
+export const userLogout = async (req, res) => {
+    try {
+        req.user = null;
+        return res.status(200).send({ message: "Log out Success" })
     } catch (error) {
         console.log(error);
         res.status(400).send({ message: error.message })
@@ -227,3 +401,151 @@ export const getAllUser = async () => {
         return error
     }
 }
+
+export const userDataUpdate = async (req, res) => {
+    try {
+        const { firstname, lastname, phoneNumber, gender } = req.body
+
+        await Customer.update(
+            {
+                ...req.body
+            },
+            {
+                where: {
+                    id: req.user.id
+                }
+            }
+        )
+        res.status(200).send({ message: "Success updating your personal details" })
+    } catch (error) {
+        console.log(error);
+        res.status(400).send({ message: error.message })
+    }
+}
+
+export const userImgUpdate = async (req, res) => {
+    try {
+        console.log(req.file);
+        const result = await Customer.update(
+            {
+                profile_picture: `http://localhost:8000/public/${req.file?.filename}`
+            },
+            {
+                where: {
+                    id: req.user.id
+                }
+            }
+        )
+        res.status(200).send("Success updating user profile picture")
+
+    } catch (error) {
+        console.log(error);
+        res.status(400).send({ message: error.message })
+    }
+}
+
+export const findEmailForgotPassword = async (req, res) => {
+    try {
+        const { email } = req.query
+
+        const findUser = await Customer.findOne({
+            where: {
+                email,
+                isVerified: true,
+                socialRegister: false
+            }
+        })
+
+        if (findUser == null) {
+            return res.status(400).send({
+                message: "Email not found"
+            })
+        }
+
+        let payload = { id: findUser.id }
+        const token = jwt.sign(payload, process.env.KEY_JWT, { expiresIn: `1h` })
+
+        const filePath = path.join(__dirname, '../../src/templates/template_reset_password_user.html');
+        const data = fs.readFileSync(filePath, 'utf-8');
+        const tempCompile = await handlebars.compile(data)
+        const tempResult = tempCompile({ email: email, link: `http://localhost:5173/user-reset-password/${token}` })
+
+        await transporter.sendMail({
+            from: 'thoby.athayaa@gmail.com',
+            to: email,
+            subject: 'Fresh Finds - Forgot Password',
+            html: tempResult
+        })
+
+        res.status(200).send({ message: "Forgot password verification has been sent" })
+    } catch (error) {
+        console.log(error);
+        res.status(400).send({ message: error.message })
+    }
+}
+
+export const userEmailUpdate = async (req, res) => {
+    try {
+        const { email } = req.query
+
+        const findUser = await Customer.findOne({
+            where: {
+                email,
+                socialRegister: false,
+                isVerified: true
+            }
+        });
+
+        if (findUser == null) {
+            const result = await Customer.update({
+                email: email,
+                isVerified: false,
+            }, {
+                where: {
+                    id: req.user.id
+                }
+            })
+
+            let payload = { id: req.user.id }
+            const token = jwt.sign(payload, process.env.KEY_JWT, { expiresIn: `1h` })
+
+            const filePath = path.join(__dirname, '../../src/templates/template_update_email_user.html');
+            const data = fs.readFileSync(filePath, 'utf-8');
+            const tempCompile = await handlebars.compile(data)
+            const tempResult = tempCompile({ email: email, link: `http://localhost:5173/user-update-email/${token}` })
+
+            await transporter.sendMail({
+                from: 'thoby.athayaa@gmail.com',
+                to: email,
+                subject: 'Fresh Finds - Email Update',
+                html: tempResult
+            })
+        } else {
+            return res.status(400).send({ message: "This email address is already registered" })
+        }
+
+        res.status(200).send({ message: "Email update link has been sent" })
+    } catch (error) {
+        console.log(error);
+        res.status(400).send({ message: error.message })
+    }
+}
+
+export const userEmailUpdateVerification = async (req, res) => {
+    try {
+        console.log('User ID:', req.user.id);
+
+        await Customer.update({
+            isVerified: true
+        }, {
+            where: {
+                id: req.user.id
+            }
+        })
+        res.status(200).send({ message: "Email verification success" })
+    } catch (error) {
+        console.log(error);
+        res.status(400).send({ message: error.message })
+    }
+}
+

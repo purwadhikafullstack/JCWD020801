@@ -1,38 +1,64 @@
-import appLogo from "../../assets/logo-app-1.png";
-import appLogoSm from "../../assets/lemon-logo.svg";
-import deliveryIcon from "../../assets/navbar/delivery.svg"
-import categoryIcon from "../../assets/navbar/category.svg"
-import searchIcon from "../../assets/navbar/search.svg"
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { NavbarMobile } from "./components/navbarMobile";
-import { ModalCategory } from "./components/modalCategory";
-import { ModalAccount } from "./components/modalAccount";
-import { ShoppingCart } from "./components/shoppingCart";
-import { useSelector } from "react-redux";
+import appLogo from '../../assets/logo-app-1.png';
+import appLogoSm from '../../assets/lemon-logo.svg';
+import deliveryIcon from '../../assets/navbar/delivery.svg';
+import categoryIcon from '../../assets/navbar/category.svg';
+import searchIcon from '../../assets/navbar/search.svg';
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { NavbarMobile } from './components/navbarMobile';
+import { ModalCategory } from './components/modalCategory';
+import { ModalAccount } from './components/modalAccount';
+import { ShoppingCart } from './components/shoppingCart';
+import { useSelector } from 'react-redux';
 
 const categoryList = [
-    { name: "Meat & Poultry", subcategory: { list: ["Beef", "Lamb", "Chicken", "Duck", "Sausage & Hot Dogs"] } },
-    { name: "Seafood", subcategory: { list: ["Fish Fillets", "Fish Whole", "Salmon", "Crab", "Lobster", "Shrimp"] } },
-    { name: "Fresh", subcategory: { list: ["Fruits", "Berries", "Vegetables", "Dried Fruits & Nuts"] } },
-    { name: "Spice & Herbs" },
-    { name: "Dairy", subcategory: { list: ["Eggs", "Milk", "Yoghurt", "Sour Cream", "Pudding"] } },
-    { name: "Drinks" },
-    { name: "Frozen" },
-    { name: "Snacks" },
-    { name: "Beauty" },
-    { name: "Healthcare" },
-    { name: "Cleaning & Household" },
-    { name: "Pet" },
+    {
+        name: 'Meat & Poultry',
+        subcategory: {
+            list: ['Beef', 'Lamb', 'Chicken', 'Duck', 'Sausage & Hot Dogs'],
+        },
+    },
+    {
+        name: 'Seafood',
+        subcategory: {
+            list: [
+                'Fish Fillets',
+                'Fish Whole',
+                'Salmon',
+                'Crab',
+                'Lobster',
+                'Shrimp',
+            ],
+        },
+    },
+    {
+        name: 'Fresh',
+        subcategory: {
+            list: ['Fruits', 'Berries', 'Vegetables', 'Dried Fruits & Nuts'],
+        },
+    },
+    { name: 'Spice & Herbs' },
+    {
+        name: 'Dairy',
+        subcategory: { list: ['Eggs', 'Milk', 'Yoghurt', 'Sour Cream', 'Pudding'] },
+    },
+    { name: 'Drinks' },
+    { name: 'Frozen' },
+    { name: 'Snacks' },
+    { name: 'Beauty' },
+    { name: 'Healthcare' },
+    { name: 'Cleaning & Household' },
+    { name: 'Pet' },
 ];
 
 export const Navbar = () => {
-    const customer = useSelector((state) => state.customer.value)
+    const customer = useSelector((state) => state.customer.value);
+    console.log(customer);
 
     const [isOpen, setIsOpen] = useState(false);
     const [isOpenCategory, setIsOpenCategory] = useState(false);
     const [isOpenAccount, setIsOpenAccount] = useState(false);
-    const [isOpenCart, setIsOpenCart] = useState(false)
+    const [isOpenCart, setIsOpenCart] = useState(false);
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);
@@ -47,8 +73,8 @@ export const Navbar = () => {
     };
 
     const toggleOpenCart = () => {
-        setIsOpenCart(!isOpenCart)
-    }
+        setIsOpenCart(!isOpenCart);
+    };
 
     return (
         <>
@@ -56,7 +82,7 @@ export const Navbar = () => {
             <div className="flex items-center justify-between bg-[#71C1AB] px-[16px] py-1.5 lg:px-[160px]">
                 <div className="flex items-center gap-2.5">
                     <div className="flex items-center gap-1.5">
-                        <img src={deliveryIcon} ></img>
+                        <img src={deliveryIcon}></img>
                         <span className="text-[15px] text-white">Delivery to</span>
                     </div>
                     <span className="text-[15px] font-normal text-white underline underline-offset-2">
@@ -131,32 +157,37 @@ export const Navbar = () => {
                 {/* Sign in & cart */}
                 <div className="flex items-center gap-[0.7rem]">
                     <div
-                        className="hidden cursor-pointer h-[41px] px-4 items-center gap-2 md:flex hover:bg-[#f6f7f8] rounded-full transition ease-in-out delay-150"
+                        className={`${customer.profile_picture ? "pl-[0.125rem] pr-4 border border-transparent hover:border-[#94d1c0]" : "px-4"} hidden cursor-pointer h-[41px] items-center gap-2 md:flex hover:bg-[#f6f7f8] rounded-full transition ease-in-out delay-150`}
                         onClick={toggleMenuAccount}
-                    > {customer && customer.profile_picture ? customer.profile_picture : <svg
-                        className="mb-[0.1rem]"
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
                     >
-                        <path
-                            d="M4.1665 21.875V20.8334C4.1665 17.3816 6.96472 14.5834 10.4165 14.5834H14.5832C18.0349 14.5834 20.8332 17.3816 20.8332 20.8334V21.875"
-                            stroke="#343538"
-                            strokeWidth="2.08333"
-                            strokeLinecap="round"
-                        />
-                        <path
-                            d="M12.5002 11.4583C10.199 11.4583 8.3335 9.59285 8.3335 7.29167C8.3335 4.99048 10.199 3.125 12.5002 3.125C14.8013 3.125 16.6668 4.99048 16.6668 7.29167C16.6668 9.59285 14.8013 11.4583 12.5002 11.4583Z"
-                            stroke="#343538"
-                            strokeWidth="2.08333"
-                            strokeLinecap="round"
-                        />
-                    </svg>}
-
+                        {' '}
+                        {customer.profile_picture ? (
+                            <img src={customer.profile_picture} className="object-cover h-9 w-9 rounded-full mr-1"></img>
+                        ) : (
+                            <svg
+                                className="mb-[0.1rem]"
+                                width="20"
+                                height="20"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    d="M4.1665 21.875V20.8334C4.1665 17.3816 6.96472 14.5834 10.4165 14.5834H14.5832C18.0349 14.5834 20.8332 17.3816 20.8332 20.8334V21.875"
+                                    stroke="#343538"
+                                    strokeWidth="2.08333"
+                                    strokeLinecap="round"
+                                />
+                                <path
+                                    d="M12.5002 11.4583C10.199 11.4583 8.3335 9.59285 8.3335 7.29167C8.3335 4.99048 10.199 3.125 12.5002 3.125C14.8013 3.125 16.6668 4.99048 16.6668 7.29167C16.6668 9.59285 14.8013 11.4583 12.5002 11.4583Z"
+                                    stroke="#343538"
+                                    strokeWidth="2.08333"
+                                    strokeLinecap="round"
+                                />
+                            </svg>
+                        )}
                         <span className="whitespace-nowrap font-medium text-[#343538]">
-                            {customer ? customer.firstname : "Account"}
+                            {customer.firstname ? customer.firstname : `Account`}
                         </span>
                         <motion.svg
                             width="16"
@@ -176,7 +207,10 @@ export const Navbar = () => {
                     </div>
                     {/* -- Modal Account */}
                     <ModalAccount isOpenAccount={isOpenAccount} />
-                    <div onClick={toggleOpenCart} className="flex h-[41px] items-center justify-between gap-2 rounded-full px-4 md:bg-[#F6F7F8] hover:bg-[#edeff1] transition ease-in-out delay-150 cursor-pointer group">
+                    <div
+                        onClick={toggleOpenCart}
+                        className="flex h-[41px] items-center justify-between gap-2 rounded-full px-4 md:bg-[#F6F7F8] hover:bg-[#edeff1] transition ease-in-out delay-150 cursor-pointer group"
+                    >
                         <svg
                             className="mb-[0.1rem]"
                             width="20"

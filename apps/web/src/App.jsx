@@ -14,6 +14,8 @@ import { useDispatch } from 'react-redux'
 import { setData } from '../redux/customerSlice';
 import { useEffect } from 'react';
 import axios from 'axios';
+import { UserResetPassword } from './pages/userResetPassword';
+import { UserUpdateEmail } from './pages/userUpdateEmail';
 
 
 const router = createBrowserRouter([
@@ -23,6 +25,9 @@ const router = createBrowserRouter([
   { path: "/login-admin", element: <LoginAdmin /> },
   { path: "/signin", element: <UserSignIn /> },
   { path: "/register", element: <UserRegister /> },
+  { path: "/verify/:token", element: <AccountVerification /> },
+  { path: "/user-reset-password/:token", element: <UserResetPassword /> },
+  { path: "/user-update-email/:token", element: <UserUpdateEmail /> },
 
   {
     element: <Required />,
@@ -32,7 +37,6 @@ const router = createBrowserRouter([
       { path: "/admin-management", element: <AdminManagement /> },
       { path: "/user-dashboard", element: <UserDashboard /> },
       { path: "/user-verification", element: <UserVerification /> },
-      { path: "/verify/:token", element: <AccountVerification /> },
     ],
   },
 ]);

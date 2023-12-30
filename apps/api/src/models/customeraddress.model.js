@@ -9,16 +9,28 @@ export default class CustomerAddress extends Model {
 export const init = (sequelize) => {
   CustomerAddress.init(
     {
+      title: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       address: {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      customerAddressName: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      phoneNumber: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
       longitude: {
-        type: DataTypes.DECIMAL,
+        type: DataTypes.FLOAT,
         allowNull: false,
       },
       latitude: {
-        type: DataTypes.DECIMAL,
+        type: DataTypes.FLOAT,
         allowNull: false,
       },
       isDefault: {

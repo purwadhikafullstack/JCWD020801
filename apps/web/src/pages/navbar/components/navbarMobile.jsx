@@ -3,8 +3,12 @@ import PropTypes from 'prop-types';
 
 import appLogoSm from "../../../assets/lemon-logo.svg";
 import crossIcon from "../../../assets/navbar/cross.svg";
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 export const NavbarMobile = ({ isOpen, toggleMenu, isOpenCategory, toggleMenuCategory, categoryList }) => {
+    const customer = useSelector((state) => state.customer.value);
+
     return (
         <AnimatePresence>
             {isOpen && (
@@ -102,41 +106,65 @@ export const NavbarMobile = ({ isOpen, toggleMenu, isOpenCategory, toggleMenuCat
                     </div>
                     {/* account */}
                     <div className="mt-3 flex w-full gap-4 border-t pt-4">
-                        <svg
-                            className="mb-[0.1rem]"
-                            width="26"
-                            height="26"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <path
-                                d="M4.1665 21.875V20.8334C4.1665 17.3816 6.96472 14.5834 10.4165 14.5834H14.5832C18.0349 14.5834 20.8332 17.3816 20.8332 20.8334V21.875"
-                                stroke="white"
-                                strokeWidth="2.08333"
-                                strokeLinecap="round"
-                            />
-                            <path
-                                d="M12.5002 11.4583C10.199 11.4583 8.3335 9.59285 8.3335 7.29167C8.3335 4.99048 10.199 3.125 12.5002 3.125C14.8013 3.125 16.6668 4.99048 16.6668 7.29167C16.6668 9.59285 14.8013 11.4583 12.5002 11.4583Z"
-                                stroke="white"
-                                strokeWidth="2.08333"
-                                strokeLinecap="round"
-                            />
-                        </svg>
-                        <div className="flex gap-2">
-                            <span className="cursor-pointer text-white underline underline-offset-2">
-                                Sign in
-                            </span>
-                            <span className="text-white">or</span>
-                            <span className="cursor-pointer text-white underline underline-offset-2">
-                                Create account
-                            </span>
-                        </div>
+                        {!customer.id && (
+                            <>
+                                <svg
+                                    className="mb-[0.1rem]"
+                                    width="26"
+                                    height="26"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path
+                                        d="M4.1665 21.875V20.8334C4.1665 17.3816 6.96472 14.5834 10.4165 14.5834H14.5832C18.0349 14.5834 20.8332 17.3816 20.8332 20.8334V21.875"
+                                        stroke="white"
+                                        strokeWidth="2.08333"
+                                        strokeLinecap="round"
+                                    />
+                                    <path
+                                        d="M12.5002 11.4583C10.199 11.4583 8.3335 9.59285 8.3335 7.29167C8.3335 4.99048 10.199 3.125 12.5002 3.125C14.8013 3.125 16.6668 4.99048 16.6668 7.29167C16.6668 9.59285 14.8013 11.4583 12.5002 11.4583Z"
+                                        stroke="white"
+                                        strokeWidth="2.08333"
+                                        strokeLinecap="round"
+                                    />
+                                </svg>
+                                <div className="flex gap-2">
+                                    <span className="cursor-pointer text-white underline underline-offset-2">
+                                        Sign in
+                                    </span>
+                                    <span className="text-white">or</span>
+                                    <span className="cursor-pointer text-white underline underline-offset-2">
+                                        Create account
+                                    </span>
+                                </div>
+                            </>
+                        )}
+
+                        {customer.id && (
+                            <div className="w-full flex justify-between items-center">
+                                <div className="flex gap-4 items-center">
+                                    <img
+                                        src={customer.profile_picture}
+                                        alt=""
+                                        className="h-9 w-9 object-cover rounded-full"
+                                    />
+                                    <span className="text-white text-[17px] font-medium">
+                                        {customer.firstname}
+                                    </span>
+                                </div>
+                                <Link to={'/user-dashboard'} className="flex">
+                                    <span className="text-white text-[16px] cursor-pointer underline underline-offset-2">
+                                        My Account
+                                    </span>
+                                </Link>
+                            </div>
+                        )}
                     </div>
                 </motion.div>
             )}
         </AnimatePresence>
-    )
+    );
 }
 
 NavbarMobile.propTypes = {
