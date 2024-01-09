@@ -62,7 +62,7 @@ export const ChangeEmail = () => {
                 <div className="flex items-center justify-between">
                     <div className="flex flex-col">
                         <h3 className="mb-2 text-[26px] font-bold">Change Your Email</h3>
-                        <p className="text-[15px] text-gray-500 ">
+                        <p className="text-[15px] text-gray-600 ">
                             Type the new email you want to use for your account below
                         </p>
                     </div>

@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import dummyProduct from "../../../assets/navbar/bowl.png"
 import PropTypes from 'prop-types';
+import { convertToIDR } from '../../../functions/functions';
 
 const productList = [
     { name: "Family Tree Farms Jumbo Ultra-Premium Blueberries, Case", price: "67000", img: dummyProduct },
@@ -20,16 +21,6 @@ const truncateProductName = (productName) => {
     }
     return productName;
 };
-
-const convertToIDR = (price) => {
-    const priceStr = price.toString().split('');
-
-    for (let i = priceStr.length - 3; i > 0; i -= 3) {
-        priceStr.splice(i, 0, '.');
-    }
-    const formattedPrice = priceStr.join('');
-    return formattedPrice;
-}
 
 export const ShoppingCart = ({ isOpenCart, toggleOpenCart }) => {
     return (

@@ -68,7 +68,7 @@ export const ResetPassword = () => {
                 <div className="flex items-center justify-between">
                     <div className="flex flex-col">
                         <h3 className="mb-2 text-[26px] font-bold">Reset Password</h3>
-                        <p className="text-[15px] text-gray-500 ">
+                        <p className="text-[15px] text-gray-600 ">
                             You need to enter your email and current password before resetting
                         </p>
                     </div>

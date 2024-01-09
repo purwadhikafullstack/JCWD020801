@@ -353,7 +353,7 @@ export const userLogin = async (req, res) => {
 
         let payload = { id: dataLoginUser.id };
         if (dataLoginUser.isVerified) {
-            const token = jwt.sign(payload, process.env.KEY_JWT);
+            const token = jwt.sign(payload, process.env.KEY_JWT, { expiresIn: '1h' });
             return res.status(200).send({
                 message: 'Login Success!', result: dataLoginUser, token
             })

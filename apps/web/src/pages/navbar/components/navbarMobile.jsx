@@ -17,7 +17,7 @@ export const NavbarMobile = ({ isOpen, toggleMenu, isOpenCategory, toggleMenuCat
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -50 }}
                     transition={{ duration: 0.3 }}
-                    className="absolute top-0 w-[100vw] items-start bg-[#347563] px-[18px] py-5"
+                    className="z-50 absolute top-0 w-[100vw] items-start bg-[#347563] px-[18px] py-5"
                 >
                     <div className="flex w-full items-center justify-between">
                         <div className="flex items-center gap-4">

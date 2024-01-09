@@ -14,14 +14,30 @@ export const init = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      latitude: {
-        type: DataTypes.DECIMAL,
+      address: {
+        type: DataTypes.STRING,
         allowNull: false,
       },
       longitude: {
-        type: DataTypes.DECIMAL,
+        type: DataTypes.DOUBLE,
         allowNull: false,
       },
+      latitude: {
+        type: DataTypes.DOUBLE,
+        allowNull: false,
+      },
+      contactNumber: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      isActive: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true
+      },
+      isSuperStore: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+      }
     },
     {
       sequelize,

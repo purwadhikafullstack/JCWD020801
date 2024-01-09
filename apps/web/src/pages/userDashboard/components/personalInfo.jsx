@@ -112,7 +112,7 @@ export const PersonalInformation = () => {
                         Welcome to Your Account,
                         <span className="text-[#00A67C]"> {customer.firstname}!</span>
                     </h3>
-                    <p className="text-[15px] text-gray-500">
+                    <p className="text-[15px] text-gray-600">
                         {customer.socialRegister ? 'See' : 'Update'} your personal details
                     </p>
                 </div>

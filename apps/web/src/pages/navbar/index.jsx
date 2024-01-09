@@ -1,15 +1,20 @@
 import appLogo from '../../assets/logo-app-1.png';
 import appLogoSm from '../../assets/lemon-logo.svg';
-import deliveryIcon from '../../assets/navbar/delivery.svg';
 import categoryIcon from '../../assets/navbar/category.svg';
 import searchIcon from '../../assets/navbar/search.svg';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { NavbarMobile } from './components/navbarMobile';
 import { ModalCategory } from './components/modalCategory';
 import { ModalAccount } from './components/modalAccount';
 import { ShoppingCart } from './components/shoppingCart';
 import { useSelector } from 'react-redux';
+import { useGeoLocation } from '../../hooks/useGeoLocation';
+import { fetchAddressFromCoordinates } from '../../api/fetchAddressFromCoordinates';
+import { truncateString } from '../../functions/functions';
+import { Tooltip } from '@material-tailwind/react';
+import { LiaShippingFastSolid } from "react-icons/lia";
+
 
 const categoryList = [
     {
@@ -55,6 +60,10 @@ export const Navbar = () => {
     const customer = useSelector((state) => state.customer.value);
     console.log(customer);
 
+    // const location = useGeoLocation()
+    const { coordinates, loaded } = useGeoLocation();
+    const [formattedAddress, setFormattedAddress] = useState("")
+
     const [isOpen, setIsOpen] = useState(false);
     const [isOpenCategory, setIsOpenCategory] = useState(false);
     const [isOpenAccount, setIsOpenAccount] = useState(false);
@@ -76,28 +85,66 @@ export const Navbar = () => {
         setIsOpenCart(!isOpenCart);
     };
 
+    useEffect(() => {
+        if (loaded) {
+            const getAddress = async () => {
+                const address = await fetchAddressFromCoordinates(coordinates?.lat, coordinates?.lng);
+                setFormattedAddress(address)
+            };
+            getAddress();
+        }
+    }, [coordinates?.lat, coordinates?.lng])
+
     return (
         <>
             {/* Navbar Top */}
             <div className="flex items-center justify-between bg-[#71C1AB] px-[16px] py-1.5 lg:px-[160px]">
-                <div className="flex items-center gap-2.5">
-                    <div className="flex items-center gap-1.5">
-                        <img src={deliveryIcon}></img>
-                        <span className="text-[15px] text-white">Delivery to</span>
+                <div className="flex items-center gap-2.5 w-max">
+                    <div className="flex items-center gap-1.5 w-max">
+                        <LiaShippingFastSolid size={21} className="text-white " />
+                        <span className="text-[15px] text-white whitespace-nowrap">
+                            Delivery to
+                        </span>
                     </div>
-                    <span className="text-[15px] font-normal text-white underline underline-offset-2">
-                        Taman Cibaduyut Indah...
+                    <span className="text-[15px] font-normal text-white underline underline-offset-2 line-clamp-1 w-max cursor-pointer">
+                        {loaded && formattedAddress ? (
+                            <Tooltip
+                                content={formattedAddress}
+                                className="bg-white text-gray-600 border border-blue-gray-50 shadow-xl shadow-black/10 py-[0.4rem] px-[0.6rem]"
+                                animate={{
+                                    mount: { scale: 1, y: 0 },
+                                    unmount: { scale: 0, y: -15 },
+                                }}
+                            >
+                                <p>{truncateString(formattedAddress, 50)}</p>
+                            </Tooltip>
+                        ) : (
+                            <Tooltip
+                                content="Please allow the browser to access your location"
+                                className="bg-white text-gray-600 border border-blue-gray-50 shadow-xl shadow-black/10 py-[0.4rem] px-[0.6rem]"
+                                animate={{
+                                    mount: { scale: 1, y: 0 },
+                                    unmount: { scale: 0, y: -15 },
+                                }}
+                            >
+                                <p>Location not available</p>
+                            </Tooltip>
+                        )}
                     </span>
                 </div>
-                <span className="mr-1 hidden text-[15px] text-white md:block">
+                <span className="mr-1 hidden text-[15px] text-white md:block whitespace-nowrap w-max">
                     Find a store
                 </span>
-            </div>
+            </div >
             {/* Navbar Bottom */}
-            <div className="flex items-center justify-between border-b border-[#E4E4E4] px-[16px] py-2.5 lg:px-[160px]">
+            < div className="flex items-center justify-between border-b border-[#E4E4E4] px-[16px] py-2.5 lg:px-[160px]" >
                 {/* Logo & Category */}
-                <div className="flex items-center gap-[1rem]">
-                    <img src={appLogo} alt="" className="hidden h-[35px] md:block"></img>
+                <div className="flex items-center gap-[1rem]" >
+                    <img
+                        src={appLogo}
+                        alt=""
+                        className="hidden h-[35px] md:block"
+                    ></img>
                     <img
                         src={appLogoSm}
                         alt=""
@@ -134,9 +181,9 @@ export const Navbar = () => {
                             </motion.svg>
                         </div>
                     </div>
-                </div>
+                </div >
                 {/* Search Bar */}
-                <div>
+                <div  >
                     <div className="ml-3 rounded-lg md:ml-0">
                         <label htmlFor="table-search" className="sr-only">
                             Search
@@ -153,16 +200,22 @@ export const Navbar = () => {
                             />
                         </div>
                     </div>
-                </div>
+                </div >
                 {/* Sign in & cart */}
-                <div className="flex items-center gap-[0.7rem]">
+                <div className="flex items-center gap-[0.7rem]" >
                     <div
-                        className={`${customer.profile_picture ? "pl-[0.125rem] pr-4 border border-transparent hover:border-[#94d1c0]" : "px-4"} hidden cursor-pointer h-[41px] items-center gap-2 md:flex hover:bg-[#f6f7f8] rounded-full transition ease-in-out delay-150`}
+                        className={`${customer.profile_picture
+                            ? 'pl-[0.125rem] pr-4 border border-transparent hover:border-[#94d1c0]'
+                            : 'px-4'
+                            } hidden cursor-pointer h-[41px] items-center gap-2 md:flex hover:bg-[#f6f7f8] rounded-full transition ease-in-out delay-150`}
                         onClick={toggleMenuAccount}
                     >
                         {' '}
                         {customer.profile_picture ? (
-                            <img src={customer.profile_picture} className="object-cover h-9 w-9 rounded-full mr-1"></img>
+                            <img
+                                src={customer.profile_picture}
+                                className="object-cover h-9 w-9 rounded-full mr-1"
+                            ></img>
                         ) : (
                             <svg
                                 className="mb-[0.1rem]"
@@ -236,9 +289,9 @@ export const Navbar = () => {
                         </svg>
                         <span className="font-semibold text-[#343538]">12</span>
                     </div>
-                </div>
+                </div >
                 {/* Hamburger */}
-                <div className="mt-1 items-center md:hidden">
+                <div className="mt-1 items-center md:hidden" >
                     <button
                         className="focus:shadow-outline rounded-lg focus:outline-none"
                         onClick={toggleMenu}
@@ -251,11 +304,11 @@ export const Navbar = () => {
                             ></path>
                         </svg>
                     </button>
-                </div>
-            </div>
+                </div >
+            </div >
 
             {/* -- Navbar Mobile  -- */}
-            <NavbarMobile
+            < NavbarMobile
                 isOpen={isOpen}
                 toggleMenu={toggleMenu}
                 isOpenCategory={isOpenCategory}
@@ -264,7 +317,7 @@ export const Navbar = () => {
             />
 
             {/* -- Shopping Cart -- */}
-            <ShoppingCart isOpenCart={isOpenCart} toggleOpenCart={toggleOpenCart} />
+            < ShoppingCart isOpenCart={isOpenCart} toggleOpenCart={toggleOpenCart} />
         </>
     );
 };

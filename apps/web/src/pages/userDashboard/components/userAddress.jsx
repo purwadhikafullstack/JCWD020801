@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { ModalUserCreateAddress } from "./modalUserCreateAddress";
-import axios from "axios";
+// import axios from "axios";
 import { AddressDataMap } from "./AddressDataMap";
+import axios from "../../../api/axios";
 
 export const UserAddress = () => {
     const token = localStorage.getItem('token');
@@ -12,7 +13,7 @@ export const UserAddress = () => {
 
     const fetchUserAddressData = async () => {
         try {
-            const response = await axios.get('http://localhost:8000/api/customer-address/list', {
+            const response = await axios.get('customer-address/list', {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -34,7 +35,7 @@ export const UserAddress = () => {
                 <div className="flex flex-col gap-4 md:gap-0 md:flex-row items-end md:items-center justify-between">
                     <div className="flex flex-col">
                         <h3 className="mb-2 text-[26px] font-bold">Your Address</h3>
-                        <p className="text-[15px] text-gray-500 ">
+                        <p className="text-[15px] text-gray-600 ">
                             Edit, Delete and Add a new Address for your account
                         </p>
                     </div>
