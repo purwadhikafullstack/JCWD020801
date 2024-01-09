@@ -93,6 +93,22 @@ export const getAllAdmin = async (req, res) => {
     }
 }
 
+export const getAllAdminNoPagination = async (req, res) => {
+    try {
+        const result = await Admin.findAll({
+            where: {
+                isSuperAdmin: false
+            },
+            // order: 
+        })
+        return res.status(200).send({ result: result })
+
+    } catch (error) {
+        console.log(error);
+        res.status(400).send({ message: error.message })
+    }
+}
+
 export const deleteAdmin = async (req, res) => {
     const id = req.params.id;
     try {
@@ -222,7 +238,7 @@ export const updateVerifiedAdmin = async (req, res) => {
             }
         });
 
-        return res.status(200).send({message: "Account successfully verified"});
+        return res.status(200).send({ message: "Account successfully verified" });
     } catch (error) {
         return res.status(400).send({ error: error.message });
     }
@@ -299,7 +315,7 @@ export const getVerCode = async (req, res) => {
         })
 
         if (!account) {
-            return res.status(404).send({message: "Account not found",});
+            return res.status(404).send({ message: "Account not found", });
         }
 
         return res.status(200).send({ result: account });

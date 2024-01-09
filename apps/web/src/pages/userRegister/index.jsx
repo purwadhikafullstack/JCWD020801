@@ -12,9 +12,13 @@ import { ModalEmailVerification } from './components/modalEmailVerification';
 import { ModalError } from './components/modalError';
 import { registerWithGoogle } from '../../../../api/src/firebase'
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setData } from '../../../redux/customerSlice';
+import { toast } from 'react-toastify';
 
 export const UserRegister = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch()
 
     const [socialHover1, setSocialHover1] = useState(false);
     const [socialHover2, setSocialHover2] = useState(false);
@@ -30,9 +34,17 @@ export const UserRegister = () => {
 
             const response = await axios.post('http://localhost:8000/api/customer/register-google', { googleUserData: userData })
             console.log(response.data);
+            localStorage.setItem('token', response.data.token)
+            dispatch(setData(response.data.result))
+            toast.success(response.data.message, {
+                position: "top-center",
+            })
             navigate('/home')
         } catch (error) {
             console.log("Error from handle Google Register Front-end", error);
+            toast.error(error.response.data.message, {
+                position: "top-center",
+            })
         }
     }
 
@@ -230,7 +242,7 @@ export const UserRegister = () => {
                                                 animate={{ opacity: 1, x: 0 }}
                                                 exit={{ opacity: 0, x: -50 }}
                                                 transition={{ duration: 0.3 }}
-                                                className="mr-0 whitespace-nowrap text-[14px] font-semibold text-gray-500 md:mr-1.5"
+                                                className="mr-0 whitespace-nowrap text-[14px] font-semibold text-gray-600 md:mr-1.5"
                                             >
                                                 Register with Google
                                             </motion.span>
@@ -266,7 +278,7 @@ export const UserRegister = () => {
                         <div>
                             <span className="text-[15px] text-gray-800">
                                 Already have an account?{" "}
-                                <span className="cursor-pointer font-semibold text-[#41907A] hover:underline hover:decoration-1">
+                                <span onClick={() => navigate('/signin')} className="cursor-pointer font-semibold text-[#41907A] hover:underline hover:decoration-1">
                                     Sign In
                                 </span>
                             </span>

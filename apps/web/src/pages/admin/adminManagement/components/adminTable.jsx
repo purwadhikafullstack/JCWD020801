@@ -13,11 +13,11 @@ import {
 import { PencilIcon, TrashIcon, UserPlusIcon, MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { Helper } from "../../components/icons";
 
-export default function AdminTable({handleOpenAdd, handleDelete, handleEdit, adminData, currentPage, handlePageChange, totalPages}) {
+export default function AdminTable({ handleOpenAdd, handleDelete, handleEdit, adminData, currentPage, handlePageChange, totalPages }) {
     const TABLE_HEAD = ["Name", "Username", "Email", "Action"];
-    return(
+    return (
         <div className="flex flex-col w-full items-center justify-center gap-5">
-        <div className="w-screen md:w-5/6">
+            <div className="w-screen md:w-5/6">
                 <Card className="mt-6 w-full">
                     <CardBody>
                         <Typography variant="h5" color="blue-gray" className="mb-2">
@@ -34,12 +34,12 @@ export default function AdminTable({handleOpenAdd, handleDelete, handleEdit, adm
                             </Button>
                             <div className="w-full md:w-72">
                                 <Input
-                                label="Search"
-                                icon={<MagnifyingGlassIcon className="h-5 w-5" />}
+                                    label="Search"
+                                    icon={<MagnifyingGlassIcon className="h-5 w-5" />}
                                 />
-                            </div>   
+                            </div>
                         </div>
-                        
+
                     </CardFooter>
                 </Card>
             </div>
@@ -102,14 +102,14 @@ export default function AdminTable({handleOpenAdd, handleDelete, handleEdit, adm
                                                 <td className={classes}>
                                                     <div className="flex flex-col w-1/2">
                                                         <div className="flex flex-row items-center gap-1">
-                                                        <Typography
-                                                            variant="small"
-                                                            color="blue-gray"
-                                                            className="font-normal"
-                                                        >
-                                                            {item.email}
-                                                        </Typography>
-                                                        <Helper content={`Verification code: ${item.verification_code}`}/>
+                                                            <Typography
+                                                                variant="small"
+                                                                color="blue-gray"
+                                                                className="font-normal"
+                                                            >
+                                                                {item.email}
+                                                            </Typography>
+                                                            <Helper content={`Verification code: ${item.verification_code}`} />
                                                         </div>
                                                         <Chip
                                                             variant="filled"
@@ -121,13 +121,13 @@ export default function AdminTable({handleOpenAdd, handleDelete, handleEdit, adm
                                                 </td>
                                                 <td className={classes}>
                                                     <Tooltip content="Edit User">
-                                                        <IconButton onClick={()=>handleEdit(item)} variant="text">
+                                                        <IconButton onClick={() => handleEdit(item)} variant="text">
                                                             <PencilIcon className="h-4 w-4" />
                                                         </IconButton>
                                                     </Tooltip>
                                                     <Tooltip content={`Delete ${item.name}`}>
-                                                        <IconButton onClick={()=>handleDelete(item)} variant="text">
-                                                            <TrashIcon className="h-4 w-4" color="red"/>
+                                                        <IconButton onClick={() => handleDelete(item)} variant="text">
+                                                            <TrashIcon className="h-4 w-4" color="red" />
                                                         </IconButton>
                                                     </Tooltip>
                                                 </td>

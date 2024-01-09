@@ -21,36 +21,48 @@ import { UserVerification } from './pages/userVerification';
 import { UserSignIn } from './pages/userSignIn';
 import { UserRegister } from './pages/userRegister';
 import { AccountVerification } from './pages/accountVerification';
+import { UserResetPassword } from './pages/userResetPassword';
+import { UserUpdateEmail } from './pages/userUpdateEmail';
 import { setData } from './redux/customerSlice';
 import AdminRequired from './components/adminRequired';
+import { StoreManagement } from './pages/admin/storeManagement';
+import { StoreBranchDetail } from './pages/admin/storeManagement/storeBranchDetail';
+import { StoreLocator } from './pages/storeLocator';
+import { CheckoutPage } from './pages/checkout';
 
 const router = createBrowserRouter([
   //Untuk yang tidak butuh token
   { path: "/", element: <Home /> },
   { path: "/login-admin", element: <LoginAdmin></LoginAdmin> },
-  { path: "/admin-verification/:token", element: <AdminVerification/> },
-  { path: "/admin-reset-password/:token", element: <AdminResetPassword/> },
+  { path: "/admin-verification/:token", element: <AdminVerification /> },
+  { path: "/admin-reset-password/:token", element: <AdminResetPassword /> },
   { path: "/home", element: <HomePage /> },
   { path: "/signin", element: <UserSignIn /> },
   { path: "/register", element: <UserRegister /> },
   { path: "/verify/:token", element: <AccountVerification /> },
+  { path: "/user-reset-password/:token", element: <UserResetPassword /> },
+  { path: "/user-update-email/:token", element: <UserUpdateEmail /> },
+  { path: "/store-locator", element: <StoreLocator /> },
   {
     element: <Required />,
     children: [
       //untuk yang butuh customer
       { path: "/user-dashboard", element: <UserDashboard /> },
       { path: "/user-verification", element: <UserVerification /> },
+      { path: "/checkout", element: <CheckoutPage /> },
     ],
   },
   {
-    element: <AdminRequired/>,
+    element: <AdminRequired />,
     children: [
       { path: "/admin-management", element: <AdminManagement /> },
-      { path: "/admin-overview", element: <Overview/> },
-      { path: "/customer-management", element: <CustomerManagement/> },
-      { path: "/product-management", element: <ProductManagement/> },
-      { path: "/admin-profile", element: <AdminProfile/> },
-      { path: "/category-management", element: <CategoryManagement/> }
+      { path: "/admin-overview", element: <Overview /> },
+      { path: "/customer-management", element: <CustomerManagement /> },
+      { path: "/product-management", element: <ProductManagement /> },
+      { path: "/admin-profile", element: <AdminProfile /> },
+      { path: "/category-management", element: <CategoryManagement /> },
+      { path: "/store-management", element: <StoreManagement /> },
+      { path: "/store-management/:id", element: <StoreBranchDetail /> }
     ]
   }
 ]);
@@ -64,14 +76,14 @@ function App() {
 
   const keepLoginAdmin = async () => {
     try {
-        const response = await axios.get("admins/keep-login", {
-          headers: {
-            Authorization: `Bearer ${admtoken}`,
-          },
-        });
-        dispatch(setDataAdmin(response.data.result));
+      const response = await axios.get("admins/keep-login", {
+        headers: {
+          Authorization: `Bearer ${admtoken}`,
+        },
+      });
+      dispatch(setDataAdmin(response.data.result));
     } catch (err) {
-      if(err.response.status === 401){
+      if (err.response.status === 401) {
         localStorage.removeItem('admtoken')
         handleOpen();
       }
@@ -95,23 +107,27 @@ function App() {
     if (token) {
       keepLoginCustomer();
     }
-    if(admtoken){
+    if (admtoken) {
       keepLoginAdmin();
     }
   }, []);
 
   return (
     <>
-    <RouterProvider router={router}></RouterProvider>
-    <ExpiredToken
-    content={'Please login again'}
-    openDialog={open}
-    handleOpen={handleOpen}/>
+      <RouterProvider router={router}></RouterProvider>
+      <ExpiredToken
+        content={'Please login again'}
+        openDialog={open}
+        handleOpen={handleOpen} />
     </>
   );
 }
 
 export default App;
+
+
+
+
 
 
 

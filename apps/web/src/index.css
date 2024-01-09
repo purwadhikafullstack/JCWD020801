@@ -143,3 +143,74 @@ html {
 
   /*outline: 1px solid slategrey;*/
 }
+
+/* underline */
+#underline {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: gray;
+  transition: all 0.3s ease;
+  transform-origin: left;
+  transform: scaleX(0);
+}
+
+#underline-wrapper:hover #underline {
+  transform: scaleX(1);
+}
+
+/* transition div bg */
+.bg-transition {
+  position: relative;
+  overflow: hidden;
+}
+
+.bg-transition-blue::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background-color: #e7f0ff;
+  transition: left 0.3s ease;
+}
+
+.bg-transition-blue:hover::before {
+  left: 0;
+}
+
+.bg-transition-orange::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background-color: #fef0ea;
+  transition: left 0.3s ease;
+}
+
+.bg-transition-orange:hover::before {
+  left: 0;
+}
+
+/* Pulse effect */
+/* #E1F5EF */
+.pulse-effect {
+  border-radius: 9999px;
+  background-color: #e1f5ef;
+  animation: 1.5s pulse infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 #e1f5ef;
+  }
+
+  100% {
+    box-shadow: 0 0 0 14px #e1f5ef00;
+  }
+}
