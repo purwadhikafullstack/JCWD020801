@@ -21,7 +21,6 @@ export default function Overview() {
   }, []);
 
   return (
-    // <div className="flex flex-row">
     <div className="flex flex-row">
       <AdminSidebar />
       <div className="flex flex-col p-1 md:p-9 w-full bg-[#edf7f4]">

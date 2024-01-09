@@ -67,6 +67,7 @@ export const AddressDelivery = () => {
                     Authorization: `Bearer ${token}`,
                 },
             })
+
             setDeliveryAddress(response.data.result)
         } catch (error) {
             console.log(error);

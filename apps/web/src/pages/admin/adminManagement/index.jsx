@@ -29,7 +29,6 @@ export default function AdminManagement() {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            console.log(response);
             setAdminData(response.data?.result.rows)
             setTotalPages(response.data?.totalPages)
         } catch (err) {
