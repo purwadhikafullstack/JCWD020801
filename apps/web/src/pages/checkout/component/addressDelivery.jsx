@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PropTypes from 'prop-types';
+import { ModalChangeAddress } from '../component/modalChangeAddress'
+import axios from "../../../api/axios";
 
 const deliveryMethod = [
     {
@@ -49,9 +51,31 @@ const deliveryMethod = [
     },
 ];
 
-export const AddressDelivery = ({ modalChangeAddressOpen, setModalChangeAddressOpen }) => {
+export const AddressDelivery = () => {
+    const token = localStorage.getItem('token');
+
     const [selectedMethod, setSelectedMethod] = useState('');
     const [selectedService, setSelectedService] = useState('');
+
+    const [modalChangeAddressOpen, setModalChangeAddressOpen] = useState(false);
+    const [deliveryAddress, setDeliveryAddress] = useState(null)
+
+    const fetchDeliveryAddress = async () => {
+        try {
+            const response = await axios.get('customer-address/delivery-address', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+            setDeliveryAddress(response.data.result)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        fetchDeliveryAddress()
+    }, [])
 
     const handleMethodChange = (event) => {
         const selectedMethodName = event.target.value;
@@ -163,6 +187,11 @@ export const AddressDelivery = ({ modalChangeAddressOpen, setModalChangeAddressO
                     <h4 className="font-semibold">Rp 24.000</h4>
                 </div>
             </section>
+            {/* ----- Modal ----- */}
+            <ModalChangeAddress
+                modalChangeAddressOpen={modalChangeAddressOpen}
+                setModalChangeAddressOpen={setModalChangeAddressOpen}
+            />
         </>
     )
 }

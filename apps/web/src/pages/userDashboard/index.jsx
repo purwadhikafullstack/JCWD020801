@@ -22,7 +22,7 @@ import { ChangeEmail } from './components/changeEmail';
 
 const menuList = [
     { title: 'Personal Information', icon: personIcon },
-    { title: 'User Address', icon: addressIcon },
+    { title: 'Address List', icon: addressIcon },
     { title: 'Reset Password', icon: passwordIcon },
     { title: 'Change Email', icon: emailIcon },
     { title: 'Order History', icon: orderIcon },

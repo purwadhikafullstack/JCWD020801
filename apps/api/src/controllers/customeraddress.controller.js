@@ -137,3 +137,49 @@ export const setDefaultAddress = async (req, res) => {
         res.status(400).send({ message: error.message })
     }
 }
+
+export const setDeliveryAddress = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const userId = req.user.id;
+
+        const currentDeliveryAddress = await CustomerAddress.findOne({
+            where: {
+                CustomerId: userId,
+                isDeliveryAddress: true
+            }
+        })
+
+        if (currentDeliveryAddress) {
+            await currentDeliveryAddress.update({ isDeliveryAddress: false })
+        }
+
+        const newDeliveryAddress = await CustomerAddress.update({
+            isDeliveryAddress: true
+        }, {
+            where: {
+                CustomerId: userId,
+                id: id
+            }
+        })
+        res.status(200).send({ message: "Delivery Address has been updated" })
+    } catch (error) {
+        console.log(error);
+        res.status(400).send({ message: error.message })
+    }
+}
+
+export const getDeliveryAddress = async (req, res) => {
+    try {
+        const result = await CustomerAddress.findOne({
+            where: {
+                CustomerId: req.user.id,
+                isDeliveryAddress: true
+            }
+        })
+        res.status(200).send({ result })
+    } catch (error) {
+        console.log(error);
+        res.status(400).send({ message: error.message })
+    }
+}

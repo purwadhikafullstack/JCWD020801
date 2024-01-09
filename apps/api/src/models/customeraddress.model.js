@@ -38,6 +38,10 @@ export const init = (sequelize) => {
         allowNull: false,
         defaultValue: false,
       },
+      isDeliveryAddress: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+      }
     },
     {
       sequelize,
