@@ -1,16 +1,15 @@
 import { FaArrowRight } from 'react-icons/fa6';
 import { AddressDelivery } from './component/addressDelivery';
 import { OrderSummary } from './component/orderSummary';
-import appLogo from '../../assets/logo-app-1.png'
+import appLogo from '../../assets/logo-app-1.png';
 import { IoMdArrowBack } from 'react-icons/io';
 import { useSelector } from 'react-redux';
 import { useState } from 'react';
-import { AnimatePresence, motion } from "framer-motion"
+import { AnimatePresence, motion } from 'framer-motion';
 
 export const CheckoutPage = () => {
   const customer = useSelector((state) => state.customer.value);
-  const [isPaymentOpen, setIsPaymentOpen] = useState(false)
-
+  const [isPaymentOpen, setIsPaymentOpen] = useState(false);
 
   return (
     <div>
@@ -86,9 +85,7 @@ export const CheckoutPage = () => {
                   <path d="M9 11V6a3 3 0 0 1 6 0v5m0 8l2 2l4-4" />
                 </g>
               </svg>
-              <h2 className="text-[25px] font-bold text-[#00A67C]">
-                Checkout
-              </h2>
+              <h2 className="text-[25px] font-bold text-[#00A67C]">Checkout</h2>
             </div>
           </div>
           {/* Grid */}
@@ -135,9 +132,7 @@ export const CheckoutPage = () => {
                             />
                           </svg>
 
-                          <p className="text-gray-700 text-[14px]">
-                            Midtrans
-                          </p>
+                          <p className="text-gray-700 text-[14px]">Midtrans</p>
                         </div>
                       </label>
                     </div>
@@ -243,11 +238,11 @@ export const CheckoutPage = () => {
                       d="M3.5 3A2.5 2.5 0 0 0 1 5.5V6h14v-.5A2.5 2.5 0 0 0 12.5 3zM15 7H1v3.5A2.5 2.5 0 0 0 3.5 13h9a2.5 2.5 0 0 0 2.5-2.5zm-4.5 3h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1"
                     />
                   </svg>
-                  <span className="text-[17px] font-normal">Payment Details</span>
+                  <span className="text-[17px] font-normal">
+                    Payment Details
+                  </span>
                 </div>
-                <div
-                  className="flex justify-center items-center text-white"
-                >
+                <div className="flex justify-center items-center text-white">
                   <motion.svg
                     width="38"
                     height="10"
@@ -339,7 +334,9 @@ export const CheckoutPage = () => {
                 </motion.section>
               )}
             </AnimatePresence>
-            {isPaymentOpen && (<div className="fixed top-0 left-0 w-full h-full bg-black opacity-40 z-20"></div>)}
+            {isPaymentOpen && (
+              <div className="fixed top-0 left-0 w-full h-full bg-black opacity-40 z-20"></div>
+            )}
           </div>
         </section>
       </div>

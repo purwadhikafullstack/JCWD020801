@@ -12,9 +12,9 @@ import { useSelector } from 'react-redux';
 import { fetchAddressFromCoordinates } from '../../api/fetchAddressFromCoordinates';
 import { truncateString } from '../../functions/functions';
 import { Tooltip } from '@material-tailwind/react';
-import { LiaShippingFastSolid } from "react-icons/lia";
+import { LiaShippingFastSolid } from 'react-icons/lia';
 import { Link, useNavigate } from 'react-router-dom';
-import Headroom from 'react-headroom'
+import Headroom from 'react-headroom';
 import axios from '../../api/axios';
 
 export const Navbar = () => {
@@ -46,42 +46,43 @@ export const Navbar = () => {
     setIsOpenCart(!isOpenCart);
   };
 
-  const [categoryList, setCategoryList] = useState([])
-  const [searchValue, setSearchValue] = useState([])
+  const [categoryList, setCategoryList] = useState([]);
+  const [searchValue, setSearchValue] = useState([]);
   const navigate = useNavigate();
 
   const getCategory = async () => {
     try {
-      const response = await axios.get(`/categories/all?all=true}`)
-      setCategoryList(response.data.result.rows)
+      const response = await axios.get(`/categories/all?all=true}`);
+      setCategoryList(response.data.result.rows);
     } catch (err) {
-      console.error(err)
+      console.error(err);
     }
-  }
+  };
 
   useEffect(() => {
     if (loaded) {
       const getAddress = async () => {
-        const address = await fetchAddressFromCoordinates(coordinates?.lat, coordinates?.lng);
-        setFormattedAddress(address)
-        
+        const address = await fetchAddressFromCoordinates(
+          coordinates?.lat,
+          coordinates?.lng,
+        );
+        setFormattedAddress(address);
       };
       getAddress();
     }
-  }, [coordinates?.lat, coordinates?.lng])
+  }, [coordinates?.lat, coordinates?.lng]);
 
   useEffect(() => {
-      getCategory();
-  }, [])
+    getCategory();
+  }, []);
 
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
-        navigate(`/catalogue/0/${searchValue}`);
+      navigate(`/catalogue/0/${searchValue}`);
     }
-};
+  };
 
   return (
-
     <div className="relative z-[200]">
       {/* Top Navbar */}
       {/* {isNavbarVisible && ()} */}
@@ -124,15 +125,13 @@ export const Navbar = () => {
             Find Our store
           </span>
         </Link>
-      </div >
+      </div>
       {/* Bottom Navbar */}
       <Headroom>
-        <div
-          className="pt-[44px] flex items-center justify-between border-b border-[#E4E4E4] px-[16px] py-2.5 lg:px-[160px] bg-white"
-        >
+        <div className="pt-[44px] flex items-center justify-between border-b border-[#E4E4E4] px-[16px] py-2.5 lg:px-[160px] bg-white">
           {/* Logo & Category */}
-          <div className="flex items-center gap-[1rem]" >
-            <Link to={'/home'} >
+          <div className="flex items-center gap-[1rem]">
+            <Link to={'/home'}>
               <div className="flex shrink-0">
                 <img
                   src={appLogo}
@@ -177,14 +176,17 @@ export const Navbar = () => {
                 </motion.svg>
               </div>
             </div>
-          </div >
+          </div>
           {/* Search Bar */}
           <div className="flex grow ml-3 rounded-lg md:ml-0 px-0 md:pl-1 md:pr-3 lg:pl-2">
             <label htmlFor="table-search" className="sr-only">
               Search
             </label>
             <div className="relative w-full">
-              <div onClick={() => navigate(`/catalogue/0/${searchValue}`)} className="absolute inset-y-0 left-0 flex cursor-pointer items-center pl-3">
+              <div
+                onClick={() => navigate(`/catalogue/0/${searchValue}`)}
+                className="absolute inset-y-0 left-0 flex cursor-pointer items-center pl-3"
+              >
                 <img src={searchIcon}></img>
               </div>
               <input
@@ -198,12 +200,13 @@ export const Navbar = () => {
             </div>
           </div>
           {/* Sign in & cart */}
-          <div className="flex items-center gap-[0.7rem]" >
+          <div className="flex items-center gap-[0.7rem]">
             <div
-              className={`${customer.profile_picture
-                ? 'pl-[0.125rem] pr-4 border border-transparent hover:border-[#94d1c0]'
-                : 'px-4'
-                } hidden cursor-pointer h-[41px] items-center gap-2 md:flex hover:bg-[#f6f7f8] rounded-full transition ease-in-out delay-150`}
+              className={`${
+                customer.profile_picture
+                  ? 'pl-[0.125rem] pr-4 border border-transparent hover:border-[#94d1c0]'
+                  : 'px-4'
+              } hidden cursor-pointer h-[41px] items-center gap-2 md:flex hover:bg-[#f6f7f8] rounded-full transition ease-in-out delay-150`}
               onClick={toggleMenuAccount}
             >
               {' '}
@@ -283,11 +286,13 @@ export const Navbar = () => {
                   strokeLinejoin="round"
                 />
               </svg>
-              <span className="font-semibold text-[#343538]">{totalProduct}</span>
+              <span className="font-semibold text-[#343538]">
+                {totalProduct}
+              </span>
             </div>
-          </div >
+          </div>
           {/* Hamburger */}
-          <div className="mt-1 items-center md:hidden" >
+          <div className="mt-1 items-center md:hidden">
             <button
               className="focus:shadow-outline rounded-lg focus:outline-none"
               onClick={toggleMenu}
@@ -300,12 +305,12 @@ export const Navbar = () => {
                 ></path>
               </svg>
             </button>
-          </div >
-        </div >
+          </div>
+        </div>
       </Headroom>
 
       {/* -- Navbar Mobile  -- */}
-      < NavbarMobile
+      <NavbarMobile
         isOpen={isOpen}
         toggleMenu={toggleMenu}
         isOpenCategory={isOpenCategory}
@@ -314,7 +319,7 @@ export const Navbar = () => {
       />
 
       {/* -- Shopping Cart -- */}
-      < ShoppingCart isOpenCart={isOpenCart} toggleOpenCart={toggleOpenCart} />
+      <ShoppingCart isOpenCart={isOpenCart} toggleOpenCart={toggleOpenCart} />
     </div>
   );
 };
