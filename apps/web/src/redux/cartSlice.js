@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import dummyProduct from '../src/assets/navbar/bowl.png';
+import dummyProduct from '../assets/navbar/bowl.png';
 
 const initialState = {
   data: [
@@ -60,6 +60,7 @@ const initialState = {
       quantity: 1,
     },
   ],
+  totalProduct: null,
 };
 
 export const cartSlice = createSlice({
@@ -89,10 +90,13 @@ export const cartSlice = createSlice({
         itemInCart.quantity--;
       }
     },
+    addTotal: (state, action) => {
+      state.totalProduct = action.payload;
+    },
   },
 });
 
-export const { addToCart, removeFromCart, subtractQuantity } =
+export const { addToCart, removeFromCart, subtractQuantity, addTotal } =
   cartSlice.actions;
 
 export default cartSlice.reducer;

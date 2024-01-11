@@ -4,9 +4,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { MinusIcon, PlusIcon } from '@heroicons/react/24/outline';
 import {
   addToCart,
+  addTotal,
   removeFromCart,
   subtractQuantity,
-} from '../../../../redux/cartSlice';
+} from '../../../redux/cartSlice';
 
 const convertToIDR = (price) => {
   let newPrice = price.toLocaleString('id-ID', {
@@ -24,7 +25,9 @@ export const ShoppingCart = ({ isOpenCart, toggleOpenCart }) => {
     (total, item) => total + item.price * item.quantity,
     0,
   );
+  const totalProduct = useSelector((state) => state.cart.totalProduct);
   const dispatch = useDispatch();
+  dispatch(addTotal(carts.reduce((total, item) => total + item.quantity, 0)));
   const addQty = (itemId) => {
     dispatch(addToCart({ id: itemId, quantity: 1 }));
   };
@@ -40,7 +43,10 @@ export const ShoppingCart = ({ isOpenCart, toggleOpenCart }) => {
     <AnimatePresence>
       {isOpenCart && (
         <>
-          <div className="fixed top-0 left-0 w-full h-full bg-black opacity-40 z-40"></div>
+          <div
+            onClick={toggleOpenCart}
+            className="fixed top-0 left-0 w-full h-full bg-black opacity-40 z-40"
+          ></div>
 
           <motion.div
             initial={{ opacity: 0, x: 50 }}
@@ -56,7 +62,9 @@ export const ShoppingCart = ({ isOpenCart, toggleOpenCart }) => {
                     My Cart
                   </span>
                   <div className="flex items-center rounded-full bg-[#00A67C] px-[1rem] py-[0.2rem]">
-                    <span className="text-white font-medium">12</span>
+                    <span className="text-white font-medium">
+                      {totalProduct ? totalProduct : 0}
+                    </span>
                   </div>
                 </div>
                 <div
