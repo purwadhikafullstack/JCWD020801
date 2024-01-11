@@ -15,7 +15,7 @@ import { Tooltip } from '@material-tailwind/react';
 import { Link, useNavigate } from 'react-router-dom';
 import Headroom from 'react-headroom';
 import axios from '../../api/axios';
-import { MdLocationOn } from "react-icons/md";
+import { MdLocationOn } from 'react-icons/md';
 
 export const Navbar = () => {
   const customer = useSelector((state) => state.customer.value);
@@ -104,8 +104,12 @@ export const Navbar = () => {
                 }}
               >
                 <div>
-                  <p className="hidden md:block">{truncateString(formattedAddress, 75)}</p>
-                  <p className="md:hidden">{truncateString(formattedAddress, 42)}</p>
+                  <p className="hidden md:block">
+                    {truncateString(formattedAddress, 75)}
+                  </p>
+                  <p className="md:hidden">
+                    {truncateString(formattedAddress, 42)}
+                  </p>
                 </div>
               </Tooltip>
             ) : (
@@ -202,10 +206,11 @@ export const Navbar = () => {
           {/* Sign in & cart */}
           <div className="flex items-center gap-[0.7rem]">
             <div
-              className={`${customer.profile_picture
-                ? 'pl-[0.125rem] pr-4 border border-transparent hover:border-[#94d1c0]'
-                : 'px-4'
-                } hidden cursor-pointer h-[41px] items-center gap-2 md:flex hover:bg-[#f6f7f8] rounded-full transition ease-in-out delay-150`}
+              className={`${
+                customer.profile_picture
+                  ? 'pl-[0.125rem] pr-4 border border-transparent hover:border-[#94d1c0]'
+                  : 'px-4'
+              } hidden cursor-pointer h-[41px] items-center gap-2 md:flex hover:bg-[#f6f7f8] rounded-full transition ease-in-out delay-150`}
               onClick={toggleMenuAccount}
             >
               {' '}

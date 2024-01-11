@@ -35,11 +35,11 @@ export const CheckoutPage = () => {
     0,
   );
 
-  const [selectedDeliveryCost, setSelectedDeliveryCost] = useState(null)
+  const [selectedDeliveryCost, setSelectedDeliveryCost] = useState(null);
 
   const handleDeliveryCostChange = (cost) => {
-    setSelectedDeliveryCost(cost)
-  }
+    setSelectedDeliveryCost(cost);
+  };
   // console.log(selectedDeliveryCost);
 
   useEffect(() => {
@@ -165,7 +165,9 @@ export const CheckoutPage = () => {
                 convertToIDR={convertToIDR}
               />
               {/* Address & Delivery */}
-              <AddressDelivery handleDeliveryCostChange={handleDeliveryCostChange} />
+              <AddressDelivery
+                handleDeliveryCostChange={handleDeliveryCostChange}
+              />
               {/* Payment Method */}
               <section className="rounded-xl bg-[#FFFFFF] py-5 px-4 md:px-7 shadow-sm mb-[4rem] lg:mb-0">
                 <h3 className="text-[20px] font-bold border-b border-[#dcdcdc] text-[#28302A] pb-[0.6rem]">
@@ -315,13 +317,12 @@ export const CheckoutPage = () => {
                   </svg>
                   <div className="flex gap-[0.5rem]">
                     <span className="text-[17px] font-medium">Total:</span>
-                    <span className="text-[16.5px] font-normal">{convertToIDR(total + selectedDeliveryCost - discount)}</span>
-
+                    <span className="text-[16.5px] font-normal">
+                      {convertToIDR(total + selectedDeliveryCost - discount)}
+                    </span>
                   </div>
                 </div>
-                <div
-                  className="flex justify-center items-center text-white"
-                >
+                <div className="flex justify-center items-center text-white">
                   <motion.svg
                     width="38"
                     height="10"
@@ -403,11 +404,14 @@ export const CheckoutPage = () => {
                   </div>
                   <div className="border-t border-[#dcdcdc] flex items-center justify-between pt-[1rem]">
                     <h4 className="font-semibold text-[18px]">Total</h4>
-                    <h4 className="font-bold text-[18px]">{convertToIDR(total + selectedDeliveryCost - discount)}</h4>
+                    <h4 className="font-bold text-[18px]">
+                      {convertToIDR(total + selectedDeliveryCost - discount)}
+                    </h4>
                   </div>
                   <button
                     onClick={() => handleCheckout()}
-                    className="flex items-center justify-center gap-2 mt-[1.2rem] px-4 rounded-lg w-full bg-[#00A67C] font-semibold text-white py-[0.6rem] text-[15px] hover:bg-[#00916D] transition ease-in-out delay-100">
+                    className="flex items-center justify-center gap-2 mt-[1.2rem] px-4 rounded-lg w-full bg-[#00A67C] font-semibold text-white py-[0.6rem] text-[15px] hover:bg-[#00916D] transition ease-in-out delay-100"
+                  >
                     <span>Pay Now</span>
                     {/* <img src={arrowLong} alt="" className="mt-[0.1rem]" /> */}
                     <FaArrowRight className="mt-[0.1rem]" />
@@ -415,7 +419,9 @@ export const CheckoutPage = () => {
                 </motion.section>
               )}
             </AnimatePresence>
-            {isPaymentOpen && (<div className="fixed top-0 left-0 w-full h-full bg-black opacity-40 z-20"></div>)}
+            {isPaymentOpen && (
+              <div className="fixed top-0 left-0 w-full h-full bg-black opacity-40 z-20"></div>
+            )}
           </div>
         </section>
       </div>
