@@ -17,9 +17,18 @@ import { ModalChangeAddress } from '../../checkout/component/modalChangeAddress'
 
 export const ProductCards = ({ branchData, coordinates }) => {
   const token = localStorage.getItem('token');
-  const [modalChangeAddressOpen, setModalChangeAddressOpen] = useState(false)
+  const [modalChangeAddressOpen, setModalChangeAddressOpen] = useState(false);
   const [deliveryAddress, setDeliveryAddress] = useState(null);
   // console.log(deliveryAddress);
+  const customer = useSelector((state) => state.customer.value);
+
+  const navigate = useNavigate();
+
+  const products = useSelector((state) => state.product.data);
+  const dispatch = useDispatch();
+
+  const [keenSlider, setKeenSlider] = useState(null);
+  const sliderRef = useRef(null);
 
   const fetchDeliveryAddress = async () => {
     try {
@@ -29,15 +38,14 @@ export const ProductCards = ({ branchData, coordinates }) => {
         },
       });
       setDeliveryAddress(response.data.result);
-
     } catch (error) {
       console.error(error);
     }
-  }
+  };
 
   const handleAddressClick = () => {
     if (token) {
-      setModalChangeAddressOpen(!modalChangeAddressOpen)
+      setModalChangeAddressOpen(!modalChangeAddressOpen);
     } else {
       toast.error(
         <>
@@ -49,18 +57,17 @@ export const ProductCards = ({ branchData, coordinates }) => {
         },
       );
     }
-  }
+  };
 
   useEffect(() => {
     fetchDeliveryAddress();
-  }, [])
+  }, []);
 
   // const customer = useSelector((state) => state.customer.value);
   // const navigate = useNavigate()
 
   // const products = useSelector((state) => state.product.data);
   // const dispatch = useDispatch();
-
 
   // const [keenSlider, setKeenSlider] = useState(null);
   // const sliderRef = useRef(null);
@@ -177,8 +184,9 @@ export const ProductCards = ({ branchData, coordinates }) => {
           {/* Branch */}
           <section className="flex gap-[0.7rem] items-center w-max p-1 bg-[#00A67C] rounded-full">
             <div
-              className={`${!coordinates?.lat && 'pulse-effect'
-                } rounded-full p-2 bg-[#E1F5EF]`}
+              className={`${
+                !coordinates?.lat && 'pulse-effect'
+              } rounded-full p-2 bg-[#E1F5EF]`}
             >
               <svg
                 width="32"
@@ -194,8 +202,9 @@ export const ProductCards = ({ branchData, coordinates }) => {
               </svg>
             </div>
             <div
-              className={`${!coordinates?.lat && 'mr-[1.2rem]'
-                } flex flex-col text-white`}
+              className={`${
+                !coordinates?.lat && 'mr-[1.2rem]'
+              } flex flex-col text-white`}
             >
               <span className="text-[14px] font-normal">Shopping from:</span>
               <Tooltip
@@ -216,9 +225,7 @@ export const ProductCards = ({ branchData, coordinates }) => {
                     viewBox="0 0 24 24"
                     className="mt-[2.4px] h-[1rem] w-[1rem] fill-[#E1F5EF]"
                   >
-                    <path
-                      d="M11 17h2v-6h-2zm1-8q.425 0 .713-.288T13 8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8q0 .425.288.713T12 9m0 13q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12q0-3.35-2.325-5.675T12 4Q8.65 4 6.325 6.325T4 12q0 3.35 2.325 5.675T12 20m0-8"
-                    />
+                    <path d="M11 17h2v-6h-2zm1-8q.425 0 .713-.288T13 8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8q0 .425.288.713T12 9m0 13q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12q0-3.35-2.325-5.675T12 4Q8.65 4 6.325 6.325T4 12q0 3.35 2.325 5.675T12 20m0-8" />
                   </svg>
                 </div>
               </Tooltip>
@@ -242,7 +249,9 @@ export const ProductCards = ({ branchData, coordinates }) => {
               className="flex items-center gap-[0.5rem] cursor-pointer"
             >
               <span className="text-[#00A67C] text-[15.5px] mt-[1px] md:mt-0 md:text-[15px] font-medium underline underline-offset-2">
-                {deliveryAddress?.title ? deliveryAddress.title : "choose address"}
+                {deliveryAddress?.title
+                  ? deliveryAddress.title
+                  : 'choose address'}
               </span>
               <motion.svg
                 width="16"
@@ -350,12 +359,22 @@ export const ProductCards = ({ branchData, coordinates }) => {
 
                           <div className="flex gap-1.5 items-center">
                             <img
-                              src={item.stock === 0 || null ? stockNonAvail : stockAvail}
+                              src={
+                                item.stock === 0 || null
+                                  ? stockNonAvail
+                                  : stockAvail
+                              }
                               alt=""
                               className=" h-3 pt-[0.1rem]"
                             />
 
-                            <span className={`${item.stock === 0 || null ? 'text-gray-500' : 'text-[#067627] '} font-medium text-[13px] md:text-[14px]`}>
+                            <span
+                              className={`${
+                                item.stock === 0 || null
+                                  ? 'text-gray-500'
+                                  : 'text-[#067627] '
+                              } font-medium text-[13px] md:text-[14px]`}
+                            >
                               stock:{' '}
                               <span className="text-[13px] md:text-[14px]">
                                 {item.stock}
@@ -366,8 +385,9 @@ export const ProductCards = ({ branchData, coordinates }) => {
                         <button
                           disabled={item.stock > 0 ? false : true}
                           onClick={() => handleAddtoCart(item)}
-                          className={`mt-1 mb-[0.2rem] w-full rounded-full  text-white py-[0.4rem] text-[14px] ${item.stock > 0 ? 'bg-[#00A67C]' : ' bg-gray-500'
-                            }`}
+                          className={`mt-1 mb-[0.2rem] w-full rounded-full  text-white py-[0.4rem] text-[14px] ${
+                            item.stock > 0 ? 'bg-[#00A67C]' : ' bg-gray-500'
+                          }`}
                         >
                           {item.stock > 0 ? 'Add to Cart' : 'Out of Stock'}
                         </button>
@@ -396,5 +416,5 @@ ProductCards.propTypes = {
     name: PropTypes.string.isRequired,
     id: PropTypes.number.isRequired,
     distance: PropTypes.number,
-  })
-}
+  }),
+};
