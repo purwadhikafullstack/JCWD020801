@@ -29,54 +29,55 @@ import { StoreManagement } from './pages/admin/storeManagement';
 import { StoreBranchDetail } from './pages/admin/storeManagement/storeBranchDetail';
 import { StoreLocator } from './pages/storeLocator';
 import { CheckoutPage } from './pages/checkout';
+// import Checkout from './pages/checkout';
 
 const router = createBrowserRouter([
   //Untuk yang tidak butuh token
-  { path: "/", element: <Home /> },
-  { path: "/login-admin", element: <LoginAdmin></LoginAdmin> },
-  { path: "/admin-verification/:token", element: <AdminVerification /> },
-  { path: "/admin-reset-password/:token", element: <AdminResetPassword /> },
-  { path: "/home", element: <HomePage /> },
-  { path: "/signin", element: <UserSignIn /> },
-  { path: "/register", element: <UserRegister /> },
-  { path: "/verify/:token", element: <AccountVerification /> },
-  { path: "/user-reset-password/:token", element: <UserResetPassword /> },
-  { path: "/user-update-email/:token", element: <UserUpdateEmail /> },
-  { path: "/store-locator", element: <StoreLocator /> },
+  { path: '/', element: <Home /> },
+  { path: '/login-admin', element: <LoginAdmin></LoginAdmin> },
+  { path: '/admin-verification/:token', element: <AdminVerification /> },
+  { path: '/admin-reset-password/:token', element: <AdminResetPassword /> },
+  { path: '/home', element: <HomePage /> },
+  { path: '/signin', element: <UserSignIn /> },
+  { path: '/register', element: <UserRegister /> },
+  { path: '/verify/:token', element: <AccountVerification /> },
+  { path: '/user-reset-password/:token', element: <UserResetPassword /> },
+  { path: '/user-update-email/:token', element: <UserUpdateEmail /> },
+  { path: '/store-locator', element: <StoreLocator /> },
   {
     element: <Required />,
     children: [
       //untuk yang butuh customer
-      { path: "/user-dashboard", element: <UserDashboard /> },
-      { path: "/user-verification", element: <UserVerification /> },
-      { path: "/checkout", element: <CheckoutPage /> },
+      { path: '/user-dashboard', element: <UserDashboard /> },
+      { path: '/user-verification', element: <UserVerification /> },
+      { path: '/checkout', element: <CheckoutPage /> },
     ],
   },
   {
     element: <AdminRequired />,
     children: [
-      { path: "/admin-management", element: <AdminManagement /> },
-      { path: "/admin-overview", element: <Overview /> },
-      { path: "/customer-management", element: <CustomerManagement /> },
-      { path: "/product-management", element: <ProductManagement /> },
-      { path: "/admin-profile", element: <AdminProfile /> },
-      { path: "/category-management", element: <CategoryManagement /> },
-      { path: "/store-management", element: <StoreManagement /> },
-      { path: "/store-management/:id", element: <StoreBranchDetail /> }
-    ]
-  }
+      { path: '/admin-management', element: <AdminManagement /> },
+      { path: '/admin-overview', element: <Overview /> },
+      { path: '/customer-management', element: <CustomerManagement /> },
+      { path: '/product-management', element: <ProductManagement /> },
+      { path: '/admin-profile', element: <AdminProfile /> },
+      { path: '/category-management', element: <CategoryManagement /> },
+      { path: '/store-management', element: <StoreManagement /> },
+      { path: '/store-management/:id', element: <StoreBranchDetail /> },
+    ],
+  },
 ]);
 
 function App() {
-  const token = localStorage.getItem("token");
-  const admtoken = localStorage.getItem('admtoken')
+  const token = localStorage.getItem('token');
+  const admtoken = localStorage.getItem('admtoken');
   const dispatch = useDispatch();
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(!open);
 
   const keepLoginAdmin = async () => {
     try {
-      const response = await axios.get("admins/keep-login", {
+      const response = await axios.get('admins/keep-login', {
         headers: {
           Authorization: `Bearer ${admtoken}`,
         },
@@ -84,7 +85,7 @@ function App() {
       dispatch(setDataAdmin(response.data.result));
     } catch (err) {
       if (err.response.status === 401) {
-        localStorage.removeItem('admtoken')
+        localStorage.removeItem('admtoken');
         handleOpen();
       }
     }
@@ -101,7 +102,7 @@ function App() {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   useEffect(() => {
     if (token) {
@@ -118,17 +119,10 @@ function App() {
       <ExpiredToken
         content={'Please login again'}
         openDialog={open}
-        handleOpen={handleOpen} />
+        handleOpen={handleOpen}
+      />
     </>
   );
 }
 
 export default App;
-
-
-
-
-
-
-
-

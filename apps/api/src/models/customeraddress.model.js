@@ -19,11 +19,11 @@ export const init = (sequelize) => {
       },
       customerAddressName: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
       },
       phoneNumber: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
       },
       longitude: {
         type: DataTypes.DOUBLE,
@@ -40,8 +40,8 @@ export const init = (sequelize) => {
       },
       isDeliveryAddress: {
         type: DataTypes.BOOLEAN,
-        defaultValue: false
-      }
+        defaultValue: false,
+      },
     },
     {
       sequelize,
