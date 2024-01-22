@@ -58,6 +58,8 @@ const categoryList = [
 export const Navbar = () => {
   const customer = useSelector((state) => state.customer.value);
   console.log(customer);
+  console.log(customer.isVerified);
+  const totalProduct = useSelector((state) => state.cart.totalProduct);
 
   // const location = useGeoLocation()
   const { coordinates, loaded } = useGeoLocation();
@@ -286,7 +288,7 @@ export const Navbar = () => {
                 strokeLinejoin="round"
               />
             </svg>
-            <span className="font-semibold text-[#343538]">12</span>
+            <span className="font-semibold text-[#343538]">{totalProduct}</span>
           </div>
         </div>
         {/* Hamburger */}

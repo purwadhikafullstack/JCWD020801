@@ -29,7 +29,7 @@ import { StoreManagement } from './pages/admin/storeManagement';
 import { StoreBranchDetail } from './pages/admin/storeManagement/storeBranchDetail';
 import { StoreLocator } from './pages/storeLocator';
 import { CheckoutPage } from './pages/checkout';
-import Checkout from './pages/checkout';
+// import Checkout from './pages/checkout';
 
 const router = createBrowserRouter([
   //Untuk yang tidak butuh token

@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { MinusIcon, PlusIcon } from '@heroicons/react/24/outline';
+import { toast } from 'react-toastify';
 import {
   addToCart,
   addTotal,
@@ -20,9 +21,11 @@ const convertToIDR = (price) => {
 };
 
 export const ShoppingCart = ({ isOpenCart, toggleOpenCart }) => {
+  const data = useSelector((state) => state.product.data);
   const carts = useSelector((state) => state.cart.data);
+  // console.log(carts);
   const total = carts.reduce(
-    (total, item) => total + item.price * item.quantity,
+    (total, item) => total + item.amount * item.quantity,
     0,
   );
   const totalProduct = useSelector((state) => state.cart.totalProduct);
@@ -31,12 +34,29 @@ export const ShoppingCart = ({ isOpenCart, toggleOpenCart }) => {
   const addQty = (itemId) => {
     dispatch(addToCart({ id: itemId, quantity: 1 }));
   };
-  const subtractQty = (itemId) => {
-    dispatch(subtractQuantity({ id: itemId, quantity: 1 }));
+
+  const handleSubtractQuantity = (product, item) => {
+    if (item.quantity === 1) {
+      dispatch(subtractQuantity({ id: product.id, quantity: 1 }));
+      toast.success(`${product.title} has been removed from cart`, {
+        position: 'top-center',
+        hideProgressBar: true,
+        theme: 'light',
+        autoClose: 3000,
+      });
+    } else {
+      dispatch(subtractQuantity({ id: product.id, quantity: 1 }));
+    }
   };
 
-  const removeProduct = (itemId) => {
-    dispatch(removeFromCart({ id: itemId }));
+  const handleRemoveProduct = (product) => {
+    dispatch(removeFromCart({ id: product.id }));
+    toast.success(`${product.title} has been removed from cart`, {
+      position: 'top-center',
+      hideProgressBar: true,
+      theme: 'light',
+      autoClose: 3000,
+    });
   };
 
   return (
@@ -93,49 +113,56 @@ export const ShoppingCart = ({ isOpenCart, toggleOpenCart }) => {
                 id="shopping-cart-scroll"
               >
                 {/* map here */}
-                {carts.map((item) => (
-                  <div
-                    className="flex justify-start gap-4 py-[0.8rem]"
-                    key={item.id}
-                  >
-                    <div className="flex shrink-0 items-center">
-                      <img
-                        src={item.img}
-                        alt=""
-                        className="h-full w-[6rem] object-cover rounded-lg"
-                      />
-                    </div>
-                    <div className="flex flex-col gap-1">
-                      <span className="text-[14px] font-medium">
-                        {convertToIDR(item.price)}
-                      </span>
-                      <span className="text-[14px] font-medium text-gray-700 cursor-pointer hover:underline hover:text-black transition delay-50 ease-in-out line-clamp-2">
-                        {item.name}
-                      </span>
-                      <div className="mt-1 flex items-center">
-                        <div
-                          className="mx-3 rounded-full border border-[#B2B2B2] h-[1.8rem] w-[1.8rem] flex items-center justify-center hover:bg-[#00A67C] group cursor-pointer transition delay-50 ease-in-out hover:border-[#00A67C]"
-                          onClick={() => subtractQty(item.id)}
-                        >
-                          <MinusIcon className=" text-gray-900 group-hover:text-white w-5 h-5" />
-                        </div>
-                        <p className="text-[16px]">{item.quantity}</p>
-                        <div
-                          onClick={() => addQty(item.id)}
-                          className="mx-3 rounded-full border border-[#B2B2B2] h-[1.8rem] w-[1.8rem] flex items-center justify-center hover:bg-[#00A67C] group cursor-pointer transition delay-50 ease-in-out hover:border-[#00A67C]"
-                        >
-                          <PlusIcon className="text-gray-900 group-hover:text-white w-4 h-4" />
-                        </div>
-                        <div
-                          className="text-[14px]  text-gray-600 cursor-pointer hover:text-[#00A67C]"
-                          onClick={() => removeProduct(item.id)}
-                        >
-                          <p>Remove</p>
+                {carts.map((item) => {
+                  const product = data.find(
+                    (product) => product.id === item.id,
+                  );
+                  return (
+                    <div
+                      className="flex justify-start gap-4 py-[0.8rem]"
+                      key={product.id}
+                    >
+                      <div className="flex shrink-0 items-center">
+                        <img
+                          src={product.img}
+                          alt=""
+                          className="h-full w-[6rem] object-cover rounded-lg"
+                        />
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <span className="text-[14px] font-medium">
+                          {convertToIDR(product.price)}
+                        </span>
+                        <span className="text-[14px] font-medium text-gray-700 cursor-pointer hover:underline hover:text-black transition delay-50 ease-in-out line-clamp-2">
+                          {product.desc}
+                        </span>
+                        <div className="mt-1 flex items-center">
+                          <div
+                            className="mx-3 rounded-full border border-[#B2B2B2] h-[1.8rem] w-[1.8rem] flex items-center justify-center hover:bg-[#00A67C] group cursor-pointer transition delay-50 ease-in-out hover:border-[#00A67C]"
+                            onClick={() =>
+                              handleSubtractQuantity(product, item)
+                            }
+                          >
+                            <MinusIcon className=" text-gray-900 group-hover:text-white w-5 h-5" />
+                          </div>
+                          <p className="text-[16px]">{item.quantity}</p>
+                          <div
+                            onClick={() => addQty(product.id)}
+                            className="mx-3 rounded-full border border-[#B2B2B2] h-[1.8rem] w-[1.8rem] flex items-center justify-center hover:bg-[#00A67C] group cursor-pointer transition delay-50 ease-in-out hover:border-[#00A67C]"
+                          >
+                            <PlusIcon className="text-gray-900 group-hover:text-white w-4 h-4" />
+                          </div>
+                          <div
+                            className="text-[14px]  text-gray-600 cursor-pointer hover:text-[#00A67C]"
+                            onClick={() => handleRemoveProduct(product)}
+                          >
+                            <p>Remove</p>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
               {/* Checkout */}
               <div className="rounded-t-xl border-t border-[#D9D9D9] px-[1.4rem] py-[0.7rem] fixed bottom-0 bg-white w-[26rem]">
