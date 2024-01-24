@@ -1,159 +1,183 @@
 import { Dialog, DialogBody, DialogHeader } from "@material-tailwind/react"
-import googlePin from "../../../assets/userDashboard/google-pin-2.svg"
-import { FiCheck } from "react-icons/fi";
 import { FaPlus } from "react-icons/fa6";
-import { IoIosArrowForward, IoMdArrowBack } from "react-icons/io";
-import { SlArrowRight } from "react-icons/sl";
+import { IoIosArrowForward } from "react-icons/io";
+import { useEffect, useState } from "react";
+import axios from "../../../api/axios"
+import { AddressDeliveryMap } from "./addressDeliveryMap";
+import PropTypes from 'prop-types';
+import notFoundImg from '../../../assets/userDashboard/address_illu.svg'
+import { useNavigate } from "react-router-dom";
+import { ModalUserCreateAddress } from "../../userDashboard/components/modalUserCreateAddress";
 
-const dummy = [
-    { isDefault: false, isDeliveryAddress: true, title: "Home", customerAddressName: "Toby", phoneNumber: "09833893", address: "Jl. Taman Cibaduyut Indah No.3b, Cangkuang Wetan, Kec. Dayeuhkolot, Kabupaten Bandung, Jawa Barat 40238, Indonesia" },
-    { isDefault: true, isDeliveryAddress: false, title: "My Apartment", customerAddressName: "Marry", phoneNumber: "0862839", address: "Apartemen City Park - Rendy Rooms Tower H18, Ruko Citypark, RT.7/RW.14, East Cengkareng, West Jakarta City, Jakarta, Indonesia" },
-    // { isDefault: false, isDeliveryAddress: false, title: "My Apartment", customerAddressName: "Marry", phoneNumber: "0862839", address: "Apartemen City Park - Rendy Rooms Tower H18, Ruko Citypark, RT.7/RW.14, East Cengkareng, West Jakarta City, Jakarta, Indonesia" },
-    // { isDefault: false, isDeliveryAddress: false, title: "My Apartment", customerAddressName: "Marry", phoneNumber: "0862839", address: "Apartemen City Park - Rendy Rooms Tower H18, Ruko Citypark, RT.7/RW.14, East Cengkareng, West Jakarta City, Jakarta, Indonesia" },
-]
+export const ModalChangeAddress = ({ modalChangeAddressOpen, setModalChangeAddressOpen, fetchDeliveryAddress }) => {
+    const token = localStorage.getItem('token');
+    const navigate = useNavigate()
 
-export const ModalChangeAddress = ({ modalChangeAddressOpen, setModalChangeAddressOpen }) => {
+    const [modalAddOpen, setModalAddOpen] = useState(false)
+    const [allAddress, setAllAddress] = useState(null)
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
 
+    const handleModalAddOpen = () => setModalAddOpen(!modalAddOpen);
+
+    const fetchAllAddress = async (page) => {
+        try {
+            const response = await axios.get(`customer-address/checkout?page=${page}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            setAllAddress(response.data.result.rows)
+            setTotalPages(response.data.totalPages)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const handlePageChange = (newPage) => {
+        setCurrentPage(newPage);
+    };
+
+    useEffect(() => {
+        fetchAllAddress(currentPage);
+    }, [currentPage])
 
     return (
-        <Dialog
-            Dialog
-            size="md"
-            open={modalChangeAddressOpen}
-            handler={() => setModalChangeAddressOpen}
-        >
-            <DialogHeader className="font-bold flex w-full h-max">
-                <div className="flex items-center justify-between w-full border-b border-gray-300 pb-[0.7rem]">
-                    <div></div>
-                    <div className="flex text-[#28302A] text-[20px] md:text-[21px] gap-3 items-center">
-                        {/* <img
-                            src={googlePin}
-                            alt=""
-                            className="h-[1.2rem] w-[1.2rem] mb-[0.1rem]"
-                        /> */}
-                        <span>Choose Delivery Address</span>
-                    </div>
-                    <div
-                        onClick={() => setModalChangeAddressOpen(false)}
-                        className="cursor-pointer rounded-md hover:bg-gray-100 p-[0.1rem]"
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth={1.5}
-                            stroke="#657385"
-                            className="w-6 h-6"
+        <>
+            <Dialog
+                Dialog
+                size="md"
+                open={modalChangeAddressOpen}
+                handler={() => setModalChangeAddressOpen}
+            >
+                <DialogHeader className="font-bold flex w-full h-max">
+                    <div className="flex items-center justify-between w-full border-b border-gray-300 pb-[0.7rem]">
+                        <div></div>
+                        <div className="flex text-[#28302A] text-[20px] md:text-[21px] gap-3 items-center">
+                            <span>Choose Delivery Address</span>
+                        </div>
+                        <div
+                            onClick={() => setModalChangeAddressOpen(false)}
+                            className="cursor-pointer rounded-md hover:bg-gray-100 p-[0.1rem]"
                         >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M6 18 18 6M6 6l12 12"
-                            />
-                        </svg>
-                    </div>
-                </div>
-            </DialogHeader>
-            <DialogBody className="flex flex-col pt-0">
-                {/*  */}
-                <div className="flex flex-col gap-2">
-                    {dummy.map((item, index) => (
-                        <>
-                            <div
-                                key={index}
-                                className={`${item.isDeliveryAddress
-                                    ? 'border border-[#209978] bg-[#f8fdfd]'
-                                    : 'border border-gray-300 bg-transparent hover:border-[#71e1c3]'
-                                    } flex flex-col gap-1 p-4 shadow-sm rounded-xl cursor-pointer transition ease-in-out delay-100`}
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                strokeWidth={1.5}
+                                stroke="#657385"
+                                className="w-6 h-6"
                             >
-                                <div className="flex items-center justify-between">
-                                    <div className="flex flex-col gap-[0.15rem]">
-                                        <div className="flex items-center gap-[0.6rem]">
-                                            <h4 className="text-[16.5px] text-[#474747] font-medium">
-                                                {item.title}
-                                            </h4>
-                                            {item.isDefault && (
-                                                <div className="flex items-center py-[0.1rem] bg-[#DBEFDC] w-max rounded-md px-[0.5rem] mt-[0.1rem]">
-                                                    <span className="text-[13px] font-medium text-[#1e6a24] tracking-tight">
-                                                        default
-                                                    </span>
-                                                </div>
-                                            )}
-                                        </div>
-                                        <div className="flex items-center gap-1 text-[#989d9e] text-[15px] ">
-                                            <span className="font-medium">
-                                                {item.customerAddressName}
-                                            </span>
-                                            <span className=" font-medium text-[14px]">
-                                                ({item.phoneNumber})
-                                            </span>
-                                        </div>
-                                    </div>
-                                    {item.isDeliveryAddress && (
-                                        <FiCheck
-                                            size={28}
-                                            className="text-[#209978] mr-[0.3rem]"
-                                        />
-                                    )}
-                                </div>
-                                <div className="flex gap-1 rounded-xl bg-[#f5f6f6] p-3 mt-[0.3rem]">
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M6 18 18 6M6 6l12 12"
+                                />
+                            </svg>
+                        </div>
+                    </div>
+                </DialogHeader>
+                <DialogBody className="flex flex-col pt-0">
+                    {allAddress?.length > 0 ? (
+                        <div id="modal-scroll" className="flex flex-col gap-2 h-[70vh] overflow-auto">
+                            {allAddress?.map((item) => (
+                                <AddressDeliveryMap
+                                    key={item.id}
+                                    item={item}
+                                    fetchAllAddress={fetchAllAddress}
+                                    fetchDeliveryAddress={fetchDeliveryAddress}
+                                />
+                            ))}
+                            <div className="flex items-center justify-between pr-1 mt-[2px]">
+                                <button
+                                    onClick={() => handlePageChange(currentPage - 1)}
+                                    disabled={currentPage === 1}
+                                    className="rounded-lg border border-[#E0E0E0] p-1.5 hover:shadow-sm disabled:cursor-not-allowed disabled:opacity-[0.65] transition ease-in-out delay-100"
+                                >
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
-                                        width="21"
-                                        height="21"
-                                        viewBox="0 0 15 15"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        strokeWidth="1.5"
+                                        stroke="#7a7a7a"
+                                        className="h-[1.2rem] w-[1.2rem] rtl:rotate-180"
                                     >
-                                        <g
-                                            fill="none"
-                                            fillRule="evenodd"
-                                            stroke="#696969"
-                                            strokeLinecap="square"
-                                            clipRule="evenodd"
-                                        >
-                                            <path d="M7.5 8.495a2 2 0 0 0 2-1.999a2 2 0 0 0-4 0a2 2 0 0 0 2 1.999Z" />
-                                            <path d="M13.5 6.496c0 4.997-5 7.995-6 7.995s-6-2.998-6-7.995A5.999 5.999 0 0 1 7.5.5c3.313 0 6 2.685 6 5.996Z" />
-                                        </g>
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            d="M15.75 19.5L8.25 12l7.5-7.5"
+                                        />
                                     </svg>
-                                    <p className="text-[14px] font-medium text-[#696969] px-1">
-                                        {item.address}
-                                    </p>
+                                </button>
+                                <div className="text-[#989D9E] text-[14px] font-medium mx-1.5">
+                                    Page {currentPage} of {totalPages}
                                 </div>
-                                {!item.isDeliveryAddress && (
-                                    <button
-                                        // onClick={() => setModalChangeAddressOpen(!modalChangeAddressOpen)}
-                                        className="w-max mt-[0.35rem] px-4 py-[0.4rem] font-normal rounded-full bg-[#00A67C] text-white text-[14px] hover:bg-[#00916D] transition ease-in-out delay-100"
+                                <button
+                                    onClick={() => handlePageChange(currentPage + 1)}
+                                    disabled={currentPage === totalPages}
+                                    className="rounded-lg border border-[#E0E0E0] p-1.5 hover:shadow-sm disabled:cursor-not-allowed disabled:opacity-[0.65] transition ease-in-out delay-100"
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        strokeWidth="1.5"
+                                        stroke="#7a7a7a"
+                                        className="h-[1.2rem] w-[1.2rem] rotate-180"
                                     >
-                                        Select
-                                    </button>
-                                )}
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            d="M15.75 19.5L8.25 12l7.5-7.5"
+                                        />
+                                    </svg>
+                                </button>
                             </div>
-                        </>
-                    ))}
-                </div>
-
-                <div
-                    // onClick={() => navigate('/store-management')}
-                    id="underline-wrapper"
-                    className="text-gray-500 w-max flex self-end w-full mt-[0.7rem] items-center gap-1 cursor-pointer hover:text-gray-700 relative"
-                >
-                    <span className="font-medium text-[15px] relative">
-                        Go to your Address List
-                        <span
-                            id="underline"
-                            className="absolute bottom-0 left-0 w-full h-0.5 bg-gray-700 transition-all origin-left transform scale-x-0"
-                        ></span>
-                    </span>
-                    <IoIosArrowForward size={15} className="mt-[0.8px]" />
-                </div>
-                <button
-                    // onClick={() => setModalChangeAddressOpen(!modalChangeAddressOpen)}
-                    className="flex items-center justify-center gap-2 w-full mt-[0.5rem] px-4 py-[0.5rem] font-medium rounded-full bg-[#00A67C] text-white text-[15px] hover:bg-[#00916D] transition ease-in-out delay-100"
-                >
-                    <span>Add New</span>
-                    <FaPlus size={14} />
-                </button>
-                {/*  */}
-            </DialogBody>
-        </Dialog>
+                        </div>
+                    ) : (
+                        <div className="flex flex-col items-center gap-1 my-5">
+                            <div>
+                                <img src={notFoundImg} alt="" className="h-[8rem] w-[8rem] opacity-60" />
+                            </div>
+                            <h3 className="text-[19px] text-[#666666] font-semibold opacity-80 mt-[1rem]">Your Address List is empty!</h3>
+                            <p className="text-[14px] font-medium text-gray-500 w-[60%] text-center opacity-90 mt-[0.1rem]">Looks like you haven&apos;t added your address, please add a new one.</p>
+                        </div>
+                    )}
+                    <div
+                        onClick={() => navigate('/user-dashboard')}
+                        id="underline-wrapper"
+                        className="text-gray-500 w-max flex self-end w-full mt-[0.7rem] items-center gap-1 cursor-pointer hover:text-gray-700 relative"
+                    >
+                        <span className="font-medium text-[14.5px] relative">
+                            Go to your Address List
+                            <span
+                                id="underline"
+                                className="absolute bottom-0 left-0 w-full h-0.5 bg-gray-700 transition-all origin-left transform scale-x-0"
+                            ></span>
+                        </span>
+                        <IoIosArrowForward size={15} className="mt-[0.8px]" />
+                    </div>
+                    <button
+                        onClick={handleModalAddOpen}
+                        className="flex items-center justify-center gap-2 w-full mt-[0.5rem] px-4 py-[0.5rem] font-medium rounded-full bg-[#00A67C] text-white text-[15px] hover:bg-[#00916D] transition ease-in-out delay-100"
+                    >
+                        <span>Add New</span>
+                        <FaPlus size={14} />
+                    </button>
+                    {/*  */}
+                </DialogBody>
+            </Dialog>
+            <ModalUserCreateAddress
+                modalAddOpen={modalAddOpen}
+                handleModalAddOpen={handleModalAddOpen}
+                fetchAllAddress={fetchAllAddress}
+            />
+        </>
     );
+}
+
+ModalChangeAddress.propTypes = {
+    modalChangeAddressOpen: PropTypes.bool.isRequired,
+    setModalChangeAddressOpen: PropTypes.func.isRequired,
+    fetchDeliveryAddress: PropTypes.func.isRequired
 }

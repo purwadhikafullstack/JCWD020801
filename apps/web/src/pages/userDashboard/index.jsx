@@ -16,9 +16,10 @@ import { UserAddress } from './components/userAddress';
 import { ResetPassword } from './components/resetPassword';
 import { AnimationWrapper } from './components/animationWrapper';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ModalSignOut } from '../navbar/components/modalSignOut';
 import { ChangeEmail } from './components/changeEmail';
+import { Footer } from '../footer';
 
 const menuList = [
     { title: 'Personal Information', icon: personIcon },
@@ -32,7 +33,6 @@ const menuList = [
 export const UserDashboard = () => {
     const navigate = useNavigate();
     const customer = useSelector((state) => state.customer.value);
-    console.log(customer);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedOption, setSelectedOption] = useState(0);
     const [navMenuOpen, setNavMenuOpen] = useState(false);
@@ -50,16 +50,13 @@ export const UserDashboard = () => {
         setCurrentOption(filteredMenuList[index].title)
     };
 
-    // Handle navmenu based on screen size
     useEffect(() => {
         const handleResize = () => {
             const screenWidth = window.innerWidth;
 
             if (screenWidth < 768) {
-                // For mobile screens
                 setNavMenuOpen(false);
             } else {
-                // For desktop and tablet screens
                 setNavMenuOpen(true);
             }
         };
@@ -80,7 +77,12 @@ export const UserDashboard = () => {
                 <div className="mx-[16px] lg:mx-[160px] pb-7 lg:pt-1">
                     {/* Breadcrumb */}
                     <div className="flex w-max items-center justify-center gap-1.5 rounded-lg bg-none pl-1.5 text-[14px] font-medium text-gray-500">
-                        <span className="">Home</span>
+                        <Link
+                            to={'/home'}
+                            className="cursor-pointer hover:underline hover:text-[#858585] underline-offset-2"
+                        >
+                            Home
+                        </Link>
                         <div className="flex items-center pt-[0.1rem]">
                             <svg
                                 width="6"
@@ -252,6 +254,7 @@ export const UserDashboard = () => {
                     </div>
                 </div>
             </section>
+            <Footer />
             <ModalSignOut isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
         </>
     );

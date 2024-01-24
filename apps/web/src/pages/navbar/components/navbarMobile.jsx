@@ -4,10 +4,17 @@ import PropTypes from 'prop-types';
 import appLogoSm from "../../../assets/lemon-logo.svg";
 import crossIcon from "../../../assets/navbar/cross.svg";
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { storeLastVisitedPage } from '../../../functions/storeLastVisitedPage';
 
 export const NavbarMobile = ({ isOpen, toggleMenu, isOpenCategory, toggleMenuCategory, categoryList }) => {
     const customer = useSelector((state) => state.customer.value);
+    const navigate = useNavigate()
+
+    const handleRedirectToLogin = () => {
+        storeLastVisitedPage();
+        navigate('/signin')
+    }
 
     return (
         <AnimatePresence>
@@ -130,7 +137,7 @@ export const NavbarMobile = ({ isOpen, toggleMenu, isOpenCategory, toggleMenuCat
                                     />
                                 </svg>
                                 <div className="flex gap-2">
-                                    <span className="cursor-pointer text-white underline underline-offset-2">
+                                    <span onClick={handleRedirectToLogin} className="cursor-pointer text-white underline underline-offset-2">
                                         Sign in
                                     </span>
                                     <span className="text-white">or</span>

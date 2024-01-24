@@ -46,7 +46,7 @@ export const userRegister = async (req, res) => {
 
             // jwt
             let payload = { id: result.id }
-            const token = jwt.sign(payload, process.env.KEY_JWT, { expiresIn: `1h` })
+            const token = jwt.sign(payload, process.env.KEY_JWT, { expiresIn: `12h` })
 
             const filePath = path.join(__dirname, '../../src/templates/template_verify.html');
             const data = fs.readFileSync(filePath, 'utf-8');
@@ -95,7 +95,6 @@ export const userRegisterWithGoogle = async (req, res) => {
         console.log(findUser);
 
         if (findUser == null) {
-            // Generate Referral code
             const generateReferralCode = (name) => {
                 const words = name.split(' ')
                 const userChars = words
@@ -127,20 +126,44 @@ export const userRegisterWithGoogle = async (req, res) => {
             let payload = { id: result.id }
             const token = jwt.sign(payload, process.env.KEY_JWT, { expiresIn: `1h` })
 
-            return res.status(200).send({ message: "Successfully registering new user with Google Account", result: result, token })
+            return res.status(200).send({ message: "Google Account registration success", result: result, token })
 
         } else if (findUser) {
             // jwt
-            let payload = { id: findUser.id }
-            const token = jwt.sign(payload, process.env.KEY_JWT, { expiresIn: `1h` })
-
-            console.log("Google account is already registered");
-            return res.status(200).send({ message: "Success Signing in with Google Account", result: findUser, token })
+            return res.status(400).send({ message: "Your account is already registered" })
         }
 
     } catch (error) {
         console.log(error);
         return res.status(400).send({ message: error.message })
+    }
+}
+
+export const userLoginWithGoogle = async (req, res) => {
+    try {
+        const { googleUserData } = req.body
+        console.log(googleUserData);
+
+        const findUser = await Customer.findOne({
+            where: {
+                firebaseUID: googleUserData?.uid
+            }
+        });
+
+        if (findUser) {
+            // jwt
+            let payload = { id: findUser.id }
+            const token = jwt.sign(payload, process.env.KEY_JWT, { expiresIn: `12h` })
+
+            console.log("Google account is already registered");
+            return res.status(200).send({ message: "Google Account Sign In success", result: findUser, token })
+        } else {
+            return res.status(400).send({ message: "Account not found" })
+        }
+
+    } catch (error) {
+        console.log(error);
+        res.status(400).send({ message: error.message })
     }
 }
 
@@ -154,13 +177,16 @@ export const userVerification = async (req, res) => {
             }
         })
 
-        console.log('User data:219', user);
 
         const verificationSentTime = user.verificationSentAt;
         const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000) //1 hour ago
 
         if (!verificationSentTime || verificationSentTime < oneHourAgo) {
             return res.status(400).send({ message: "Verification link has expired or is invalid" });
+        }
+
+        if (user.isVerified == true) {
+            return res.status(400).send({ message: "Your Account has been verified before" })
         }
 
         const salt = await bcrypt.genSalt(10);
@@ -208,7 +234,7 @@ export const userReverification = async (req, res) => {
         }
 
         const verificationSentTime = findUser.verificationSentAt;
-        const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000); // 1 hour ago
+        const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
 
         if (!verificationSentTime || verificationSentTime < oneHourAgo) {
             // let payload = { id: findUser.id }
@@ -353,7 +379,7 @@ export const userLogin = async (req, res) => {
 
         let payload = { id: dataLoginUser.id };
         if (dataLoginUser.isVerified) {
-            const token = jwt.sign(payload, process.env.KEY_JWT, { expiresIn: '1h' });
+            const token = jwt.sign(payload, process.env.KEY_JWT, { expiresIn: '12h' });
             return res.status(200).send({
                 message: 'Login Success!', result: dataLoginUser, token
             })
@@ -385,7 +411,12 @@ export const keepLogin = async (req, res) => {
                 id: req.user.id
             }
         })
-        res.status(200).send({ message: "Keep login success", result: customer })
+
+        if (!customer) {
+            return res.status(404).send({ message: "User not found" })
+        }
+
+        return res.status(200).send({ message: "Keep login success", result: customer })
     } catch (error) {
         console.log(error);
         res.status(400).send({ message: error.message })

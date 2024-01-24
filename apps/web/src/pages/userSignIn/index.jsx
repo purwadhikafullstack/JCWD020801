@@ -1,14 +1,13 @@
 import appLogoSm from '../../assets/userSignIn/lemon-logo.svg';
 import googleIcon from '../../assets/userSignIn/google-icon.svg';
-import facebookIcon from '../../assets/userSignIn/facebook-icon.svg';
+// import facebookIcon from '../../assets/userSignIn/facebook-icon.svg';
 import loginBanner from '../../assets/userSignIn/login-vector.svg';
 import { SyncLoader } from 'react-spinners'
-import { motion, AnimatePresence } from 'framer-motion';
+// import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import axios from "axios";
-
+import axios from '../../api/axios'
 import eyeIcon from '../../assets/userDashboard/eye.svg';
 import eyeOffIcon from '../../assets/userDashboard/eye-off.svg';
 import { useNavigate } from 'react-router-dom';
@@ -21,8 +20,8 @@ import { ModalUserReverify } from './components/modalUserReverify';
 
 export const UserSignIn = () => {
     const navigate = useNavigate();
-    const [socialHover1, setSocialHover1] = useState(false);
-    const [socialHover2, setSocialHover2] = useState(false);
+    // const [socialHover1, setSocialHover1] = useState(false);
+    // const [socialHover2, setSocialHover2] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -37,14 +36,23 @@ export const UserSignIn = () => {
             const userData = await registerWithGoogle();
             console.log(userData);
 
-            const response = await axios.post('http://localhost:8000/api/customer/register-google', { googleUserData: userData })
-            console.log(response.data);
+            const response = await axios.post('customer/signin-google', { googleUserData: userData })
             localStorage.setItem('token', response.data.token)
             dispatch(setData(response.data.result))
-            toast.success(response.data.message, {
-                position: "top-center",
-            })
-            navigate('/home')
+
+            const lastVisitedPage = localStorage.getItem('lastVisitedPage');
+
+            toast.success(
+                <>
+                    <div className="font-medium text-[#07BC0C]">Google Sign in success</div>
+                    <div className="text-[15px]">Welcome back!</div>
+                </>,
+                {
+                    position: 'top-center',
+                },
+            );
+            navigate(lastVisitedPage || '/home')
+            localStorage.removeItem('lastVisitedPage');
         } catch (error) {
             console.log("Error from handle Google Register Front-end", error);
             toast.error(error.response.data.message, {
@@ -63,9 +71,22 @@ export const UserSignIn = () => {
             navigate('/home')
             localStorage.setItem('token', response.data.token)
             dispatch(setData(response.data.result))
-            toast.success('Login Success!', {
-                position: "top-center",
-            })
+
+            const lastVisitedPage = localStorage.getItem('lastVisitedPage');
+
+            toast.success(
+                <>
+                    <div className="font-medium text-[#07BC0C]">Sign in success</div>
+                    <div className="text-[15px]">Welcome back!</div>
+                </>,
+                {
+                    position: 'top-center',
+                },
+            );
+
+            navigate(lastVisitedPage || '/home')
+            localStorage.removeItem('lastVisitedPage');
+
         } catch (error) {
             console.log(error);
             setIsLoading(false)
@@ -108,7 +129,7 @@ export const UserSignIn = () => {
                                 <span className="text-gray-500">Please enter your details</span>
                             </div>
                         </div>
-                        <div className="mt-0 flex w-full flex-col gap-6 px-[2.2rem] pb-8 md:mt-5 md:px-[2rem] lg:px-[8rem]">
+                        <div className="mt-0 flex w-full flex-col gap-5 px-[2.2rem] pb-8 md:mt-5 md:px-[2rem] lg:px-[8rem]">
                             {/* Input email, Password */}
                             <form onSubmit={formik.handleSubmit} className="flex flex-col gap-3">
                                 {/* email */}
@@ -195,8 +216,7 @@ export const UserSignIn = () => {
                                 </p>
                                 <hr className="mt-[0.2rem] h-px w-full border-0 bg-gray-300"></hr>
                             </div>
-                            <div className="flex items-center justify-center gap-5">
-                                {/* Google */}
+                            {/* <div className="flex items-center justify-center gap-5">
                                 <motion.div
                                     onClick={handleGoogleSignin}
                                     className="flex h-12 cursor-pointer gap-3 rounded-full bg-[#f0f0f0] p-3 hover:bg-[#e6e6e6]"
@@ -221,7 +241,6 @@ export const UserSignIn = () => {
                                         )}
                                     </AnimatePresence>
                                 </motion.div>
-                                {/* Facebook */}
                                 <motion.div
                                     className="flex h-12 cursor-pointer gap-3 rounded-full bg-[#1977F3] p-3"
                                     onHoverStart={() => setSocialHover2(true)}
@@ -245,7 +264,13 @@ export const UserSignIn = () => {
                                         )}
                                     </AnimatePresence>
                                 </motion.div>
-                            </div>
+                            </div> */}
+                            <button
+                                onClick={handleGoogleSignin}
+                                className="w-full flex justify-center items-center h-[46px] gap-2.5 bg-[#f0f0f0] rounded-full hover:bg-[#e6e6e6]">
+                                <img src={googleIcon} alt="" className="h-[1.1rem] w-[1.1rem] object-cover mb-[1px]"></img>
+                                <span className="whitespace-nowrap text-[14px] font-semibold text-gray-600">Sign In with Google</span>
+                            </button>
                         </div>
                         <div>
                             <span className="text-[15px] text-gray-800">

@@ -1,5 +1,7 @@
 import Customer from '../models/customer.model';
 import CustomerAddress from '../models/customeraddress.model'
+import City from '../models/city.model'
+import Province from '../models/province.model'
 
 export const getAll = async (req, res) => {
     try {
@@ -20,7 +22,7 @@ export const getAll = async (req, res) => {
 
 export const addressCreate = async (req, res) => {
     try {
-        const { title, customerAddressName, phoneNumber, address, longitude, latitude } = req.body
+        const { title, customerAddressName, phoneNumber, address, longitude, latitude, fullAddress, province_id, CityId } = req.body
 
         const findAddress = await CustomerAddress.findOne({
             where: {
@@ -42,11 +44,11 @@ export const addressCreate = async (req, res) => {
                 ]
             })
 
-            return res.status(200).send({ message: "Success adding new address to your profile!", result: result })
+            return res.status(200).send({ message: "Success Adding new address!", result: result })
 
         } else {
             console.log("Address is already on your address list");
-            return res.status(400).send({ message: "Address is already on your address list" })
+            return res.status(400).send({ message: "Address is already on your list" })
         }
 
     } catch (error) {
@@ -57,7 +59,7 @@ export const addressCreate = async (req, res) => {
 
 export const addressEdit = async (req, res) => {
     try {
-        const { title, customerAddressName, phoneNumber, address, longitude, latitude } = req.body
+        const { title, customerAddressName, phoneNumber, address, longitude, latitude, fullAddress, province_id, CityId } = req.body
 
         await CustomerAddress.update({
             ...req.body,
@@ -67,7 +69,7 @@ export const addressEdit = async (req, res) => {
                 id: req.params.id
             }
         })
-        res.status(200).send({ message: "Success updating your address" })
+        res.status(200).send({ message: "Success updating address" })
 
     } catch (error) {
         console.log(error);
@@ -77,20 +79,141 @@ export const addressEdit = async (req, res) => {
 
 export const getAllByCustomerId = async (req, res) => {
     try {
-        const result = await CustomerAddress.findAll({
+        const { page } = req.query
+        const limit = 4
+        const offset = (page - 1) * limit;
+
+        const result = await CustomerAddress.findAndCountAll({
             where: {
                 CustomerId: req.user.id
             },
             order: [
-                ['isDefault', 'DESC']
-            ]
-        })
-        res.status(200).send({ result: result })
+                ['isDefault', 'DESC'],
+                ['createdAt', 'DESC']
+            ],
+            include: [
+                {
+                    model: City,
+                    attributes: ['city'],
+                    include: [
+                        {
+                            model: Province,
+                            attributes: ['province']
+                        }
+                    ]
+                }
+            ],
+            limit: parseInt(limit),
+            offset: parseInt(offset)
+        });
+
+        const totalPages = Math.ceil(result.count / limit)
+        res.status(200).send({ result: result, page, totalPages })
     } catch (error) {
         console.log(error);
         res.status(400).send({ message: error.message })
     }
 }
+
+// export const getAllByCustomerId = async (req, res) => {
+//     try {
+//         const result = await CustomerAddress.findAll({
+//             where: {
+//                 CustomerId: req.user.id
+//             },
+//             order: [
+//                 ['isDefault', 'DESC'],
+//                 ['createdAt', 'DESC']
+//             ],
+//             include: [
+//                 {
+//                     model: City,
+//                     attributes: ['city'],
+//                     include: [
+//                         {
+//                             model: Province,
+//                             attributes: ['province']
+//                         }
+//                     ]
+//                 }
+//             ]
+//         })
+//         res.status(200).send({ result: result })
+//     } catch (error) {
+//         console.log(error);
+//         res.status(400).send({ message: error.message })
+//     }
+// }
+
+export const getAllForCheckout = async (req, res) => {
+    try {
+        const { page } = req.query;
+        const limit = 4
+        const offset = (page - 1) * limit;
+
+        const result = await CustomerAddress.findAndCountAll({
+            where: {
+                CustomerId: req.user.id
+            },
+            order: [
+                ['isDeliveryAddress', 'DESC'],
+                ['isDefault', 'DESC'],
+                ['createdAt', 'DESC']
+            ],
+            include: [
+                {
+                    model: City,
+                    attributes: ['city'],
+                    include: [
+                        {
+                            model: Province,
+                            attributes: ['province']
+                        }
+                    ]
+                }
+            ],
+            limit: parseInt(limit),
+            offset: parseInt(offset)
+        })
+
+        const totalPages = Math.ceil(result.count / limit)
+        res.status(200).send({ result: result, page, totalPages })
+    } catch (error) {
+        console.log(error);
+        res.status(400).send({ message: error.message })
+    }
+}
+
+// export const getAllForCheckout = async (req, res) => {
+//     try {
+//         const result = await CustomerAddress.findAll({
+//             where: {
+//                 CustomerId: req.user.id
+//             },
+//             order: [
+//                 ['isDeliveryAddress', 'DESC'],
+//                 ['isDefault', 'DESC'],
+//                 ['createdAt', 'DESC']
+//             ],
+//             include: [
+//                 {
+//                     model: City,
+//                     attributes: ['city'],
+//                     include: [
+//                         {
+//                             model: Province,
+//                             attributes: ['province']
+//                         }
+//                     ]
+//                 }
+//             ]
+//         })
+//         res.status(200).send({ result: result })
+//     } catch (error) {
+//         console.log(error);
+//         res.status(400).send({ message: error.message })
+//     }
+// }
 
 export const deleteById = async (req, res) => {
     try {
@@ -100,7 +223,7 @@ export const deleteById = async (req, res) => {
                 id: req.params.id
             },
         })
-        res.status(200).send({ message: "Success deleting an address from the list" })
+        res.status(200).send({ message: "Success deleting address" })
     } catch (error) {
         console.log(error);
         res.status(400).send({ message: error.message })
@@ -131,7 +254,7 @@ export const setDefaultAddress = async (req, res) => {
                 id: id
             }
         })
-        res.status(200).send({ message: "Your Default Address has been updated" })
+        res.status(200).send({ message: "Default Address updated" })
     } catch (error) {
         console.log(error);
         res.status(400).send({ message: error.message })
@@ -162,7 +285,7 @@ export const setDeliveryAddress = async (req, res) => {
                 id: id
             }
         })
-        res.status(200).send({ message: "Delivery Address has been updated" })
+        res.status(200).send({ message: "Delivery Address updated" })
     } catch (error) {
         console.log(error);
         res.status(400).send({ message: error.message })
@@ -175,7 +298,19 @@ export const getDeliveryAddress = async (req, res) => {
             where: {
                 CustomerId: req.user.id,
                 isDeliveryAddress: true
-            }
+            },
+            include: [
+                {
+                    model: City,
+                    attributes: ['city'],
+                    include: [
+                        {
+                            model: Province,
+                            attributes: ['province']
+                        }
+                    ]
+                }
+            ]
         })
         res.status(200).send({ result })
     } catch (error) {
@@ -183,3 +318,4 @@ export const getDeliveryAddress = async (req, res) => {
         res.status(400).send({ message: error.message })
     }
 }
+

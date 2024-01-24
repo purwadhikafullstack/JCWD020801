@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { userRegister, getAllUser, userVerification, userLogin, keepLogin, userRegisterWithGoogle, userImgUpdate, userDataUpdate, userLogout, resetPassword, resetPasswordVerification, findEmailForgotPassword, userEmailUpdate, userSignInWithGoogle, userEmailUpdateVerification, userReverification } from '../controllers/customer.controller'
+import { userRegister, getAllUser, userVerification, userLogin, keepLogin, userRegisterWithGoogle, userImgUpdate, userDataUpdate, userLogout, resetPassword, resetPasswordVerification, findEmailForgotPassword, userEmailUpdate, userSignInWithGoogle, userEmailUpdateVerification, userReverification, userLoginWithGoogle } from '../controllers/customer.controller'
 const { verifyToken } = require('../middleware/auth')
 const { multerUpload } = require('../middleware/multer')
 const customerRouter = Router();
@@ -18,6 +18,7 @@ customerRouter.get('/email-reverification', userReverification)
 // POST
 customerRouter.post('/register', userRegister)
 customerRouter.post('/register-google', userRegisterWithGoogle)
+customerRouter.post('/signin-google', userLoginWithGoogle)
 customerRouter.post('/user-logout', userLogout)
 
 // PATCH

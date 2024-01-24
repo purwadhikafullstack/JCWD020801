@@ -9,8 +9,6 @@ export const ModalBranchChangeStatus = ({ modalStatusOpen, setModalStatusOpen, b
     const [isLoading, setIsLoading] = useState(false);
     const token = localStorage.getItem('admtoken');
 
-    console.log("Branch's data", branchDetailData);
-
     const handleChangeStatus = async () => {
         try {
             setIsLoading(true);
@@ -104,11 +102,6 @@ ModalBranchChangeStatus.propTypes = {
     fetchBranchDetailData: PropTypes.func.isRequired,
     branchDetailData: PropTypes.shape({
         name: PropTypes.string.isRequired,
-        contactNumber: PropTypes.string.isRequired,
-        AdminId: PropTypes.number.isRequired,
-        latitude: PropTypes.number.isRequired,
-        longitude: PropTypes.number.isRequired,
-        address: PropTypes.string.isRequired,
         id: PropTypes.number.isRequired,
         isActive: PropTypes.bool.isRequired
     })

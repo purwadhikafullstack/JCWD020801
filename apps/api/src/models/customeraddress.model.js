@@ -3,27 +3,24 @@ import { Model, DataTypes } from 'sequelize';
 export default class CustomerAddress extends Model {
   static associate(models) {
     CustomerAddress.belongsTo(models.Customer);
+    CustomerAddress.belongsTo(models.City, { foreignKey: 'CityId' });
   }
 }
 
 export const init = (sequelize) => {
   CustomerAddress.init(
     {
-      title: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
       address: {
         type: DataTypes.STRING,
         allowNull: false,
       },
       customerAddressName: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: false
       },
       phoneNumber: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: false
       },
       longitude: {
         type: DataTypes.DOUBLE,
@@ -40,8 +37,20 @@ export const init = (sequelize) => {
       },
       isDeliveryAddress: {
         type: DataTypes.BOOLEAN,
-        defaultValue: false,
+        defaultValue: false
       },
+      fullAddress: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      province_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+      },
+      CityId: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+      }
     },
     {
       sequelize,

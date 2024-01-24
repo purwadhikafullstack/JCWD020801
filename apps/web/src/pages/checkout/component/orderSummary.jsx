@@ -24,7 +24,7 @@ const productList = [
 export const OrderSummary = () => {
     return (
         <>
-            <section className="rounded-xl bg-[#FFFFFF] py-5 px-7 shadow-sm">
+            <section className="rounded-xl bg-[#FFFFFF] py-5 px-4 md:px-7 shadow-sm">
                 <h3 className="text-[20px] font-bold border-b border-[#dcdcdc] text-[#28302A] pb-[0.6rem]">
                     Order Summary
                 </h3>
@@ -34,10 +34,10 @@ export const OrderSummary = () => {
                             <img
                                 src={item.img}
                                 alt=""
-                                className="w-[6rem] object-cover rounded-lg"
+                                className="w-[5rem] md:w-[6rem] object-cover rounded-lg"
                             />
                             <div className="flex flex-col w-[20rem]">
-                                <span className="text-[14px] font-medium text-gray-800 line-clamp-2">
+                                <span className="text-[13px] md:text-[14px] font-medium text-gray-800 line-clamp-2">
                                     {item.name}
                                 </span>
                                 <div className="flex gap-2 mt-[0.3rem]">
@@ -51,7 +51,7 @@ export const OrderSummary = () => {
                                 </span>
                             </div>
                             <div className="ml-auto">
-                                <span className="text-[15px] font-semibold text-gray-700">
+                                <span className="text-[13px] md:text-[15px] font-semibold text-gray-700  whitespace-nowrap">
                                     Rp 200.000
                                 </span>
                             </div>
