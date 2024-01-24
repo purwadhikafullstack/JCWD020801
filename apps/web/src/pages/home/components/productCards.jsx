@@ -5,56 +5,20 @@ import stockAvail from '../../../assets/home/stock_avail.svg'
 import { convertToIDR, formatDistance } from '../../../functions/functions';
 import { useGeoLocation } from '../../../hooks/useGeoLocation';
 import axios from '../../../api/axios';
-
-const cardsData = [
-    {
-        title: 'card 2',
-        img: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        price: '25000',
-        stock: 54,
-        desc: 'Just FreshDirect 100% Grass-Fed Local 80% Lean Ground Beef, Fresh, Premium Packaging',
-    },
-    {
-        title: 'card 1',
-        img: 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?q=80&w=1965&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        price: '25000',
-        stock: 54,
-        desc: "FreshDirect Rotisserie Chicken, Raised w/o Antibiotics",
-    },
-    {
-        title: 'card 3',
-        img: 'https://images.unsplash.com/photo-1519996529931-28324d5a630e?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        price: '2500000',
-        stock: 54,
-        desc: 'Siggis Skyr Icelandic-Style Strained Non-Fat Yogurt, Mixed Berry and Acai',
-    },
-    {
-        title: 'card 4',
-        img: 'https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?q=80&w=1915&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        price: '25000',
-        stock: 54,
-        desc: 'Just FreshDirect Local Angus RWA 90% Lean Ground Beef, Premium Packaging',
-    },
-    {
-        title: 'card 5',
-        img: 'https://images.unsplash.com/photo-1557800636-894a64c1696f?q=80&w=1965&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        price: '25000000',
-        stock: 54,
-        desc: 'Sprouts Organic Chicken Thin Sliced Boneless Breast',
-    },
-    {
-        title: 'card 6',
-        img: 'https://plus.unsplash.com/premium_photo-1671379041175-782d15092945?q=80&w=1920&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        price: '250000',
-        stock: 54,
-        desc: 'this is desc this is desc this is desc',
-    },
-];
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import { addToCart } from '../../../redux/cartSlice';
 
 export const ProductCards = () => {
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const products = useSelector((state) => state.product.data);
+    const customer = useSelector((state) => state.customer.value);
+
     const { coordinates, loaded } = useGeoLocation();
     const [branchData, setBranchData] = useState(null)
-    // console.log("coords from product cards", coordinates);
 
     const [keenSlider, setKeenSlider] = useState(null);
     const sliderRef = useRef(null);
@@ -151,6 +115,21 @@ export const ProductCards = () => {
         }
     }, [loaded, coordinates?.lat, coordinates?.lng]);
 
+    const handleAddtoCart = (item) => {
+        if (Object.keys(customer).length > 0 && customer.isVerified === true) {
+            dispatch(addToCart({ id: item.id, quantity: 1, amount: item.price }));
+
+            toast.success(`${item.title} has been added to cart`, {
+                position: 'top-center',
+                autoClose: 3000,
+                hideProgressBar: true,
+                theme: 'light',
+            });
+        } else {
+            navigate('/signin');
+        }
+    };
+
     return (
         <>
             <div className="my-[16px] mx-[16px] md:mx-[32px] lg:mx-[160px]">
@@ -187,10 +166,10 @@ export const ProductCards = () => {
                 </section>
                 {/* Cards */}
                 <>
-                    <section className="border-t border-[#D1D5D8]">
+                    <section className="border-y border-[#D1D5D8]">
                         <div className="pb-[2rem] pt-[1.4rem]">
                             <div className="items-center justify-between sm:flex">
-                                <h2 className="text-[25px] md:text-[29px] font-semibold text-gray-900 tracking-tight">
+                                <h2 className="text-[25px] md:text-[28px] font-semibold text-gray-900 tracking-tight">
                                     Recommended Products
                                 </h2>
 
@@ -248,7 +227,7 @@ export const ProductCards = () => {
                             {/* ---- */}
                             <div className="mt-6" ref={sliderRef}>
                                 <div id="keen-slider" className="keen-slider">
-                                    {cardsData.map((item, index) => (
+                                    {products.map((item, index) => (
                                         <div
                                             className="keen-slider__slide cursor-pointer"
                                             key={index}
@@ -265,7 +244,7 @@ export const ProductCards = () => {
                                                     <div className="flex gap-1">
                                                         <span className="font-bold text-[13px]">Rp</span>
                                                         <p className="text-[16px] md:text-[18px] font-bold text-rose-600 tracking-tight">
-                                                            {convertToIDR(item.price)}
+                                                            {item.price}
                                                         </p>
                                                     </div>
                                                     <p className="leading-relaxed text-gray-700 text-[14px] md:text-[15px] line-clamp-2">
@@ -276,7 +255,7 @@ export const ProductCards = () => {
                                                         <img
                                                             src={stockAvail}
                                                             alt=""
-                                                            className="h-3 h-3 pt-[0.1rem]"
+                                                            className=" h-3 pt-[0.1rem]"
                                                         />
                                                         <span className="text-[#067627] font-medium text-[13px] md:text-[14px]">
                                                             stock:{' '}
@@ -286,8 +265,13 @@ export const ProductCards = () => {
                                                         </span>
                                                     </div>
                                                 </div>
-                                                <button className="mt-1 mb-[0.2rem] w-full rounded-full bg-[#00A67C] text-white py-[0.4rem] text-[14px]">
-                                                    Add to Cart
+                                                <button
+                                                    disabled={item.stock > 0 ? false : true}
+                                                    onClick={() => handleAddtoCart(item)}
+                                                    className={`mt-1 mb-[0.2rem] w-full rounded-full  text-white py-[0.4rem] text-[14px] ${item.stock > 0 ? 'bg-[#00A67C]' : ' bg-gray-600'
+                                                        }`}
+                                                >
+                                                    {item.stock > 0 ? 'Add to Cart' : 'Out of Stock'}
                                                 </button>
                                             </div>
                                         </div>

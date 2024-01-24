@@ -24,10 +24,19 @@ export const init = (sequelize) => {
       type: {
         type: DataTypes.ENUM,
         allowNull: false,
-        values: ['product', 'shipping'],
+        values: ['product', 'shipping_cost', 'referral_code'],
       },
       value: {
+        type: DataTypes.ENUM,
+        allowNull: false,
+        values: ['percentage', 'nominal'],
+      },
+      amount: {
         type: DataTypes.DECIMAL,
+        allowNull: false,
+      },
+      min_purchase_amount: {
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
       max_discount: {

@@ -80,6 +80,7 @@ export const userRegister = async (req, res) => {
     }
 }
 
+
 export const userRegisterWithGoogle = async (req, res) => {
     try {
         const { googleUserData } = req.body
@@ -90,6 +91,8 @@ export const userRegisterWithGoogle = async (req, res) => {
                 firebaseUID: googleUserData?.uid
             }
         });
+
+        console.log(findUser);
 
         if (findUser == null) {
             const generateReferralCode = (name) => {

@@ -70,10 +70,10 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  const token = localStorage.getItem("token");
-  const admtoken = localStorage.getItem('admtoken')
+  const token = localStorage.getItem('token');
+  const admtoken = localStorage.getItem('admtoken');
   const dispatch = useDispatch();
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(!open);
 
   const keepLoginAdmin = async () => {
@@ -107,7 +107,7 @@ function App() {
       localStorage.removeItem('token');
       history.push('/signin');
     }
-  }
+  };
 
   useEffect(() => {
     if (token) {
@@ -130,11 +130,3 @@ function App() {
 }
 
 export default App;
-
-
-
-
-
-
-
-
