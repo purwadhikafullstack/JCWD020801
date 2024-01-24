@@ -1,24 +1,27 @@
-import 'keen-slider/keen-slider.min.css'
-import KeenSlider from 'keen-slider'
-import { useEffect, useRef, useState } from 'react'
-import stockAvail from '../../../assets/home/stock_avail.svg'
-import { convertToIDR, formatDistance } from '../../../functions/functions';
+import 'keen-slider/keen-slider.min.css';
+import KeenSlider from 'keen-slider';
+import { useEffect, useRef, useState } from 'react';
+import stockAvail from '../../../assets/home/stock_avail.svg';
+import { formatDistance } from '../../../functions/functions';
 import { useGeoLocation } from '../../../hooks/useGeoLocation';
 import axios from '../../../api/axios';
-import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
 import { addToCart } from '../../../redux/cartSlice';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
 
 export const ProductCards = () => {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
+    const { coordinates, loaded } = useGeoLocation();
+    const [branchData, setBranchData] = useState(null);
+    //   console.log('coords from product cards', coordinates);
+    const customer = useSelector((state) => state.customer.value);
+    // console.log(customer);
 
     const products = useSelector((state) => state.product.data);
-    const customer = useSelector((state) => state.customer.value);
-
-    const { coordinates, loaded } = useGeoLocation();
-    const [branchData, setBranchData] = useState(null)
+    //   console.log(products);
+    const dispatch = useDispatch();
 
     const [keenSlider, setKeenSlider] = useState(null);
     const sliderRef = useRef(null);
@@ -48,7 +51,7 @@ export const ProductCards = () => {
                     '(min-width: 0px)': {
                         slides: {
                             perView: 2,
-                            spacing: 8
+                            spacing: 8,
                         },
                     },
                     '(min-width: 640px)': {
@@ -87,9 +90,11 @@ export const ProductCards = () => {
     const fetchNearestBranch = async () => {
         if (loaded) {
             try {
-                const response = await axios.post(`branches/get-nearest?latitude=${coordinates.lat}&longitude=${coordinates.lng}&limit=1`);
-                // console.log(response.data.result);
-                setBranchData(response.data.result[0])
+                const response = await axios.post(
+                    `branches/get-nearest?latitude=${coordinates.lat}&longitude=${coordinates.lng}`,
+                );
+                console.log(response.data.result);
+                setBranchData(response.data.result);
             } catch (error) {
                 console.log(error);
             }
@@ -99,18 +104,20 @@ export const ProductCards = () => {
     const fetchMainBranch = async () => {
         try {
             const response = await axios.get('branches/super-store');
-            setBranchData(response.data.result)
+            setBranchData(response.data.result);
         } catch (error) {
             console.error(error);
         }
-    }
+    };
 
     useEffect(() => {
         if (coordinates === null) {
             console.log('Location permission denied. Fetching data from main store.');
             fetchMainBranch();
         } else if (coordinates && loaded) {
-            console.log('Location permission granted. Fetching data from nearest store.');
+            console.log(
+                'Location permission granted. Fetching data from nearest store.',
+            );
             fetchNearestBranch();
         }
     }, [loaded, coordinates?.lat, coordinates?.lng]);
@@ -135,7 +142,10 @@ export const ProductCards = () => {
             <div className="my-[16px] mx-[16px] md:mx-[32px] lg:mx-[160px]">
                 {/* Shopping From */}
                 <section className="flex gap-[0.7rem] mb-5 items-center w-max p-1 bg-[#00A67C] rounded-full">
-                    <div className={`${!coordinates?.lat && ("pulse-effect")} rounded-full p-2 bg-[#E1F5EF]`}>
+                    <div
+                        className={`${!coordinates?.lat && 'pulse-effect'
+                            } rounded-full p-2 bg-[#E1F5EF]`}
+                    >
                         <svg
                             width="32"
                             height="32"
@@ -149,11 +159,12 @@ export const ProductCards = () => {
                             />
                         </svg>
                     </div>
-                    <div className={`${!coordinates?.lat && ("mr-[1.2rem]")} flex flex-col text-white`}>
+                    <div
+                        className={`${!coordinates?.lat && 'mr-[1.2rem]'
+                            } flex flex-col text-white`}
+                    >
                         <span className="text-[14px] font-normal">Shopping from:</span>
-                        <span className="text-[16px] font-medium">
-                            {branchData?.name}
-                        </span>
+                        <span className="text-[16px] font-medium">{branchData?.name}</span>
                     </div>
                     {coordinates?.lat && (
                         <div className="pulse-effect rounded-full bg-[#E1F5EF] px-4 py-[0.7rem] ml-[0.5rem]">
@@ -284,4 +295,4 @@ export const ProductCards = () => {
             </div>
         </>
     );
-}
+};

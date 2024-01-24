@@ -21,6 +21,11 @@ const accountListLogin = [
     { title: "Wishlist", link: "/" },
 ]
 
+const accountListLogin = [
+    { title: "My account", link: "/user-dashboard" },
+    { title: "Wishlist", link: "/" },
+]
+
 export const ModalAccount = ({ isOpenAccount }) => {
     const customer = useSelector((state) => state.customer.value)
     const navigate = useNavigate()
