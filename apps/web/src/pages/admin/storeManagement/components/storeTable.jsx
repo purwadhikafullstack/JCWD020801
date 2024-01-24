@@ -1,5 +1,5 @@
 import { Button, CardBody, CardFooter, IconButton, Tooltip, Typography } from '@material-tailwind/react'
-import { ChevronUpDownIcon, TrashIcon } from '@heroicons/react/24/solid'
+import { ChevronUpDownIcon } from '@heroicons/react/24/solid'
 import { useEffect, useState } from 'react'
 import axios from '../../../../api/axios'
 import { FaCircleInfo } from 'react-icons/fa6'
@@ -20,7 +20,6 @@ export const StoreTable = () => {
                     Authorization: `Bearer ${token}`,
                 },
             })
-            console.log("Branches Data:", response);
             setBranchData(response.data.result)
         } catch (error) {
             console.log(error);
@@ -126,18 +125,15 @@ export const StoreTable = () => {
                                             <span className="pl-3 text-gray-500 text-[14px]">{formatDate(item.createdAt)}</span>
                                         </div>
                                     </td>
-                                    <td>
-                                        <Tooltip content="Branch Detail">
-                                            <IconButton onClick={() => navigate(`/store-management/${item.id}`)} variant="text">
-                                                {/* <PencilIcon className="h-4 w-4 text-[#616161]" /> */}
-                                                <FaCircleInfo className="h-4 w-4 text-[#616161]" />
-                                            </IconButton>
-                                        </Tooltip>
-                                        <Tooltip content="Delete Branch">
-                                            <IconButton onClick={""} variant="text">
-                                                <TrashIcon className="h-4 w-4 text-[#ff0000]" color="red" />
-                                            </IconButton>
-                                        </Tooltip>
+                                    <td className="">
+                                        <div className="flex justify-center">
+                                            <Tooltip content="Branch Detail">
+                                                <IconButton onClick={() => navigate(`/store-management/${item.id}`)} variant="text">
+                                                    {/* <PencilIcon className="h-4 w-4 text-[#616161]" /> */}
+                                                    <FaCircleInfo className="h-4 w-4 text-[#616161]" />
+                                                </IconButton>
+                                            </Tooltip>
+                                        </div>
                                     </td>
                                 </tr>
                             ))}

@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import dummyProduct from "../../../assets/navbar/bowl.png"
 import PropTypes from 'prop-types';
 import { convertToIDR } from '../../../functions/functions';
+import { toast } from 'react-toastify';
 
 const productList = [
     { name: "Family Tree Farms Jumbo Ultra-Premium Blueberries, Case", price: "67000", img: dummyProduct },
@@ -23,6 +24,20 @@ const truncateProductName = (productName) => {
 };
 
 export const ShoppingCart = ({ isOpenCart, toggleOpenCart }) => {
+
+    const addToCart = () => {
+        toast.error(
+            <>
+                <div className="font-semibold text-[#E74C3C]">Access Denied!</div>
+                <div className="text-[15px]">Please Sign in to access this feature</div>
+            </>,
+            {
+                position: 'top-center',
+            },
+        );
+        // navigate('/checkout)
+    };
+
     return (
         <AnimatePresence>
             {isOpenCart && (
@@ -121,7 +136,9 @@ export const ShoppingCart = ({ isOpenCart, toggleOpenCart }) => {
                                         </span>
                                     </div>
                                     <div className="">
-                                        <button className="cssbuttons-io-button w-full font-semibold">
+                                        <button
+                                            onClick={addToCart}
+                                            className="cssbuttons-io-button w-full font-semibold">
                                             Go to Checkout
                                             <div className="icon">
                                                 <svg

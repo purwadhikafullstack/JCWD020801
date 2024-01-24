@@ -54,7 +54,7 @@ const cardsData = [
 export const ProductCards = () => {
     const { coordinates, loaded } = useGeoLocation();
     const [branchData, setBranchData] = useState(null)
-    console.log("coords from product cards", coordinates);
+    // console.log("coords from product cards", coordinates);
 
     const [keenSlider, setKeenSlider] = useState(null);
     const sliderRef = useRef(null);
@@ -123,9 +123,9 @@ export const ProductCards = () => {
     const fetchNearestBranch = async () => {
         if (loaded) {
             try {
-                const response = await axios.post(`branches/get-nearest?latitude=${coordinates.lat}&longitude=${coordinates.lng}`);
-                console.log(response.data.result);
-                setBranchData(response.data.result)
+                const response = await axios.post(`branches/get-nearest?latitude=${coordinates.lat}&longitude=${coordinates.lng}&limit=1`);
+                // console.log(response.data.result);
+                setBranchData(response.data.result[0])
             } catch (error) {
                 console.log(error);
             }
@@ -187,10 +187,10 @@ export const ProductCards = () => {
                 </section>
                 {/* Cards */}
                 <>
-                    <section className="border-y border-[#D1D5D8]">
+                    <section className="border-t border-[#D1D5D8]">
                         <div className="pb-[2rem] pt-[1.4rem]">
                             <div className="items-center justify-between sm:flex">
-                                <h2 className="text-[25px] md:text-[28px] font-semibold text-gray-900 tracking-tight">
+                                <h2 className="text-[25px] md:text-[29px] font-semibold text-gray-900 tracking-tight">
                                     Recommended Products
                                 </h2>
 

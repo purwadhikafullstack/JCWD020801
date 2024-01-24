@@ -16,12 +16,12 @@ export const init = (sequelize) => {
       username: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
+        unique: 'username',
       },
       email: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
+        unique: 'email',
       },
       password: {
         type: DataTypes.STRING,
@@ -48,6 +48,16 @@ export const init = (sequelize) => {
     {
       sequelize,
       modelName: 'Admin',
+      // indexes: [
+      //   {
+      //     unique: true,
+      //     fields: ['username'],
+      //   },
+      //   {
+      //     unique: true,
+      //     fields: ['email'],
+      //   },
+      // ]
     },
   );
 };

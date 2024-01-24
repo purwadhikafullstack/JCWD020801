@@ -3,7 +3,8 @@ import { Input } from '@material-tailwind/react';
 import { useEffect, useState } from 'react';
 import { SyncLoader } from 'react-spinners';
 import { StoreTable } from './storeTable';
-import { ModalAddBranch } from './modalAddBranch';
+// import { ModalAddBranch } from './modalAddBranch';
+import { ModalAddBranch2 } from './modalAddBranch2';
 
 export const StoreOverview = () => {
     const [modalAddOpen, setModalAddOpen] = useState(false);
@@ -65,7 +66,7 @@ export const StoreOverview = () => {
                 {/* Table Section */}
                 <StoreTable />
             </div>
-            <ModalAddBranch modalAddOpen={modalAddOpen} handleModalAddOpen={handleModalAddOpen} />
+            <ModalAddBranch2 modalAddOpen={modalAddOpen} handleModalAddOpen={handleModalAddOpen} />
         </>
     );
 };

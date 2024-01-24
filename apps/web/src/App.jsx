@@ -29,6 +29,7 @@ import { StoreManagement } from './pages/admin/storeManagement';
 import { StoreBranchDetail } from './pages/admin/storeManagement/storeBranchDetail';
 import { StoreLocator } from './pages/storeLocator';
 import { CheckoutPage } from './pages/checkout';
+import { ProductCatalogue } from './pages/productCatalogue';
 
 const router = createBrowserRouter([
   //Untuk yang tidak butuh token
@@ -43,6 +44,7 @@ const router = createBrowserRouter([
   { path: "/user-reset-password/:token", element: <UserResetPassword /> },
   { path: "/user-update-email/:token", element: <UserUpdateEmail /> },
   { path: "/store-locator", element: <StoreLocator /> },
+  { path: "/catalogue", element: <ProductCatalogue /> },
   {
     element: <Required />,
     children: [
@@ -98,8 +100,12 @@ function App() {
         },
       });
       dispatch(setData(response.data.result));
+
     } catch (error) {
       console.log(error);
+
+      localStorage.removeItem('token');
+      history.push('/signin');
     }
   }
 
@@ -110,7 +116,7 @@ function App() {
     if (admtoken) {
       keepLoginAdmin();
     }
-  }, []);
+  }, [token]);
 
   return (
     <>

@@ -1,13 +1,13 @@
 import appLogoSm from '../../assets/userSignIn/lemon-logo.svg';
 import googleIcon from '../../assets/userSignIn/google-icon.svg';
-import facebookIcon from '../../assets/userSignIn/facebook-icon.svg';
+// import facebookIcon from '../../assets/userSignIn/facebook-icon.svg';
 import registerBanner from "../../assets/userRegister/signup-vector.svg";
 import { motion, AnimatePresence } from "framer-motion";
 import { SyncLoader } from 'react-spinners'
 import { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import axios from "axios";
+import axios from '../../api/axios'
 import { ModalEmailVerification } from './components/modalEmailVerification';
 import { ModalError } from './components/modalError';
 import { registerWithGoogle } from '../../../../api/src/firebase'
@@ -20,8 +20,6 @@ export const UserRegister = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch()
 
-    const [socialHover1, setSocialHover1] = useState(false);
-    const [socialHover2, setSocialHover2] = useState(false);
     const [refCodeOpen, setRefCodeOpen] = useState(false)
     const [modalOpen, setModalOpen] = useState(false)
     const [modalErrorOpen, setModalErrorOpen] = useState(false)
@@ -32,13 +30,19 @@ export const UserRegister = () => {
             const userData = await registerWithGoogle();
             console.log(userData);
 
-            const response = await axios.post('http://localhost:8000/api/customer/register-google', { googleUserData: userData })
+            const response = await axios.post('customer/register-google', { googleUserData: userData })
             console.log(response.data);
             localStorage.setItem('token', response.data.token)
             dispatch(setData(response.data.result))
-            toast.success(response.data.message, {
-                position: "top-center",
-            })
+            toast.success(
+                <>
+                    <div className="font-medium text-[#07BC0C]">Google Register success</div>
+                    <div className="text-[15px]">Welcome to Fresh Finds!</div>
+                </>,
+                {
+                    position: 'top-center',
+                },
+            );
             navigate('/home')
         } catch (error) {
             console.log("Error from handle Google Register Front-end", error);
@@ -223,8 +227,7 @@ export const UserRegister = () => {
                                 </p>
                                 <hr className="mt-[0.2rem] h-px w-full border-0 bg-gray-300"></hr>
                             </div>
-                            <div className="flex items-center justify-center gap-5">
-                                {/* Google */}
+                            {/* <div className="flex items-center justify-center gap-5">
                                 <motion.div
                                     onClick={handleGoogleRegister}
                                     className="flex h-12 cursor-pointer gap-3 rounded-full bg-[#f0f0f0] p-3 hover:bg-[#e6e6e6]"
@@ -249,7 +252,6 @@ export const UserRegister = () => {
                                         )}
                                     </AnimatePresence>
                                 </motion.div>
-                                {/* Facebook */}
                                 <motion.div
                                     className="flex h-12 cursor-pointer gap-3 rounded-full bg-[#1977F3] p-3"
                                     onHoverStart={() => setSocialHover2(true)}
@@ -273,7 +275,13 @@ export const UserRegister = () => {
                                         )}
                                     </AnimatePresence>
                                 </motion.div>
-                            </div>
+                            </div> */}
+                            <button
+                                onClick={handleGoogleRegister}
+                                className="w-full flex justify-center items-center h-[46px] gap-2.5 bg-[#f0f0f0] rounded-full hover:bg-[#e6e6e6]">
+                                <img src={googleIcon} alt="" className="h-[1.1rem] w-[1.1rem] object-cover mb-[1px]"></img>
+                                <span className="whitespace-nowrap text-[14px] font-semibold text-gray-600">Register with Google</span>
+                            </button>
                         </div>
                         <div>
                             <span className="text-[15px] text-gray-800">

@@ -12,8 +12,10 @@ import calendarIcon from '../../../../assets/storeManagement/calendar.svg'
 import { FaInfo } from 'react-icons/fa6';
 import { formatDate2 } from '../../../../functions/functions';
 import { IoMdArrowBack } from 'react-icons/io';
-import { ModalEditBranch } from './modalEditBranch';
 import { ModalBranchChangeStatus } from './modalBranchChangeStatus';
+import { ModalBranchEdit } from './modalBranchEdit';
+import { ModalBranchDelete } from './modalBranchDelete';
+import { FaBoxOpen } from "react-icons/fa";
 
 export const StoreBranchDetail = () => {
     const { id } = useParams()
@@ -24,6 +26,7 @@ export const StoreBranchDetail = () => {
     const [branchDetailData, setBranchDetaildata] = useState(null)
     const [modalEditOpen, setModalEditOpen] = useState(false)
     const [modalStatusOpen, setModalStatusOpen] = useState(false)
+    const [modalDeleteOpen, setModalDeleteOpen] = useState(false)
 
     const fetchBranchDetailData = async () => {
         try {
@@ -32,7 +35,6 @@ export const StoreBranchDetail = () => {
                     Authorization: `Bearer ${token}`,
                 },
             })
-            // console.log(response.data);
             setBranchDetaildata(response.data.result)
         } catch (error) {
             console.log(error);
@@ -114,7 +116,13 @@ export const StoreBranchDetail = () => {
                                 <h1 className="text-[#28302A] text-[26px] font-bold pt-2 pb-2">
                                     {branchDetailData?.name}
                                 </h1>
-                                {branchDetailData?.isSuperStore && (<div className="flex items-center py-[0.2rem] bg-[#DBEFDC] w-max rounded-md px-[0.6rem]"><span className="text-[14px] font-semibold text-[#1B5E20]">main store</span></div>)}
+                                {branchDetailData?.isSuperStore && (
+                                    <div className="flex items-center py-[0.2rem] bg-[#DBEFDC] w-max rounded-md px-[0.6rem]">
+                                        <span className="text-[14px] font-semibold text-[#1B5E20]">
+                                            main store
+                                        </span>
+                                    </div>
+                                )}
                             </div>
                             <div className="grid grid-cols-3 gap-4">
                                 {/* Left */}
@@ -128,24 +136,25 @@ export const StoreBranchDetail = () => {
                                                 Address:
                                             </span>
                                             <span className="text-[14px] text-[#757575] font-medium">
-                                                {branchDetailData?.address}
+                                                {branchDetailData?.fullAddress}
                                             </span>
+                                            <div className="flex items-center">
+                                                <p className="text-[14px] text-[#757575] font-medium">
+                                                    {branchDetailData?.City?.city},
+                                                </p>
+                                                <p className="text-[14px] text-[#757575] font-medium pl-1">
+                                                    {branchDetailData?.City?.Province?.province}
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div className="w-full mt-4" id="gmap-frame">
+                                    <div className="w-full mt-4 h-full" id="gmap-frame">
                                         <iframe
                                             className="rounded-lg"
                                             width="100%"
-                                            height="300"
+                                            height="100%"
                                             src={mapUrl}
                                         ></iframe>
-                                        {/* <iframe
-                                            className="rounded-lg"
-                                            width="100%"
-                                            height="300"
-                                            // src="https://maps.google.com/maps?width=100%25&amp;height=300&amp;hl=en&amp;q=-6.921946048736572,107.61607360839844+(My%20Business%20Name)&amp;t=&amp;z=15&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
-                                            src="https://maps.google.com/maps?width=100%25&amp;height=300&amp;hl=en&amp;q=-6.921946048736572,107.61607360839844+(My%20Business%20Name)&amp;t=&amp;z=15&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
-                                        ></iframe> */}
                                     </div>
                                 </div>
                                 {/* right */}
@@ -171,8 +180,6 @@ export const StoreBranchDetail = () => {
                                             </div>
                                         </div>
                                         {/*  */}
-                                    </div>
-                                    <div className="flex flex-col gap-4 col-span-1 border border-gray-300 rounded-xl py-4 px-5 shadow-sm h-max">
                                         <div className="flex gap-4 items-center">
                                             <div className="flex items-center justify-center rounded-md bg-[#F1F2F4] p-[0.5rem] h-max">
                                                 <img src={phoneIcon} alt="" />
@@ -186,20 +193,8 @@ export const StoreBranchDetail = () => {
                                                 </span>
                                             </div>
                                         </div>
-                                        {/*  */}
-                                        <div className="flex gap-4 items-center">
-                                            <div className="flex items-center justify-center rounded-md bg-[#F1F2F4] p-[0.5rem] h-max">
-                                                <img src={calendarIcon} alt="" />
-                                            </div>
-                                            <div className="flex flex-col">
-                                                <span className="text-[13px] text-gray-500 font-medium">
-                                                    Created At:
-                                                </span>
-                                                <span className="text-[15px] text-[#757575] font-medium">
-                                                    {formatDate2(branchDetailData?.createdAt)}
-                                                </span>
-                                            </div>
-                                        </div>
+                                    </div>
+                                    <div className="flex flex-col gap-4 col-span-1 border border-gray-300 rounded-xl py-4 px-5 shadow-sm h-max">
                                         {/*  */}
                                         <div className="flex gap-4 items-center">
                                             <div className="flex items-center justify-center rounded-md bg-[#F1F2F4] p-[0.5rem] h-max">
@@ -215,12 +210,46 @@ export const StoreBranchDetail = () => {
                                                 </span>
                                             </div>
                                         </div>
+                                        <div className="flex gap-4 items-center">
+                                            <div className="flex items-center justify-center rounded-md bg-[#F1F2F4] p-[0.5rem] h-max">
+                                                {/* <img src={statusIcon} alt="" /> */}
+                                                <FaBoxOpen size={17} className="text-[#7d8a9c]" />
+                                            </div>
+                                            <div className="flex flex-col">
+                                                <span className="text-[13px] text-gray-500 font-medium">
+                                                    Delivery Distance:
+                                                </span>
+                                                <span className="text-[15px] text-[#757575] font-medium whitespace-pre">
+                                                    {branchDetailData?.maxDeliveryDistance} km  <span className="text-gray-500">(max.)</span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div className="flex gap-4 items-center">
+                                            <div className="flex items-center justify-center rounded-md bg-[#F1F2F4] p-[0.5rem] h-max">
+                                                <img src={calendarIcon} alt="" />
+                                            </div>
+                                            <div className="flex flex-col">
+                                                <span className="text-[13px] text-gray-500 font-medium">
+                                                    Created At:
+                                                </span>
+                                                <span className="text-[15px] text-[#757575] font-medium">
+                                                    {formatDate2(branchDetailData?.createdAt)}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        {/*  */}
+
+                                        {/*  */}
+
                                         {/*  */}
                                     </div>
                                     {/* Button Group */}
                                     <div className="flex flex-col gap-[0.5rem] mt-1.5">
-                                        <div onClick={handleModalEditOpen} className="flex items-center gap-2.5 rounded-lg cursor-pointer bg-transition bg-transition-orange py-[0.1rem]">
-                                            <div className="flex items-center justify-center rounded-full p-[0.5rem] h-max bg-[#fef0ea] z-10">
+                                        <div
+                                            onClick={handleModalEditOpen}
+                                            className="flex items-center gap-2.5 rounded-lg cursor-pointer bg-transition bg-transition-green py-[0.1rem]"
+                                        >
+                                            <div className="flex items-center justify-center rounded-full p-[0.5rem] h-max bg-[#eafaef] z-10">
                                                 <svg
                                                     xmlns="http://www.w3.org/2000/svg"
                                                     width="16"
@@ -228,7 +257,7 @@ export const StoreBranchDetail = () => {
                                                     viewBox="0 0 16 16"
                                                 >
                                                     <path
-                                                        fill="#fd5f28"
+                                                        fill="#51D669"
                                                         fillRule="evenodd"
                                                         d="M14.287.303a1 1 0 1 1 1.415 1.414l-.707.708L13.58 1.01zm0 2.829l-6.873 6.873H6V8.59l6.873-6.874zM3 13.5a.5.5 0 0 1-.5-.5V3a.5.5 0 0 1 .5-.5h6.25a.75.75 0 0 0 0-1.5H3a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6.75a.75.75 0 0 0-1.5 0V13a.5.5 0 0 1-.5.5z"
                                                         clipRule="evenodd"
@@ -239,7 +268,10 @@ export const StoreBranchDetail = () => {
                                                 Edit
                                             </span>
                                         </div>
-                                        <div onClick={() => setModalStatusOpen(!modalStatusOpen)} className="flex items-center gap-2.5 rounded-lg cursor-pointer bg-transition bg-transition-blue py-[0.1rem]">
+                                        <div
+                                            onClick={() => setModalStatusOpen(!modalStatusOpen)}
+                                            className="flex items-center gap-2.5 rounded-lg cursor-pointer bg-transition bg-transition-blue py-[0.1rem]"
+                                        >
                                             <div className="flex items-center justify-center rounded-full p-[0.5rem] h-max bg-[#e7f0ff] z-10">
                                                 <svg
                                                     xmlns="http://www.w3.org/2000/svg"
@@ -259,6 +291,27 @@ export const StoreBranchDetail = () => {
                                                 Change status
                                             </span>
                                         </div>
+                                        <div
+                                            onClick={() => setModalDeleteOpen(!modalDeleteOpen)}
+                                            className="flex items-center gap-2.5 rounded-lg cursor-pointer bg-transition bg-transition-orange py-[0.1rem]"
+                                        >
+                                            <div className="flex items-center justify-center rounded-full p-[0.5rem] h-max bg-[#fef0ea] z-10">
+                                                <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    width="17"
+                                                    height="17"
+                                                    viewBox="0 0 16 16"
+                                                >
+                                                    <path
+                                                        fill="#fd5f28"
+                                                        d="M11 1.75V3h2.25a.75.75 0 0 1 0 1.5H2.75a.75.75 0 0 1 0-1.5H5V1.75C5 .784 5.784 0 6.75 0h2.5C10.216 0 11 .784 11 1.75M4.496 6.675l.66 6.6a.25.25 0 0 0 .249.225h5.19a.25.25 0 0 0 .249-.225l.66-6.6a.75.75 0 0 1 1.492.149l-.66 6.6A1.748 1.748 0 0 1 10.595 15h-5.19a1.75 1.75 0 0 1-1.741-1.575l-.66-6.6a.75.75 0 1 1 1.492-.15M6.5 1.75V3h3V1.75a.25.25 0 0 0-.25-.25h-2.5a.25.25 0 0 0-.25.25"
+                                                    />
+                                                </svg>
+                                            </div>
+                                            <span className="font-medium text-gray-700 text-[15px] z-10">
+                                                Delete
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -268,8 +321,24 @@ export const StoreBranchDetail = () => {
             ) : (
                 ''
             )}
-            <ModalEditBranch modalEditOpen={modalEditOpen} handleModalEditOpen={handleModalEditOpen} branchDetailData={branchDetailData} fetchBranchDetailData={fetchBranchDetailData} />
-            <ModalBranchChangeStatus modalStatusOpen={modalStatusOpen} setModalStatusOpen={setModalStatusOpen} branchDetailData={branchDetailData} fetchBranchDetailData={fetchBranchDetailData} />
+            <ModalBranchEdit
+                modalEditOpen={modalEditOpen}
+                handleModalEditOpen={handleModalEditOpen}
+                branchDetailData={branchDetailData}
+                fetchBranchDetailData={fetchBranchDetailData}
+            />
+            <ModalBranchChangeStatus
+                modalStatusOpen={modalStatusOpen}
+                setModalStatusOpen={setModalStatusOpen}
+                branchDetailData={branchDetailData}
+                fetchBranchDetailData={fetchBranchDetailData}
+            />
+            <ModalBranchDelete
+                modalDeleteOpen={modalDeleteOpen}
+                setModalDeleteOpen={setModalDeleteOpen}
+                branchDetailData={branchDetailData}
+            />
+
         </>
     );
 };
@@ -283,5 +352,6 @@ StoreBranchDetail.propTypes = {
         latitude: PropTypes.number.isRequired,
         longitude: PropTypes.number.isRequired,
         contactNumber: PropTypes.string.isRequired,
+        maxDeliveryDistance: PropTypes.string.isRequired,
     })
 }
