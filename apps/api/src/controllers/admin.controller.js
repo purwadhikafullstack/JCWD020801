@@ -69,13 +69,16 @@ export const createAdmin = async (req, res) => {
 
 export const getAllAdmin = async (req, res) => {
     try {
-        const { page, sortBy = 'createdAt', sortOrder = 'asc' } = req.query;
+        const { page, sortBy, sortOrder = 'asc', search = '' } = req.query;
         const limit = 5;
         const offset = (page - 1) * limit;
 
         const dataAdmin = await Admin.findAndCountAll({
             where: {
                 isSuperAdmin: false,
+                name: { 
+                    [Op.like]: `%${search}%` 
+                }
             },
             attributes: {
                 exclude: ['password'],
@@ -222,7 +225,7 @@ export const updateVerifiedAdmin = async (req, res) => {
             }
         });
 
-        return res.status(200).send({message: "Account successfully verified"});
+        return res.status(200).send({ message: "Account successfully verified" });
     } catch (error) {
         return res.status(400).send({ error: error.message });
     }
@@ -299,7 +302,7 @@ export const getVerCode = async (req, res) => {
         })
 
         if (!account) {
-            return res.status(404).send({message: "Account not found",});
+            return res.status(404).send({ message: "Account not found", });
         }
 
         return res.status(200).send({ result: account });

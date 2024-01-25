@@ -9,13 +9,13 @@ import {
 } from "@material-tailwind/react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { SyncLoader } from 'react-spinners';
 import 'react-toastify/dist/ReactToastify.css'
 import axios from "../../../../api/axios";
 import { useState } from "react";
 
-export default function ModalAddAdmin({ openModalAdd, handleOpenAdd, getAdminData, currentPage }) {
+export default function ModalAddAdmin({ openModalAdd, handleOpenAdd, handleRefreshTable }) {
     const token = localStorage.getItem('admtoken')
     const [isLoading, setIsLoading] = useState(false);
 
@@ -41,7 +41,7 @@ export default function ModalAddAdmin({ openModalAdd, handleOpenAdd, getAdminDat
                 hideProgressBar: true,
                 theme: "colored"
             });
-            handleOpenAdd();
+            handleRefreshTable();
             getAdminData(currentPage);
         } catch (err) {
             setIsLoading(false)
@@ -133,13 +133,6 @@ export default function ModalAddAdmin({ openModalAdd, handleOpenAdd, getAdminDat
                     </form>
                 </Card>
             </Dialog>
-            <ToastContainer
-                position="top-center"
-                hideProgressBar={true}
-                theme="colored"
-                className={'rounded-lg'}
-                style={{ zIndex: 10001 }}
-            />
         </>
     )
 }

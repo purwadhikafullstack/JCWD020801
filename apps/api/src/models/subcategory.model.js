@@ -3,6 +3,7 @@ import { Model, DataTypes } from 'sequelize';
 export default class SubCategory extends Model {
   static associate(models) {
     SubCategory.belongsTo(models.Category);
+    SubCategory.hasMany(models.Product);
   }
 }
 

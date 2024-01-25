@@ -2,34 +2,34 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import LoginAdmin from './pages/admin/loginAdmin';
 import AdminManagement from './pages/admin/adminManagement';
 import CustomerManagement from './pages/admin/customerManagement';
-import Overview from './pages/admin/overview';
-import Home from './pages/home/Home';
-import Required from './components/required';
-import { useDispatch } from 'react-redux';
-import { useEffect, useState } from 'react';
-import { setDataAdmin } from './redux/adminSlice';
-import axios from './api/axios';
 import AdminVerification from './pages/admin/components/adminVerification';
 import ProductManagement from './pages/admin/productManagement';
 import AdminProfile from './pages/admin/adminProfile';
 import AdminResetPassword from './pages/admin/components/adminResetPassword';
-import { ExpiredToken } from './pages/admin/components/dialogs';
-import CategoryManagement from './pages/admin/categoryManagement';
-import { HomePage } from './pages/home';
 import { UserDashboard } from './pages/userDashboard';
 import { UserVerification } from './pages/userVerification';
 import { UserSignIn } from './pages/userSignIn';
 import { UserRegister } from './pages/userRegister';
 import { AccountVerification } from './pages/accountVerification';
-import { setData } from './redux/customerSlice';
+import { ExpiredToken } from './pages/admin/components/dialogs';
+import CategoryManagement from './pages/admin/categoryManagement';
+import Overview from './pages/admin/overview';
+import Home from './pages/home/Home';
+import Required from './components/required';
 import AdminRequired from './components/adminRequired';
+import { useDispatch } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { setDataAdmin } from './redux/adminSlice';
+import { setData } from './redux/customerSlice';
+import axios from './api/axios';
+import { HomePage } from './pages/home';
+import AdminErrorPage from './pages/admin/components/adminErrorPage';
 
 const router = createBrowserRouter([
-  //Untuk yang tidak butuh token
   { path: "/", element: <Home /> },
   { path: "/login-admin", element: <LoginAdmin></LoginAdmin> },
-  { path: "/admin-verification/:token", element: <AdminVerification/> },
-  { path: "/admin-reset-password/:token", element: <AdminResetPassword/> },
+  { path: "/admin-verification/:token", element: <AdminVerification /> },
+  { path: "/admin-reset-password/:token", element: <AdminResetPassword /> },
   { path: "/home", element: <HomePage /> },
   { path: "/signin", element: <UserSignIn /> },
   { path: "/register", element: <UserRegister /> },
@@ -37,20 +37,20 @@ const router = createBrowserRouter([
   {
     element: <Required />,
     children: [
-      //untuk yang butuh customer
       { path: "/user-dashboard", element: <UserDashboard /> },
       { path: "/user-verification", element: <UserVerification /> },
     ],
   },
   {
-    element: <AdminRequired/>,
+    element: <AdminRequired />,
     children: [
       { path: "/admin-management", element: <AdminManagement /> },
-      { path: "/admin-overview", element: <Overview/> },
-      { path: "/customer-management", element: <CustomerManagement/> },
-      { path: "/product-management", element: <ProductManagement/> },
-      { path: "/admin-profile", element: <AdminProfile/> },
-      { path: "/category-management", element: <CategoryManagement/> }
+      { path: "/admin-overview", element: <Overview /> },
+      { path: "/customer-management", element: <CustomerManagement /> },
+      { path: "/product-management", element: <ProductManagement /> },
+      { path: "/admin-profile", element: <AdminProfile /> },
+      { path: "/category-management", element: <CategoryManagement /> },
+      { path: "/error", element: <AdminErrorPage/> }
     ]
   }
 ]);
@@ -60,18 +60,18 @@ function App() {
   const admtoken = localStorage.getItem('admtoken')
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false)
-  const handleOpen = () => setOpen(!open);
+  const handleOpen = () => setOpen(true);
 
   const keepLoginAdmin = async () => {
     try {
-        const response = await axios.get("admins/keep-login", {
-          headers: {
-            Authorization: `Bearer ${admtoken}`,
-          },
-        });
-        dispatch(setDataAdmin(response.data.result));
+      const response = await axios.get("admins/keep-login", {
+        headers: {
+          Authorization: `Bearer ${admtoken}`,
+        },
+      });
+      dispatch(setDataAdmin(response.data.result));
     } catch (err) {
-      if(err.response.status === 401){
+      if (err.response.status === 401) {
         localStorage.removeItem('admtoken')
         handleOpen();
       }
@@ -95,18 +95,19 @@ function App() {
     if (token) {
       keepLoginCustomer();
     }
-    if(admtoken){
+    if (admtoken) {
       keepLoginAdmin();
     }
   }, []);
 
   return (
     <>
-    <RouterProvider router={router}></RouterProvider>
-    <ExpiredToken
-    content={'Please login again'}
-    openDialog={open}
-    handleOpen={handleOpen}/>
+      <RouterProvider router={router}>
+        <ExpiredToken
+          content={'Please login again'}
+          open={open}
+          handleOpen={handleOpen} />
+      </RouterProvider>
     </>
   );
 }

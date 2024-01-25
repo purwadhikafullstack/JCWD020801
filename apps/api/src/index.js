@@ -4,6 +4,7 @@ import { join } from 'path';
 import { NODE_ENV, PORT } from './config';
 import router from './router';
 import { DB } from './db';
+import path from 'path';
 
 /**
  * Serve "web" project build result (for production only)
@@ -57,6 +58,7 @@ const main = async () => {
     app.use(cors());
     app.use(json());
     app.use('/api', router);
+    app.use("/public", express.static(path.join(__dirname, './public')));
 
     globalAPIErrorHandler(app);
     serveWebProjectBuildResult(app);

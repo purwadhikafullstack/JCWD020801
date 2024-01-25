@@ -4,6 +4,7 @@ export default class Product extends Model {
   static associate(models) {
     Product.hasMany(models.ProductImage);
     Product.belongsTo(models.Category);
+    Product.belongsTo(models.SubCategory);
     Product.hasMany(models.ProductBranch);
     Product.hasMany(models.OrderDetail);
   }
@@ -23,6 +24,10 @@ export const init = (sequelize) => {
       price: {
         type: DataTypes.INTEGER,
         allowNull: false,
+      },
+      weight:{
+        type: DataTypes.INTEGER,
+        allowNull: false
       },
       isDisabled: {
         type: DataTypes.BOOLEAN,

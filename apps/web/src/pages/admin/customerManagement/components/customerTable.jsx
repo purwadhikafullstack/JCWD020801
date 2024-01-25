@@ -38,29 +38,6 @@ const customer_dummy = [
 export default function CustomerTable() {
     const TABLE_HEAD = ["First Name", "Last Name", "Username", "Email", "Birth Date", "Referral Code", "Status"];
     return (
-        <div className="flex flex-col w-full items-center justify-center gap-5">
-            <div className="w-screen md:w-5/6">
-                <Card className="mt-6 w-full">
-                    <CardBody>
-                        <Typography variant="h5" color="blue-gray" className="mb-2">
-                            Customer Management
-                        </Typography>
-                        <Typography>
-                            The current list of registered customers.
-                        </Typography>
-                    </CardBody>
-                    <CardFooter className="pt-0">
-                        <div className="flex flex-col gap-3  md:flex-row md:justify-between">
-                            <div className="w-full md:w-72">
-                                <Input
-                                    label="Search"
-                                    icon={<MagnifyingGlassIcon className="h-5 w-5" />}
-                                />
-                            </div>
-                        </div>
-                    </CardFooter>
-                </Card>
-            </div>
             <div className="w-screen md:w-5/6">
                 <Card className="h-full w-full">
                     <CardBody className="overflow-scroll px-0 py-0">
@@ -211,6 +188,5 @@ export default function CustomerTable() {
                     </CardFooter>
                 </Card>
             </div>
-        </div>
     )
 }

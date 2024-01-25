@@ -8,26 +8,40 @@ import {
 } from "@material-tailwind/react";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
-import axios from "../../../../api/axios";
+import axios from "../../../api/axios";
 
-export default function ModalDelete ({openDelete, handleDelete, getAdminData, clickedData, currentPage}) {
+export default function ModalDelete ({api, openDelete, handleDelete, getData, clickedData, handleRefreshTable}) {
     const token = localStorage.getItem('admtoken')
 
     const handleSubmit = async (id) => {
         try {
-            const response = await axios.delete(`admins/${id}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            toast.success(response.data.message, {
-                position: "top-center",
-                hideProgressBar: true,
-                theme: "colored"
-            });
+            if(api === '/products'){
+                const response = await axios.patch(`${api}/${id}`, {}, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });   
+                toast.success(response.data.message, {
+                    position: "top-center",
+                    hideProgressBar: true,
+                    theme: "colored"
+                }); 
+            }else{
+                const response = await axios.delete(`${api}/${id}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                toast.success(response.data.message, {
+                    position: "top-center",
+                    hideProgressBar: true,
+                    theme: "colored"
+                });
+            }
             handleDelete();
-            getAdminData(currentPage);
+            handleRefreshTable();
         } catch (err) {
+            console.log(err);
             toast.error(err.response.data.message, { position: "top-center" });
         }
     };

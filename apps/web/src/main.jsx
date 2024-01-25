@@ -11,7 +11,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <Provider store={store}>
       <ThemeProvider>
-      <ToastContainer />
+        <ToastContainer
+          style={{ zIndex: 10001 }} />
         <App />
       </ThemeProvider>
     </Provider>
