@@ -9,6 +9,7 @@ import {
   removeFromCart,
   subtractQuantity,
 } from '../../../redux/cartSlice';
+import { useNavigate } from 'react-router-dom';
 
 const convertToIDR = (price) => {
   let newPrice = price.toLocaleString('id-ID', {
@@ -21,6 +22,7 @@ const convertToIDR = (price) => {
 };
 
 export const ShoppingCart = ({ isOpenCart, toggleOpenCart }) => {
+  const navigate = useNavigate();
   const data = useSelector((state) => state.product.data);
   const carts = useSelector((state) => state.cart.data);
   console.log(carts);
@@ -176,7 +178,10 @@ export const ShoppingCart = ({ isOpenCart, toggleOpenCart }) => {
                     </span>
                   </div>
                   <div className="">
-                    <button className="cssbuttons-io-button w-full font-semibold">
+                    <button
+                      onClick={() => navigate('/checkout')}
+                      className="cssbuttons-io-button w-full font-semibold"
+                    >
                       Go to Checkout
                       <div className="icon">
                         <svg
