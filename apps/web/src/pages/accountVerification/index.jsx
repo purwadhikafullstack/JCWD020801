@@ -21,20 +21,20 @@ export const AccountVerification = () => {
     const handleSubmit = async (values) => {
         try {
             setIsLoading(true)
-            await axios.patch('http://localhost:8000/api/customer/verification', values, {
+            const response = await axios.patch('http://localhost:8000/api/customer/verification', values, {
                 headers: {
                     Authorization: `Bearer ${params.token}`
                 }
             })
             setIsLoading(false)
-            toast.success('Account verified successfully!', {
+            toast.success(response.data.message, {
                 position: "top-center",
             })
             navigate('/signin')
         } catch (error) {
             console.log(error);
             setIsLoading(false)
-            toast.error('Account verification failed!', {
+            toast.error(error.response.data.message, {
                 position: "top-center",
             });
         }
@@ -64,7 +64,7 @@ export const AccountVerification = () => {
                     <img
                         src={bannerPage}
                         alt=""
-                        className="h-[9rem] w-full object-cover rounded-lg"
+                        className="h-[12rem] w-full object-cover rounded-lg"
                     />
                     <div className="flex flex-col">
                         <span className="text-[16px] font-semibold text-[#28302A]">
@@ -92,7 +92,6 @@ export const AccountVerification = () => {
                                         // 
                                         className="block w-full rounded-lg border border-gray-300 bg-[#FCFCFC] p-2.5 text-gray-900 sm:text-sm focus:outline-[#4ECCA3]"
                                         placeholder="password"
-                                        id=""
                                         type={showPassword ? 'text' : 'password'}
                                     />
                                     <button
@@ -139,7 +138,7 @@ export const AccountVerification = () => {
                         </div> */}
                         </div>
                         <div className="flex justify-center mt-9">
-                            <button type="submit" className="w-[115px] rounded-full bg-[#00a67c] h-[52px] text-[16px] font-semibold text-white transition delay-100 ease-in-out hover:bg-[#00916D]">
+                            <button type="submit" className="w-full rounded-xl bg-[#00a67c] h-[52px] text-[16px] font-semibold text-white transition delay-100 ease-in-out hover:bg-[#00916D]">
                                 <span>
                                     {isLoading ? (
                                         <div className="flex justify-center items-center">

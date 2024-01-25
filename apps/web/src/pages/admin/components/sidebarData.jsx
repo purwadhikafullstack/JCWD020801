@@ -4,6 +4,8 @@ import { GoPeople } from "react-icons/go";
 import { GrUserAdmin } from "react-icons/gr";
 import { MdOutlineDiscount } from "react-icons/md";
 import { VscGraphLine } from "react-icons/vsc";
+import { LuStore } from "react-icons/lu";
+
 
 export const sidebarData = [
     {
@@ -45,6 +47,13 @@ export const sidebarData = [
         ]
     },
     {
+        title: "Store Management",
+        path: "/store-management",
+        icon: <LuStore className="h-5 w-5" />,
+        admin: true
+
+    },
+    {
         title: "Discount Management",
         path: "/",
         icon: <MdOutlineDiscount className="h-5 w-5" />,
@@ -54,5 +63,5 @@ export const sidebarData = [
         title: "Reports",
         path: "/",
         icon: <VscGraphLine className="h-5 w-5" />
-    },   
+    },
 ]

@@ -4,6 +4,7 @@ import {
   deleteAdmin,
   forgotPassword,
   getAllAdmin,
+  getAllAdminNoPagination,
   getTotalAdmin,
   getVerCode,
   keepLoginAdmin,
@@ -16,11 +17,11 @@ import {
 import { checkRoleAdmin, verifyTokenAdmin } from '../middleware/admin/admin.auth';
 import { checkLoginAdmin, checkRegisterAdmin } from '../middleware/admin/admin.validator';
 
-
 const adminRouter = Router();
 
 adminRouter.post('/', verifyTokenAdmin, checkRoleAdmin, checkRegisterAdmin, createAdmin); //create a new admin
 adminRouter.get('/', verifyTokenAdmin, checkRoleAdmin, getAllAdmin); //get all admins
+adminRouter.get('/no-pagination', verifyTokenAdmin, checkRoleAdmin, getAllAdminNoPagination) // get all admin without pagination
 adminRouter.delete('/:id', verifyTokenAdmin, checkRoleAdmin, deleteAdmin); //delete admin by id
 adminRouter.patch('/', verifyTokenAdmin, updateAdmin) //edit an admin
 adminRouter.patch('/verification', verifyTokenAdmin, updateVerifiedAdmin) //verify admin account

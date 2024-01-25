@@ -5,6 +5,7 @@ module.exports = {
     verifyToken: (req, res, next) => {
         try {
             let token = req.headers.authorization
+            console.log(token);
             if (token == null) {
                 return res.status(401).send({
                     message: "Token is empty"

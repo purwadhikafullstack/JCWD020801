@@ -337,3 +337,19 @@ export const logoutAdmin = (req, res) => {
         return res.status(500).send({ message: error.message })
     }
 }
+
+export const getAllAdminNoPagination = async (req, res) => {
+    try {
+        const result = await Admin.findAll({
+            where: {
+                isSuperAdmin: false
+            },
+            // order: 
+        })
+        return res.status(200).send({ result: result })
+
+    } catch (error) {
+        console.log(error);
+        res.status(400).send({ message: error.message })
+    }
+}

@@ -5,6 +5,7 @@ export default class Customer extends Model {
     Customer.hasMany(models.CustomerAddress);
     Customer.hasMany(models.Order);
     Customer.hasMany(models.CustomerVoucher);
+    Customer.hasMany(models.ShippingCost, { foreignKey: 'CustomerId' })
   }
 }
 export const init = (sequelize) => {
@@ -21,29 +22,42 @@ export const init = (sequelize) => {
       email: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
+        unique: 'email',
       },
       password: {
         type: DataTypes.STRING,
         allowNull: true,
       },
+      lastPasswordReset: {
+        type: DataTypes.DATE,
+        allowNull: true,
+        defaultValue: null
+      },
       profile_picture: {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      birthdate: {
-        type: DataTypes.DATE,
+      phoneNumber: {
+        type: DataTypes.STRING,
         allowNull: true,
+      },
+      gender: {
+        type: DataTypes.STRING,
+        allowNull: true
       },
       referral_code: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
+        unique: 'referral_code',
       },
       isVerified: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false,
+      },
+      verificationSentAt: {
+        type: DataTypes.DATE,
+        defaultValue: null
       },
       isDeleted: {
         type: DataTypes.BOOLEAN,
