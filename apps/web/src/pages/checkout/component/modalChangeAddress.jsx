@@ -38,6 +38,12 @@ export const ModalChangeAddress = ({ modalChangeAddressOpen, setModalChangeAddre
         setCurrentPage(newPage);
     };
 
+    const handleGoToAddressList = () => {
+        navigate('/user-dashboard')
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        // window.scrollTo(0, 0)
+    }
+
     useEffect(() => {
         fetchAllAddress(currentPage);
     }, [currentPage])
@@ -145,7 +151,7 @@ export const ModalChangeAddress = ({ modalChangeAddressOpen, setModalChangeAddre
                         </div>
                     )}
                     <div
-                        onClick={() => navigate('/user-dashboard')}
+                        onClick={handleGoToAddressList}
                         id="underline-wrapper"
                         className="text-gray-500 w-max flex self-end w-full mt-[0.7rem] items-center gap-1 cursor-pointer hover:text-gray-700 relative"
                     >
