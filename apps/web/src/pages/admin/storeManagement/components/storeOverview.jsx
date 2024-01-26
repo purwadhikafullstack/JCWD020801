@@ -5,12 +5,48 @@ import { SyncLoader } from 'react-spinners';
 import { StoreTable } from './storeTable';
 // import { ModalAddBranch } from './modalAddBranch';
 import { ModalAddBranch2 } from './modalAddBranch2';
+import axios from '../../../../api/axios';
 
 export const StoreOverview = () => {
+    const token = localStorage.getItem('admtoken');
+
     const [modalAddOpen, setModalAddOpen] = useState(false);
+    const [branchData, setBranchData] = useState([])
     const [isLoading, setIsLoading] = useState(false);
 
     const handleModalAddOpen = () => setModalAddOpen(!modalAddOpen);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [searchQuery, setSearchQuery] = useState('');
+
+    const fetchBranchData = async (page, search = '') => {
+        try {
+            const response = await axios.get(`branches?page=${page}&search=${search}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+            setBranchData(response.data.result.rows)
+            setTotalPages(response.data.totalPages)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const handlePageChange = (newPage) => {
+        setCurrentPage(newPage);
+        // window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo(0, 0)
+    };
+
+    const handleSearch = () => {
+        fetchBranchData(1, searchQuery)
+    }
+
+    useEffect(() => {
+        fetchBranchData(currentPage, searchQuery);
+    }, [currentPage, searchQuery])
 
     return (
         <>
@@ -58,15 +94,27 @@ export const StoreOverview = () => {
                         <div className="w-full md:w-72">
                             <Input
                                 label="Search"
-                                icon={<MagnifyingGlassIcon className="h-5 w-5" />}
+                                icon={<MagnifyingGlassIcon className="h-5 w-5" onClick={handleSearch} />}
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
                             />
                         </div>
                     </div>
                 </div>
                 {/* Table Section */}
-                <StoreTable />
+                <StoreTable
+                    branchData={branchData}
+                    handlePageChange={handlePageChange}
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                />
             </div>
-            <ModalAddBranch2 modalAddOpen={modalAddOpen} handleModalAddOpen={handleModalAddOpen} />
+            <ModalAddBranch2
+                modalAddOpen={modalAddOpen}
+                handleModalAddOpen={handleModalAddOpen}
+                fetchBranchData={fetchBranchData}
+                currentPage={currentPage}
+            />
         </>
     );
 };

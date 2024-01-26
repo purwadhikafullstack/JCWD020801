@@ -6,13 +6,27 @@ const { Op } = require('sequelize');
 require("dotenv").config();
 const Sequelize = require('sequelize')
 
+// for admin
 export const getAll = async (req, res) => {
     try {
-        const result = await Branch.findAll({
-            where: {
-                isDeleted: false,
-                isActive: true
-            },
+        const { page, search } = req.query;
+        const limit = 5;
+        const offset = (page - 1) * limit;
+
+        const whereClause = {
+            isDeleted: false,
+            // isActive: true
+        }
+
+        if (search) {
+            whereClause[Op.or] = [
+                { name: { [Op.like]: `%${search}%` } },
+                { address: { [Op.like]: `%${search}%` } }
+            ]
+        }
+
+        const result = await Branch.findAndCountAll({
+            where: whereClause,
             order: [
                 ['isSuperStore', 'DESC'],
                 ['createdAt', 'DESC']
@@ -22,9 +36,13 @@ export const getAll = async (req, res) => {
                     model: Admin,
                     attributes: ['name', 'username', 'email']
                 }
-            ]
+            ],
+            limit: parseInt(limit),
+            offset: parseInt(offset)
         })
-        res.status(200).send({ result })
+
+        const totalPages = Math.ceil(result.count / limit);
+        res.status(200).send({ result: result, page, totalPages })
     } catch (error) {
         console.log(error);
         res.status(400).send({ message: error.message })

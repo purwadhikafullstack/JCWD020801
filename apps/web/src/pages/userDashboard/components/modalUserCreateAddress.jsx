@@ -18,7 +18,7 @@ import axios from '../../../api/axios'
 import Select from 'react-select'
 import { IoIosWarning } from "react-icons/io";
 
-export const ModalUserCreateAddress = ({ modalAddOpen, handleModalAddOpen, fetchUserAddressData, fetchAllAddress }) => {
+export const ModalUserCreateAddress = ({ modalAddOpen, handleModalAddOpen, fetchUserAddressData, fetchAllAddress, currentPage }) => {
     const token = localStorage.getItem('token');
     const customer = useSelector((state) => state.customer.value);
 
@@ -109,13 +109,19 @@ export const ModalUserCreateAddress = ({ modalAddOpen, handleModalAddOpen, fetch
                 }
             );
 
+            if (typeof fetchUserAddressData === 'function') {
+                fetchUserAddressData(currentPage);
+            }
+
+            if (typeof fetchAllAddress === 'function') {
+                fetchAllAddress(currentPage);
+            }
+
             setIsLoading(false);
             toast.success(response.data.message, {
                 position: 'top-center',
             });
             handleModalAddOpen()
-            fetchUserAddressData()
-            fetchAllAddress()
             formik.resetForm();
         } catch (error) {
             console.log(error);
@@ -566,6 +572,7 @@ export const ModalUserCreateAddress = ({ modalAddOpen, handleModalAddOpen, fetch
 };
 
 ModalUserCreateAddress.propTypes = {
+    currentPage: PropTypes.number.isRequired,
     modalAddOpen: PropTypes.bool.isRequired,
     handleModalAddOpen: PropTypes.func.isRequired,
     fetchUserAddressData: PropTypes.func.isRequired,

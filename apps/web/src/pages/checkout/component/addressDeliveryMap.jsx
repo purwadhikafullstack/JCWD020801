@@ -6,7 +6,7 @@ import { useState } from "react";
 import { SyncLoader } from "react-spinners";
 
 
-export const AddressDeliveryMap = ({ item, fetchAllAddress, fetchDeliveryAddress }) => {
+export const AddressDeliveryMap = ({ item, fetchAllAddress, fetchDeliveryAddress, currentPage }) => {
     const token = localStorage.getItem('token');
     const [isLoading, setIsLoading] = useState(false);
 
@@ -23,7 +23,7 @@ export const AddressDeliveryMap = ({ item, fetchAllAddress, fetchDeliveryAddress
                 },
             )
             setIsLoading(false);
-            fetchAllAddress();
+            fetchAllAddress(currentPage);
             fetchDeliveryAddress();
             toast.success(response.data.message, {
                 position: 'top-center',
@@ -144,6 +144,7 @@ export const AddressDeliveryMap = ({ item, fetchAllAddress, fetchDeliveryAddress
 AddressDeliveryMap.propTypes = {
     fetchAllAddress: PropTypes.func.isRequired,
     fetchDeliveryAddress: PropTypes.func.isRequired,
+    currentPage: PropTypes.number.isRequired,
     item: PropTypes.shape({
         id: PropTypes.number.isRequired,
         isDeliveryAddress: PropTypes.bool.isRequired,

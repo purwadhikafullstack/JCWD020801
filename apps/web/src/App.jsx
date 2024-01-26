@@ -5,7 +5,7 @@ import CustomerManagement from './pages/admin/customerManagement';
 import Overview from './pages/admin/overview';
 import Home from './pages/home/Home';
 import Required from './components/required';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { setDataAdmin } from './redux/adminSlice';
 import axios from './api/axios';
@@ -23,13 +23,15 @@ import { UserRegister } from './pages/userRegister';
 import { AccountVerification } from './pages/accountVerification';
 import { UserResetPassword } from './pages/userResetPassword';
 import { UserUpdateEmail } from './pages/userUpdateEmail';
-import { setData } from './redux/customerSlice';
+// import { setData } from './redux/customercustomerSliceSlice';
+import { setData } from './redux/customerSlice'
 import AdminRequired from './components/adminRequired';
 import { StoreManagement } from './pages/admin/storeManagement';
 import { StoreBranchDetail } from './pages/admin/storeManagement/storeBranchDetail';
 import { StoreLocator } from './pages/storeLocator';
 import { CheckoutPage } from './pages/checkout';
 import { ProductCatalogue } from './pages/productCatalogue';
+import { useGeoLocation } from './hooks/useGeoLocation';
 
 const router = createBrowserRouter([
   //Untuk yang tidak butuh token
@@ -75,6 +77,10 @@ function App() {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(!open);
+
+  useGeoLocation();
+  // const { coordinates, loaded } = useSelector((state) => state.geolocation);
+  // console.log(coordinates);
 
   const keepLoginAdmin = async () => {
     try {

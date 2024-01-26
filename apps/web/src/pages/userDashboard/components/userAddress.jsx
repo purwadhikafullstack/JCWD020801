@@ -10,8 +10,6 @@ export const UserAddress = () => {
 
     const [userAddressData, setUserAddressData] = useState(null);
     const [modalAddOpen, setModalAddOpen] = useState(false);
-    const handleModalAddOpen = () => setModalAddOpen(!modalAddOpen);
-
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
 
@@ -22,13 +20,16 @@ export const UserAddress = () => {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            console.log(response);
             setUserAddressData(response.data.result.rows);
+            console.log("data updated", response.data.result.rows)
             setTotalPages(response.data.totalPages);
         } catch (error) {
+            console.log("this");
             console.log(error);
         }
     };
+
+    const handleModalAddOpen = () => setModalAddOpen(!modalAddOpen);
 
     const handlePageChange = (newPage) => {
         setCurrentPage(newPage);
@@ -66,11 +67,12 @@ export const UserAddress = () => {
                 {userAddressData?.length > 0 ? (
                     <>
                         <div className="flex flex-col gap-3">
-                            {userAddressData?.map((item) => (
+                            {userAddressData?.map((item, index) => (
                                 <AddressDataMap
                                     item={item}
-                                    key={item.id}
+                                    key={index}
                                     fetchUserAddressData={fetchUserAddressData}
+                                    currentPage={currentPage}
                                 />
                             ))}
                         </div>
@@ -145,6 +147,7 @@ export const UserAddress = () => {
                 modalAddOpen={modalAddOpen}
                 handleModalAddOpen={handleModalAddOpen}
                 fetchUserAddressData={fetchUserAddressData}
+                currentPage={currentPage}
             />
         </div>
     );

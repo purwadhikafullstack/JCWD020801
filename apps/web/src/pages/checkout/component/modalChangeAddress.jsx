@@ -86,9 +86,10 @@ export const ModalChangeAddress = ({ modalChangeAddressOpen, setModalChangeAddre
                                     item={item}
                                     fetchAllAddress={fetchAllAddress}
                                     fetchDeliveryAddress={fetchDeliveryAddress}
+                                    currentPage={currentPage}
                                 />
                             ))}
-                            <div className="flex items-center justify-between pr-1 mt-[2px]">
+                            <div className="flex items-center justify-between pr-1 mt-auto">
                                 <button
                                     onClick={() => handlePageChange(currentPage - 1)}
                                     disabled={currentPage === 1}
@@ -171,6 +172,7 @@ export const ModalChangeAddress = ({ modalChangeAddressOpen, setModalChangeAddre
                 modalAddOpen={modalAddOpen}
                 handleModalAddOpen={handleModalAddOpen}
                 fetchAllAddress={fetchAllAddress}
+                currentPage={currentPage}
             />
         </>
     );

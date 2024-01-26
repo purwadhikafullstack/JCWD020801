@@ -6,7 +6,7 @@ import axios from '../../../api/axios'
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import avaDummy from '../../../assets/userDashboard/ava-dummy.png';
-import { updateProfilePicture } from "../../../../redux/customerSlice";
+import { updateProfilePicture } from "../../../redux/customerSlice"
 
 export const ModalUpdateImage = ({ modalImgOpen, setModalImgOpen }) => {
     const customer = useSelector((state) => state.customer.value);

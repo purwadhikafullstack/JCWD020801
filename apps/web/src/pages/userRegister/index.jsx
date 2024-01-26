@@ -13,7 +13,7 @@ import { ModalError } from './components/modalError';
 import { registerWithGoogle } from '../../../../api/src/firebase'
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { setData } from '../../../redux/customerSlice';
+import { setData } from '../../redux/customerSlice'
 import { toast } from 'react-toastify';
 
 export const UserRegister = () => {

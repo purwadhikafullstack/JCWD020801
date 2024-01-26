@@ -22,7 +22,7 @@ const initialState = {
       id: 3,
       title: 'card 3',
       img: 'https://images.unsplash.com/photo-1519996529931-28324d5a630e?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-      price: 2500000,
+      price: 17000,
       stock: 54,
       desc: 'Siggis Skyr Icelandic-Style Strained Non-Fat Yogurt, Mixed Berry and Acai',
     },
@@ -38,7 +38,7 @@ const initialState = {
       id: 5,
       title: 'card 5',
       img: 'https://images.unsplash.com/photo-1557800636-894a64c1696f?q=80&w=1965&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-      price: 25000000,
+      price: 32500,
       stock: 54,
       desc: 'Sprouts Organic Chicken Thin Sliced Boneless Breast',
     },
@@ -46,10 +46,11 @@ const initialState = {
       id: 6,
       title: 'card 6',
       img: 'https://plus.unsplash.com/premium_photo-1671379041175-782d15092945?q=80&w=1920&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-      price: 250000,
+      price: 40400,
       stock: 54,
       desc: 'this is desc this is desc this is desc',
     },
+    // 
   ],
 };
 

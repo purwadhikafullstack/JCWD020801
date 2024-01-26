@@ -9,7 +9,6 @@ import { ModalCategory } from './components/modalCategory';
 import { ModalAccount } from './components/modalAccount';
 import { ShoppingCart } from './components/shoppingCart';
 import { useSelector } from 'react-redux';
-import { useGeoLocation } from '../../hooks/useGeoLocation';
 import { fetchAddressFromCoordinates } from '../../api/fetchAddressFromCoordinates';
 import { truncateString } from '../../functions/functions';
 import { Tooltip } from '@material-tailwind/react';
@@ -61,8 +60,8 @@ export const Navbar = () => {
   const customer = useSelector((state) => state.customer.value);
   const totalProduct = useSelector((state) => state.cart.totalProduct);
 
-  // const location = useGeoLocation()
-  const { coordinates, loaded } = useGeoLocation();
+  // const { coordinates, loaded } = useGeoLocation();
+  const { coordinates, loaded } = useSelector((state) => state.geolocation);
   const [formattedAddress, setFormattedAddress] = useState('');
 
   const [isOpen, setIsOpen] = useState(false);
@@ -250,7 +249,7 @@ export const Navbar = () => {
                 </svg>
               )}
               <span className="whitespace-nowrap font-medium text-[#343538]">
-                {customer.firstname ? customer.firstname : `Account`}
+                {customer.firstname ? customer.firstname : `Sign in`}
               </span>
               <motion.svg
                 width="16"
@@ -297,7 +296,7 @@ export const Navbar = () => {
                   strokeLinejoin="round"
                 />
               </svg>
-              <span className="font-semibold text-[#343538]">12</span>
+              <span className="font-semibold text-[#343538]">{totalProduct}</span>
             </div>
           </div >
           {/* Hamburger */}

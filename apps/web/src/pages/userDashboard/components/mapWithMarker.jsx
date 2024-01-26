@@ -19,10 +19,9 @@ export const MapWithMarker = ({ coordinates, setAddress, setCoordinates }) => {
             draggable: true,
         });
 
-        // Update marker position on dragend
+        // Update marker position on dragedd
         marker.addListener('dragend', () => {
             const newPosition = marker.getPosition();
-            // Update state with the new position
             setCoordinates({ lat: newPosition.lat(), lng: newPosition.lng() });
 
             // Reverse geocode to get address from new coordinates
@@ -31,7 +30,6 @@ export const MapWithMarker = ({ coordinates, setAddress, setCoordinates }) => {
                 if (status === 'OK') {
                     if (results[0]) {
                         setAddress(results[0].formatted_address);
-                        // Update state with the new address
                     }
                 }
             });

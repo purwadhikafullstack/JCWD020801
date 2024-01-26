@@ -7,7 +7,7 @@ import { BiTrash } from 'react-icons/bi';
 import { HiArrowPathRoundedSquare } from "react-icons/hi2";
 import { MdOutlineModeEdit } from "react-icons/md";
 
-export const AddressDataMap = ({ item, fetchUserAddressData }) => {
+export const AddressDataMap = ({ item, fetchUserAddressData, currentPage }) => {
 
     const [modalDefaultOpen, setModalDefaultOpen] = useState(false)
     const [modalDeleteOpen, setModalDeleteOpen] = useState(false)
@@ -15,7 +15,13 @@ export const AddressDataMap = ({ item, fetchUserAddressData }) => {
 
     return (
         <>
-            <div key={item?.id} className={`${item.isDefault ? "border border-[#209978] bg-[#f8fdfd]" : "border-gray-300 bg-transparent hover:border-[#71e1c3]"} flex flex-col gap-1 rounded-xl border px-[1.1rem] py-[1rem] md:px-6 md:py-4 shadow-sm`}>
+            <div
+                key={item?.id}
+                className={`${item.isDefault
+                    ? 'border border-[#209978] bg-[#f8fdfd]'
+                    : 'border-gray-300 bg-transparent hover:border-[#71e1c3]'
+                    } flex flex-col gap-1 rounded-xl border px-[1.1rem] py-[1rem] md:px-6 md:py-4 shadow-sm`}
+            >
                 <div className="flex items-center gap-[0.6rem]">
                     <h4 className="text-[16.5px] text-[#474747] font-semibold">
                         {item?.title}
@@ -29,8 +35,12 @@ export const AddressDataMap = ({ item, fetchUserAddressData }) => {
                     )}
                 </div>
                 <div className="flex items-center gap-1 text-[#989d9e]">
-                    <span className="font-medium text-[15px]">{item?.customerAddressName}</span>
-                    <span className=" font-medium text-[14px]">({item?.phoneNumber})</span>
+                    <span className="font-medium text-[15px]">
+                        {item?.customerAddressName}
+                    </span>
+                    <span className=" font-medium text-[14px]">
+                        ({item?.phoneNumber})
+                    </span>
                 </div>
                 <div className="flex gap-1 rounded-xl bg-[#f5f6f6] p-3 mt-[0.7rem]">
                     <div className="w-max h-max flex items-center justify-center mt-[3px]">
@@ -68,35 +78,61 @@ export const AddressDataMap = ({ item, fetchUserAddressData }) => {
                 </div>
                 <div className="mt-2 lg:mt-4 flex flex-col gap-4 md:gap-0 md:flex-row md:items-center justify-between">
                     <div className="flex gap-2 divide-x-2 divide-[#e9e9e9] pl-1">
-                        <button onClick={() => setModalEditOpen(!modalEditOpen)} className="text-[14px] font-semibold flex gap-1 items-center text-[#209978] opacity-90 hover:underline">
+                        <button
+                            onClick={() => setModalEditOpen(!modalEditOpen)}
+                            className="text-[14px] font-semibold flex gap-1 items-center text-[#209978] opacity-90 hover:underline"
+                        >
                             <MdOutlineModeEdit size={13} />
                             <span>Edit</span>
                         </button>
-                        <button onClick={() => setModalDeleteOpen(!modalDeleteOpen)} className="pl-2 text-[14px] font-semibold flex gap-1 items-center text-[#209978] opacity-90 hover:underline">
+                        <button
+                            onClick={() => setModalDeleteOpen(!modalDeleteOpen)}
+                            className="pl-2 text-[14px] font-semibold flex gap-1 items-center text-[#209978] opacity-90 hover:underline"
+                        >
                             <BiTrash />
                             <span>Delete</span>
                         </button>
                         {!item.isDefault && (
-                            <button onClick={() => setModalDefaultOpen(!modalDefaultOpen)} className="pl-2 text-[14px] font-semibold flex gap-1 items-center text-[#209978] opacity-90 hover:underline">
+                            <button
+                                onClick={() => setModalDefaultOpen(!modalDefaultOpen)}
+                                className="pl-2 text-[14px] font-semibold flex gap-1 items-center text-[#209978] opacity-90 hover:underline"
+                            >
                                 <HiArrowPathRoundedSquare size={16} />
                                 <span>Set Default</span>
                             </button>
                         )}
                     </div>
-
                 </div>
             </div>
             {/* ----- Modal ----- */}
-            <ModalAddressSetDefault modalDefaultOpen={modalDefaultOpen} setModalDefaultOpen={setModalDefaultOpen} item={item} fetchUserAddressData={fetchUserAddressData} />
-            <ModalAddressDelete modalDeleteOpen={modalDeleteOpen} setModalDeleteOpen={setModalDeleteOpen} item={item} fetchUserAddressData={fetchUserAddressData} />
-            <ModalAddressEdit modalEditOpen={modalEditOpen} setModalEditOpen={setModalEditOpen} item={item} fetchUserAddressData={fetchUserAddressData} />
+            <ModalAddressSetDefault
+                modalDefaultOpen={modalDefaultOpen}
+                setModalDefaultOpen={setModalDefaultOpen}
+                item={item}
+                fetchUserAddressData={fetchUserAddressData}
+                currentPage={currentPage}
+            />
+            <ModalAddressDelete
+                modalDeleteOpen={modalDeleteOpen}
+                setModalDeleteOpen={setModalDeleteOpen}
+                item={item}
+                fetchUserAddressData={fetchUserAddressData}
+                currentPage={currentPage}
+            />
+            <ModalAddressEdit
+                modalEditOpen={modalEditOpen}
+                setModalEditOpen={setModalEditOpen}
+                item={item}
+                fetchUserAddressData={fetchUserAddressData}
+                currentPage={currentPage}
+            />
         </>
-
-    )
+    );
 }
 
 AddressDataMap.propTypes = {
     fetchUserAddressData: PropTypes.func.isRequired,
+    currentPage: PropTypes.number.isRequired,
     item: PropTypes.shape({
         id: PropTypes.number.isRequired,
         title: PropTypes.string.isRequired,

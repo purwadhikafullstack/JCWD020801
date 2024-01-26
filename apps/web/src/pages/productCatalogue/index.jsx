@@ -3,6 +3,10 @@ import { Navbar } from "../navbar"
 import { AnimatePresence, motion } from "framer-motion";
 import { ProductCatalogueData } from "./components/productCatalogueData";
 import { Footer } from "../footer";
+import { useSelector } from "react-redux";
+import axios from "../../api/axios";
+import { formatDistance } from "../../functions/functions";
+import { Link } from "react-router-dom";
 
 const categoryList = [
     {
@@ -46,8 +50,6 @@ const categoryList = [
     { name: 'Pet' },
 ];
 
-
-
 const filterItems = [
     { title: "Relevance" },
     { title: "Price: Lowest first" },
@@ -56,12 +58,44 @@ const filterItems = [
     { title: "Name: Z - A" },
 ]
 
-
 export const ProductCatalogue = () => {
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [isSortOpen, setIsSortOpen] = useState(false)
     const [isCategoryOpen, setIsCategoryOpen] = useState(false)
 
+    const { coordinates, loaded } = useSelector((state) => state.geolocation);
+    const [branchData, setBranchData] = useState(null);
+
+    console.log(branchData);
+
+    const fetchNearestBranch = async () => {
+        if (loaded) {
+            try {
+                const response = await axios.post(`branches/get-nearest?latitude=${coordinates.lat}&longitude=${coordinates.lng}&limit=1`);
+                setBranchData(response.data.result[0])
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    };
+
+    const fetchMainBranch = async () => {
+        try {
+            const response = await axios.get('branches/super-store');
+            setBranchData(response.data.result)
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    useEffect(() => {
+        if (coordinates.lat && coordinates.lng) {
+            fetchNearestBranch();
+        } else {
+            fetchMainBranch();
+        }
+
+    }, [coordinates?.lat, coordinates?.lng]);
 
     useEffect(() => {
         const handleResize = () => {
@@ -86,135 +120,179 @@ export const ProductCatalogue = () => {
             <section className="mx-[16px] md:mx-[32px] lg:mx-[100px]">
                 <section className="flex flex-col lg:flex-row lg:gap-[1rem] mb-10">
                     {/* Left Side */}
-                    <section className="flex flex-col border border-[#D1D5D8] lg:border-[#e4e4e4] rounded-xl mt-3 pb-3 lg:pb-4 h-max">
-                        {/* Branch Info */}
-                        <section className="hidden lg:flex gap-[1rem] justify-between items-center w-max px-[1.3rem] pb-4 pt-5">
-                            <div className="flex flex-col flex-wrap">
-                                <span className="text-[14px] font-medium text-[#939393]">
-                                    Shopping from:
-                                </span>
-                                <span className="text-[14.5px] font-semibold text-[#343538] w-[7.5rem] line-clamp-2">
-                                    {/* {branchData?.name} */}
-                                    Toko Asia Afrika
-                                </span>
-                            </div>
-                            <div className="rounded-full bg-[#E1F5EF] px-[0.8rem] py-[0.55rem] ">
-                                <span className="text-[14px] font-semibold text-[#00A67C]">
-                                    1.6 km
-                                </span>
-                            </div>
-                            {/* {coordinates?.lat && ( */}
-                        </section>
-                        {/* Category */}
-                        <section className="flex flex-col text-[#343538] px-[0.5rem] text-[15px]">
-                            <div
-                                onClick={() => setIsCategoryOpen(!isCategoryOpen)}
-                                className="flex justify-between items-center pt-3 lg:border-t lg:border-[#e4e4e4] cursor-pointer lg:cursor-default"
+                    <div className="">
+                        {/* Breadcrumb */}
+                        <div className="flex w-max items-center justify-center gap-1.5 rounded-lg bg-none pl-1 text-[14px] font-medium text-gray-500 my-2 lg:my-3">
+                            <Link
+                                to={'/home'}
+                                className="cursor-pointer hover:underline hover:text-[#858585] underline-offset-2"
                             >
-                                <h4 className="font-semibold lg:underline underline-offset-2 mx-[0.8rem]">
-                                    All Category
-                                </h4>
-                                <div className="lg:hidden">
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="24"
-                                        height="24"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            fill="#bbc0c5"
-                                            d="M9 5a1 1 0 1 0 0 2a1 1 0 0 0 0-2M6.17 5a3.001 3.001 0 0 1 5.66 0H19a1 1 0 1 1 0 2h-7.17a3.001 3.001 0 0 1-5.66 0H5a1 1 0 0 1 0-2zM15 11a1 1 0 1 0 0 2a1 1 0 0 0 0-2m-2.83 0a3.001 3.001 0 0 1 5.66 0H19a1 1 0 1 1 0 2h-1.17a3.001 3.001 0 0 1-5.66 0H5a1 1 0 1 1 0-2zM9 17a1 1 0 1 0 0 2a1 1 0 0 0 0-2m-2.83 0a3.001 3.001 0 0 1 5.66 0H19a1 1 0 1 1 0 2h-7.17a3.001 3.001 0 0 1-5.66 0H5a1 1 0 1 1 0-2z"
-                                        />
-                                    </svg>
-                                </div>
+                                Home
+                            </Link>
+                            <div className="flex items-center pt-[0.1rem]">
+                                <svg
+                                    width="6"
+                                    height="10"
+                                    viewBox="0 0 8 13"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path
+                                        d="M1.5 11.5L6.5 6.5L1.5 1.5"
+                                        stroke="#6B7280"
+                                        strokeWidth="1.5"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    />
+                                </svg>
                             </div>
-                            <AnimatePresence>
-                                {isCategoryOpen && (
-                                    <motion.div
-                                        initial={{ opacity: 0, y: 0, height: 0 }}
-                                        animate={{ opacity: 1, y: 0, height: "auto" }}
-                                        exit={{ opacity: 0, y: 0, height: 0 }}
-                                        transition={{
-                                            type: "spring",
-                                            bounce: 0,
-                                            duration: 0.7,
-                                        }}
-                                        className="lg:mt-3"
-                                    >
-                                        {categoryList.map((item, index) => (
-                                            <>
-                                                <div key={index} className="flex flex-col first:pt-2">
-                                                    <div
-                                                        className={`${selectedCategory === item.name
-                                                            ? 'bg-[#F0FAF7]'
-                                                            : 'bg-transparent'
-                                                            } flex justify-between items-center px-[0.8rem] w-full rounded-lg hover:bg-[#F0FAF7] group`}
-                                                    >
-                                                        <h5
+                            <span className="">Product Catalogue</span>
+                        </div>
+                        <section className="flex flex-col border border-[#D1D5D8] lg:border-[#e4e4e4] rounded-xl pb-3 lg:pb-4 h-max">
+                            {/* Branch Info */}
+                            <section className="hidden lg:flex gap-[0.8rem] justify-between items-center w-max pl-[1.3rem] pr-[1rem] pb-4 pt-5 ">
+                                <div className="flex flex-col flex-wrap">
+                                    <span className="text-[14px] font-medium text-[#939393] tracking-tight">
+                                        Shopping from:
+                                    </span>
+                                    <span className="text-[14.5px] font-semibold text-[#343538] w-[7.5rem] line-clamp-2 tracking-tight">
+                                        {branchData?.name}
+                                    </span>
+                                </div>
+                                <div className="rounded-full bg-[#E1F5EF] px-[0.7rem] py-[0.55rem]">
+                                    {branchData?.distance ? (
+                                        <span className="text-[14px] font-semibold text-[#00A67C]">
+                                            {formatDistance(branchData?.distance)}
+                                        </span>
+                                    ) : (
+                                        <svg
+                                            // width="32"
+                                            // height="32"
+                                            viewBox="0 0 20 21"
+                                            fill="none"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            className="h-[1.6rem]"
+                                        >
+                                            <path
+                                                d="M16.6667 5.49992H3.33333V3.83325H16.6667V5.49992ZM10.8333 13.4166C10.8333 14.3666 11.1917 15.3833 11.6667 16.3333V17.1666H3.33333V12.1666H2.5V10.4999L3.33333 6.33325H16.6667L17.25 9.24992C16.6667 8.98325 16.0667 8.83325 15.4167 8.83325C12.9167 8.83325 10.8333 10.9166 10.8333 13.4166ZM10 12.1666H5V15.4999H10V12.1666ZM18.3333 13.4166C18.3333 15.5833 15.4167 18.8333 15.4167 18.8333C15.4167 18.8333 12.5 15.5833 12.5 13.4166C12.5 11.8333 13.8333 10.4999 15.4167 10.4999C17 10.4999 18.3333 11.8333 18.3333 13.4166ZM16.4167 13.4999C16.4167 12.9999 15.9167 12.4999 15.4167 12.4999C14.9167 12.4999 14.4167 12.9166 14.4167 13.4999C14.4167 13.9999 14.8333 14.4999 15.4167 14.4999C16 14.4999 16.5 13.9999 16.4167 13.4999Z"
+                                                fill="#00A67C"
+                                            />
+                                        </svg>
+                                    )}
+                                </div>
+                                {/* {coordinates?.lat && ( */}
+                            </section>
+                            {/* Category */}
+                            <section className="flex flex-col text-[#343538] px-[0.5rem] text-[15px]">
+                                <div
+                                    onClick={() => setIsCategoryOpen(!isCategoryOpen)}
+                                    className="flex justify-between items-center pt-3 lg:border-t lg:border-[#e4e4e4] cursor-pointer lg:cursor-default"
+                                >
+                                    <h4 className="font-semibold lg:underline underline-offset-2 mx-[0.8rem]">
+                                        All Category
+                                    </h4>
+                                    <div className="lg:hidden">
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="24"
+                                            height="24"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                fill="#bbc0c5"
+                                                d="M9 5a1 1 0 1 0 0 2a1 1 0 0 0 0-2M6.17 5a3.001 3.001 0 0 1 5.66 0H19a1 1 0 1 1 0 2h-7.17a3.001 3.001 0 0 1-5.66 0H5a1 1 0 0 1 0-2zM15 11a1 1 0 1 0 0 2a1 1 0 0 0 0-2m-2.83 0a3.001 3.001 0 0 1 5.66 0H19a1 1 0 1 1 0 2h-1.17a3.001 3.001 0 0 1-5.66 0H5a1 1 0 1 1 0-2zM9 17a1 1 0 1 0 0 2a1 1 0 0 0 0-2m-2.83 0a3.001 3.001 0 0 1 5.66 0H19a1 1 0 1 1 0 2h-7.17a3.001 3.001 0 0 1-5.66 0H5a1 1 0 1 1 0-2z"
+                                            />
+                                        </svg>
+                                    </div>
+                                </div>
+                                <AnimatePresence>
+                                    {isCategoryOpen && (
+                                        <motion.div
+                                            initial={{ opacity: 0, y: 0, height: 0 }}
+                                            animate={{ opacity: 1, y: 0, height: 'auto' }}
+                                            exit={{ opacity: 0, y: 0, height: 0 }}
+                                            transition={{
+                                                type: 'spring',
+                                                bounce: 0,
+                                                duration: 0.7,
+                                            }}
+                                            className=""
+                                        >
+                                            {categoryList.map((item, index) => (
+                                                <>
+                                                    <div key={index} className="flex flex-col first:pt-2">
+                                                        <div
                                                             className={`${selectedCategory === item.name
-                                                                ? 'text-[#009771]'
-                                                                : 'text-gray-700 '
-                                                                } w-full font-medium py-[0.45rem]  group-hover:text-[#009771]  cursor-pointer transition ease-in-out delay-100`}
-                                                            onClick={() =>
-                                                                setSelectedCategory((prev) =>
-                                                                    prev === item.name ? null : item.name,
-                                                                )
-                                                            }
+                                                                ? 'bg-[#F0FAF7]'
+                                                                : 'bg-transparent'
+                                                                } flex justify-between items-center px-[0.8rem] w-full rounded-lg hover:bg-[#F0FAF7] group`}
                                                         >
-                                                            {item.name}
-                                                        </h5>
-                                                        {selectedCategory === item.name && (
-                                                            <motion.svg
-                                                                width="16"
-                                                                height="16"
-                                                                viewBox="0 0 17 17"
-                                                                fill="none"
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                className="mt-[0.2rem]"
-                                                                animate={{
-                                                                    rotate: setSelectedCategory ? 180 : 0,
-                                                                }}
-                                                                transition={{ duration: 0.3 }}
+                                                            <h5
+                                                                className={`${selectedCategory === item.name
+                                                                    ? 'text-[#009771]'
+                                                                    : 'text-gray-700 '
+                                                                    } w-full font-medium py-[0.45rem]  group-hover:text-[#009771]  cursor-pointer transition ease-in-out delay-100`}
+                                                                onClick={() =>
+                                                                    setSelectedCategory((prev) =>
+                                                                        prev === item.name ? null : item.name,
+                                                                    )
+                                                                }
                                                             >
-                                                                <path
-                                                                    d="M13.8106 5.65892L8.50019 10.8354L3.18981 5.65892C3.09493 5.56625 2.96757 5.51437 2.83494 5.51437C2.70231 5.51437 2.57494 5.56625 2.48006 5.65892C2.43412 5.70394 2.39763 5.75766 2.37271 5.81696C2.34779 5.87625 2.33496 5.93992 2.33496 6.00424C2.33496 6.06855 2.34779 6.13222 2.37271 6.19152C2.39763 6.25081 2.43412 6.30454 2.48006 6.34955L8.12937 11.8575C8.22858 11.9543 8.36165 12.0084 8.50019 12.0084C8.63873 12.0084 8.77179 11.9543 8.871 11.8575L14.5203 6.35061C14.5666 6.30557 14.6033 6.25171 14.6285 6.19222C14.6536 6.13273 14.6665 6.06881 14.6665 6.00424C14.6665 5.93966 14.6536 5.87575 14.6285 5.81626C14.6033 5.75677 14.5666 5.70291 14.5203 5.65786C14.4254 5.56519 14.2981 5.51331 14.1654 5.51331C14.0328 5.51331 13.9054 5.56519 13.8106 5.65786V5.65892Z"
-                                                                    fill="#009771"
-                                                                />
-                                                            </motion.svg>
-                                                        )}
+                                                                {item.name}
+                                                            </h5>
+                                                            {selectedCategory === item.name && (
+                                                                <motion.svg
+                                                                    width="16"
+                                                                    height="16"
+                                                                    viewBox="0 0 17 17"
+                                                                    fill="none"
+                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                    className="mt-[0.2rem]"
+                                                                    animate={{
+                                                                        rotate: setSelectedCategory ? 180 : 0,
+                                                                    }}
+                                                                    transition={{ duration: 0.3 }}
+                                                                >
+                                                                    <path
+                                                                        d="M13.8106 5.65892L8.50019 10.8354L3.18981 5.65892C3.09493 5.56625 2.96757 5.51437 2.83494 5.51437C2.70231 5.51437 2.57494 5.56625 2.48006 5.65892C2.43412 5.70394 2.39763 5.75766 2.37271 5.81696C2.34779 5.87625 2.33496 5.93992 2.33496 6.00424C2.33496 6.06855 2.34779 6.13222 2.37271 6.19152C2.39763 6.25081 2.43412 6.30454 2.48006 6.34955L8.12937 11.8575C8.22858 11.9543 8.36165 12.0084 8.50019 12.0084C8.63873 12.0084 8.77179 11.9543 8.871 11.8575L14.5203 6.35061C14.5666 6.30557 14.6033 6.25171 14.6285 6.19222C14.6536 6.13273 14.6665 6.06881 14.6665 6.00424C14.6665 5.93966 14.6536 5.87575 14.6285 5.81626C14.6033 5.75677 14.5666 5.70291 14.5203 5.65786C14.4254 5.56519 14.2981 5.51331 14.1654 5.51331C14.0328 5.51331 13.9054 5.56519 13.8106 5.65786V5.65892Z"
+                                                                        fill="#009771"
+                                                                    />
+                                                                </motion.svg>
+                                                            )}
+                                                        </div>
+                                                        <AnimatePresence>
+                                                            {selectedCategory === item.name && (
+                                                                <motion.div
+                                                                    initial={{ opacity: 0, y: 0, height: 0 }}
+                                                                    animate={{ opacity: 1, y: 0, height: 'auto' }}
+                                                                    exit={{ opacity: 0, y: 0, height: 0 }}
+                                                                    transition={{
+                                                                        type: 'spring',
+                                                                        bounce: 0,
+                                                                        duration: 0.7,
+                                                                    }}
+                                                                    className=""
+                                                                >
+                                                                    {item.subcategory?.map((sub, index) => (
+                                                                        <div
+                                                                            key={index}
+                                                                            className="first:mt-1 last:mb-1 py-[0.3rem] px-[1.8rem] text-[#009771] font-medium cursor-pointer"
+                                                                        >
+                                                                            {sub}
+                                                                        </div>
+                                                                    ))}
+                                                                </motion.div>
+                                                            )}
+                                                        </AnimatePresence>
                                                     </div>
-                                                    <AnimatePresence>
-                                                        {selectedCategory === item.name && (
-                                                            <motion.div
-                                                                initial={{ opacity: 0, y: 0, height: 0 }}
-                                                                animate={{ opacity: 1, y: 0, height: 'auto' }}
-                                                                exit={{ opacity: 0, y: 0, height: 0 }}
-                                                                transition={{
-                                                                    type: 'spring',
-                                                                    bounce: 0,
-                                                                    duration: 0.7,
-                                                                }}
-                                                                className=""
-                                                            >
-                                                                {item.subcategory?.map((sub, index) => (
-                                                                    <div
-                                                                        key={index}
-                                                                        className="first:mt-1 last:mb-1 py-[0.3rem] px-[1.8rem] text-[#009771] font-medium cursor-pointer"
-                                                                    >
-                                                                        {sub}
-                                                                    </div>
-                                                                ))}
-                                                            </motion.div>
-                                                        )}
-                                                    </AnimatePresence>
-                                                </div>
-                                            </>
-                                        ))}
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
+                                                </>
+                                            ))}
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </section>
                         </section>
-                    </section>
+                    </div>
                     {/* ---------- Right Side ---------- */}
                     <section className="lg:mt-3 w-full">
                         {/* Title & Filters */}

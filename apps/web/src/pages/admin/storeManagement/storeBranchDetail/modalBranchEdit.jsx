@@ -570,12 +570,12 @@ export const ModalBranchEdit = ({ modalEditOpen, handleModalEditOpen, branchDeta
                             <GrPrevious size={20} className={`${activeStep == 0 ? 'hidden' : 'block'} text-[#657385]`} />
                         </div>
                         <div className={`${activeStep == 0 ? 'hidden' : 'block'} flex gap-3`}>
-                            <button
+                            {/* <button
                                 onClick={() => handleModalEditOpen()}
                                 className="shadow-sm rounded-xl px-5 py-2 border border-[#E5E7EB] text-[15px] font-medium text-gray-600 transition delay-100 ease-in-out hover:bg-gray-100"
                             >
                                 Cancel
-                            </button>
+                            </button> */}
                             <button
                                 type="submit"
                                 className="rounded-xl bg-[#00a67c] h-[44px] w-[138px] text-[15px] font-semibold text-white transition delay-100 ease-in-out hover:bg-[#00916D] "

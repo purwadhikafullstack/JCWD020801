@@ -14,7 +14,7 @@ import { LuMapPin } from "react-icons/lu";
 import { IoIosWarning } from "react-icons/io";
 import Select from 'react-select'
 
-export const ModalAddBranch2 = ({ modalAddOpen, handleModalAddOpen }) => {
+export const ModalAddBranch2 = ({ modalAddOpen, handleModalAddOpen, fetchBranchData, currentPage }) => {
     const token = localStorage.getItem('admtoken');
 
     const [isLoading, setIsLoading] = useState(false);
@@ -129,6 +129,7 @@ export const ModalAddBranch2 = ({ modalAddOpen, handleModalAddOpen }) => {
             toast.success(response.data.message, {
                 position: 'top-center',
             });
+            fetchBranchData(currentPage);
             handleModalAddOpen()
             formik.resetForm();
 
@@ -635,4 +636,6 @@ export const ModalAddBranch2 = ({ modalAddOpen, handleModalAddOpen }) => {
 ModalAddBranch2.propTypes = {
     modalAddOpen: PropTypes.bool.isRequired,
     handleModalAddOpen: PropTypes.func.isRequired,
+    fetchBranchData: PropTypes.func.isRequired,
+    currentPage: PropTypes.number.isRequired
 };

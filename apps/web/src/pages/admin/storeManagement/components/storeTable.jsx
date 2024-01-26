@@ -1,34 +1,14 @@
 import { Button, CardBody, CardFooter, IconButton, Tooltip, Typography } from '@material-tailwind/react'
 import { ChevronUpDownIcon } from '@heroicons/react/24/solid'
-import { useEffect, useState } from 'react'
-import axios from '../../../../api/axios'
 import { FaCircleInfo } from 'react-icons/fa6'
 import { useNavigate } from 'react-router-dom'
 import { formatDate, truncateString } from '../../../../functions/functions'
+import PropTypes from 'prop-types';
 
 const tableHead = ["Store branch", "Address", "Admin", "Status", "Created", "Action"]
 
-export const StoreTable = () => {
-    const [branchData, setBranchData] = useState([])
-    const token = localStorage.getItem('admtoken');
+export const StoreTable = ({ branchData, handlePageChange, currentPage, totalPages }) => {
     const navigate = useNavigate()
-
-    const fetchBranchData = async () => {
-        try {
-            const response = await axios.get('branches/', {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            })
-            setBranchData(response.data.result)
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    useEffect(() => {
-        fetchBranchData();
-    }, [])
 
     return (
         <>
@@ -140,15 +120,24 @@ export const StoreTable = () => {
                         </tbody>
                     </table>
                 </CardBody>
+                {/* Pagination */}
                 <CardFooter className="flex items-center justify-between border-t border-gray-200 p-4">
                     <Typography variant="small" color="blue-gray" className="font-normal text-gray-600">
-                        Page 1 of 10
+                        Page {currentPage} of {totalPages}
                     </Typography>
                     <div className="flex gap-2">
-                        <Button variant="outlined" size="sm" className="border-gray-500 text-gray-500">
+                        <Button
+                            onClick={() => handlePageChange(currentPage - 1)}
+                            disabled={currentPage === 1}
+                            variant="outlined" size="sm" className="border-gray-500 text-gray-500"
+                        >
                             Previous
                         </Button>
-                        <Button variant="outlined" size="sm" className="border-gray-500 text-gray-500">
+                        <Button
+                            onClick={() => handlePageChange(currentPage + 1)}
+                            disabled={currentPage === totalPages}
+                            variant="outlined" size="sm" className="border-gray-500 text-gray-500"
+                        >
                             Next
                         </Button>
                     </div>
@@ -156,4 +145,13 @@ export const StoreTable = () => {
             </div>
         </>
     );
+}
+
+StoreTable.propTypes = {
+    branchData: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        address: PropTypes.string.isRequired,
+        id: PropTypes.number.isRequired,
+        AdminId: PropTypes.number.isRequired,
+    })
 }
