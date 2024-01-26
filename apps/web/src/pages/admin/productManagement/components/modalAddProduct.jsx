@@ -23,6 +23,8 @@ export default function ModalAddProduct({ openModalAdd, handleOpenAdd }) {
     const [categoryData, setCategoryData] = useState([]);
     const [categoryId, setCategoryId] = useState(0)
     const [subCategoryData, setSubCategoryData] = useState([])
+    const [branchData, setBranchData] = useState([])
+    const [branchId, setBranchId] = useState(0);
     const [selectedFile, setSelectedFile] = useState(null);
 
     const handleFileChange = (event) => {
@@ -45,6 +47,12 @@ export default function ModalAddProduct({ openModalAdd, handleOpenAdd }) {
                 })
                 setSubCategoryData(response2.data.result)
             }
+            const response_branch = await axios.get(`/branches/`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+            })
+            setBranchData(response_branch.data.result)
         } catch (error) {
             console.log(error);
         }
@@ -89,9 +97,11 @@ export default function ModalAddProduct({ openModalAdd, handleOpenAdd }) {
             name: "",
             description: "",
             weight: "",
+            stock: "",
             price: "",
             category_id: "",
-            subcategory_id: ""
+            subcategory_id: "",
+            branch_id: ""
         },
         validationSchema: RegisterSchema,
         onSubmit: (values, action) => {
@@ -100,8 +110,10 @@ export default function ModalAddProduct({ openModalAdd, handleOpenAdd }) {
             formData.append("description", values.description);
             formData.append("weight", values.weight);
             formData.append("price", values.price);
+            formData.append("stock", values.stock);
             formData.append("category_id", values.category_id);
             formData.append("subcategory_id", values.subcategory_id)
+            formData.append("branch_id", values.branch_id)
             formData.append("image1", selectedFile)
             handleSubmit(formData);
             action.resetForm();
@@ -114,16 +126,16 @@ export default function ModalAddProduct({ openModalAdd, handleOpenAdd }) {
 
     return (
         <>
-            <Dialog
-                size="xs"
+            <Dialog                
+                size="lg"
                 open={openModalAdd}
                 handler={handleOpenAdd}
                 dismiss={{ outsidePress: (() => handleClose()) }}
                 className="bg-transparent shadow-none"
             >
-                <Card className="mx-auto w-full max-w-[24rem]">
+                <Card className="mx-auto w-full">
                     <form onSubmit={formik.handleSubmit}>
-                        <CardBody className="flex flex-col gap-4">
+                        <CardBody className="flex flex-col gap-4 h-[90vh] overflow-auto">
                             <Typography variant="h4" color="blue-gray">
                                 Add Product
                             </Typography>
@@ -163,20 +175,29 @@ export default function ModalAddProduct({ openModalAdd, handleOpenAdd }) {
                                     {formik.errors.description}
                                 </div>
                             ) : null}
-                            <Typography className="-mb-2" variant="h6">
+                            <div className="flex flex-row gap-2 items-center justify-center">
+                            <Typography variant="h6">
                                 {'Weight (gram)'}
                             </Typography>
                             <Input type="number" name="weight" autoComplete="new" label="Weight" size="lg"
                                 onChange={formik.handleChange}
                                 value={formik.values.weight}
                                 error={formik.touched.weight && Boolean(formik.errors.weight)} />
-                            {formik.touched.weight && formik.errors.weight ? (
+                            <Typography variant="h6">
+                                Stock
+                            </Typography>
+                            <Input type="number" name="stock" autoComplete="new" label="Stock" size="lg"
+                                onChange={formik.handleChange}
+                                value={formik.values.stock}
+                                error={formik.touched.stock && Boolean(formik.errors.stock)} />
+                            {formik.touched.stock && formik.errors.stock ? (
                                 <div className=" text-red-900 text-xs">
-                                    {formik.errors.weight}
+                                    {formik.errors.stock}
                                 </div>
                             ) : null}
+                            </div>
                             <Typography className="-mb-2" variant="h6">
-                                Image 1
+                                Image
                             </Typography>
                             {selectedFile && <img src={selectedFile ? URL.createObjectURL(selectedFile) : ''} className="w-32 h-32 rounded-lg object-cover"></img>}
                             <input type="file" name="image1" autoComplete="new" size="sm"
@@ -217,6 +238,23 @@ export default function ModalAddProduct({ openModalAdd, handleOpenAdd }) {
                                     </Select>
                                 </>
                             )}
+                            {branchData && branchData.length > 0 &&(
+                                <>
+                                    <Typography className="-mb-2" variant="h6">
+                                        Branch
+                                    </Typography>
+                                    <Select
+                                        name="branch_id"
+                                        color="teal"
+                                        label="Select branch"
+                                        value={formik.values.branch_id}
+                                        onChange={(value) => { formik.setFieldValue("branch_id", value); setBranchId(value) }}
+                                    >
+                                        {branchData?.map((item, index) => (
+                                            <Option key={index} value={item.id}>{item.name}</Option>
+                                        ))}
+                                    </Select>
+                                </>)}
                         </CardBody>
                         <CardFooter className="pt-0">
                             <div className="flex flex-row gap-3">

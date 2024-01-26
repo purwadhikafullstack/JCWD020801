@@ -162,6 +162,8 @@ export default function CategoryManagement() {
                 clickedData={clickedData}
                 handleRefreshTable={handleRefreshTable} />
             <ModalEditCategory
+                api={tabValueFromChild === 0 ? '/categories' : '/categories/sub-category/'}
+                tabValueFromChild={tabValueFromChild}
                 openModalEdit={openModalEdit}
                 handleEdit={handleEdit}
                 handleRefreshTable={handleRefreshTable}

@@ -1,5 +1,6 @@
 import Customer from '../models/customer.model'
 // const { Op } = require("sequelize");
+import { Op } from "sequelize";
 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -580,3 +581,40 @@ export const userEmailUpdateVerification = async (req, res) => {
     }
 }
 
+export const getTotalCustomer = async (req, res) => {
+    try {
+        const totalCustomer = await Customer.count()
+        res.status(200).send({ totalCustomer })
+    } catch (error) {
+        console.error(error)
+        return res.status(500).send({ message: error.message })
+    }
+}
+
+export const getAllCustomer = async (req, res) => {
+    try {
+        const { page, sortBy, sortOrder = 'asc', search = '' } = req.query;
+        const limit = 5;
+        const offset = (page - 1) * limit;
+
+        const dataCustomer = await Customer.findAndCountAll({
+            where: {
+                firstname: { 
+                    [Op.like]: `%${search}%` 
+                }
+            },
+            attributes: {
+                exclude: ['password'],
+            },
+            order: [[sortBy, sortOrder.toUpperCase()]],
+            limit: parseInt(limit),
+            offset: parseInt(offset),
+        });
+
+        const totalPages = Math.ceil(dataCustomer.count / limit);
+        return res.status(200).send({ result: dataCustomer, page, totalPages })
+    } catch (error) {
+        console.error(error)
+        return res.status(500).send({ message: error.message })
+    }
+}

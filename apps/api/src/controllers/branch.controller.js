@@ -233,6 +233,16 @@ export const getNearestBranch = async (req, res) => {
     }
 };
 
+export const getTotalBranch = async (req, res) => {
+    try {
+        const totalBranch = await Branch.count();
+        res.status(200).send({ totalBranch })
+    } catch (error) {
+        console.error(error)
+        return res.status(500).send({ message: error.message })
+    }
+}
+
 // export const getNearestBranch = async (req, res) => {
 //     try {
 //         const { latitude, longitude } = req.query;

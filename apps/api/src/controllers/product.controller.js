@@ -2,14 +2,13 @@ import Product from '../models/product.model'
 import ProductImage from '../models/productimage.model';
 import Category from '../models/category.model';
 import SubCategory from '../models/subcategory.model';
+import ProductBranch from '../models/productbranch.model'
 import { Op } from "sequelize";
 require("dotenv").config();
 
 export const addProduct = async (req, res) => {
     try {
-        const { name, description, price, weight, category_id, subcategory_id } = req.body;
-        console.log("BODY", req.body);
-        console.log("FILE", req.file);
+        const { name, description, price, weight, category_id, subcategory_id, stock, branch_id } = req.body;
 
         const findProduct = await Product.findOne(
             {
@@ -33,6 +32,12 @@ export const addProduct = async (req, res) => {
 
         await ProductImage.create({
             image: `${process.env.BASE_URL_API}/public/products/${req.file?.filename}`,
+            ProductId: result.id
+        })
+
+        await ProductBranch.create({
+            stock: stock,
+            BranchId: branch_id,
             ProductId: result.id
         })
 
