@@ -26,9 +26,13 @@ export default function ModalForgotPassword({ open, handleOpen }) {
     const handleSubmit = async (data) => {
         try {
             const response = await axios.get(`admins/forgot-password?email=${data.email}`)
-            toast.success(response.data.message)
+            toast.success(response.data.message, {
+                position: "top-center",
+                hideProgressBar: true,
+                theme: "colored"
+            });
         } catch (err) {
-            toast.error(err.response.data.message);
+            toast.error(err.response.data.message, { position: "top-center" });
         }
     };
 
@@ -82,20 +86,13 @@ export default function ModalForgotPassword({ open, handleOpen }) {
                             ) : null}
                     </CardBody>
                     <CardFooter className="pt-0">
-                        <Button type="submit" className="rounded-full" style={{ backgroundColor: '#41907a' }} variant="filled" onClick={handleOpen} fullWidth>
+                        <Button type="submit" className="rounded-full" style={{ backgroundColor: '#41907a' }} variant="filled" fullWidth>
                             Search
                         </Button>
                     </CardFooter>
                 </Card>
                 </form>
             </Dialog>
-            <ToastContainer
-                position="top-center"
-                hideProgressBar={true}
-                theme="colored"
-                className={'rounded-lg'}
-                style={{ zIndex: 10001 }}
-            />
         </>
     )
 }

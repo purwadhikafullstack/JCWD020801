@@ -69,13 +69,16 @@ export const createAdmin = async (req, res) => {
 
 export const getAllAdmin = async (req, res) => {
     try {
-        const { page, sortBy = 'createdAt', sortOrder = 'asc' } = req.query;
+        const { page, sortBy, sortOrder = 'asc', search = '' } = req.query;
         const limit = 5;
         const offset = (page - 1) * limit;
 
         const dataAdmin = await Admin.findAndCountAll({
             where: {
                 isSuperAdmin: false,
+                name: { 
+                    [Op.like]: `%${search}%` 
+                }
             },
             attributes: {
                 exclude: ['password'],
@@ -90,22 +93,6 @@ export const getAllAdmin = async (req, res) => {
     } catch (error) {
         console.error(error)
         return res.status(500).send({ message: error.message })
-    }
-}
-
-export const getAllAdminNoPagination = async (req, res) => {
-    try {
-        const result = await Admin.findAll({
-            where: {
-                isSuperAdmin: false
-            },
-            // order: 
-        })
-        return res.status(200).send({ result: result })
-
-    } catch (error) {
-        console.log(error);
-        res.status(400).send({ message: error.message })
     }
 }
 
@@ -348,5 +335,21 @@ export const logoutAdmin = (req, res) => {
     } catch (error) {
         console.error(error)
         return res.status(500).send({ message: error.message })
+    }
+}
+
+export const getAllAdminNoPagination = async (req, res) => {
+    try {
+        const result = await Admin.findAll({
+            where: {
+                isSuperAdmin: false
+            },
+            // order: 
+        })
+        return res.status(200).send({ result: result })
+
+    } catch (error) {
+        console.log(error);
+        res.status(400).send({ message: error.message })
     }
 }

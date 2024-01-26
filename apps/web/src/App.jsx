@@ -30,10 +30,13 @@ import { StoreBranchDetail } from './pages/admin/storeManagement/storeBranchDeta
 import { StoreLocator } from './pages/storeLocator';
 import { CheckoutPage } from './pages/checkout';
 import { ProductCatalogue } from './pages/productCatalogue';
+import AdminErrorPage from './pages/admin/components/adminErrorPage';
 
 const router = createBrowserRouter([
-  //Untuk yang tidak butuh token
   { path: "/", element: <Home /> },
+  { path: "/login-admin", element: <LoginAdmin></LoginAdmin> },
+  { path: "/admin-verification/:token", element: <AdminVerification /> },
+  { path: "/admin-reset-password/:token", element: <AdminResetPassword /> },
   { path: "/login-admin", element: <LoginAdmin></LoginAdmin> },
   { path: "/admin-verification/:token", element: <AdminVerification /> },
   { path: "/admin-reset-password/:token", element: <AdminResetPassword /> },
@@ -62,7 +65,8 @@ const router = createBrowserRouter([
       { path: "/customer-management", element: <CustomerManagement /> },
       { path: "/product-management", element: <ProductManagement /> },
       { path: "/admin-profile", element: <AdminProfile /> },
-      { path: "/category-management", element: <CategoryManagement /> },
+      { path: "/category-management", element: <CategoryManagement />},
+      { path: "/error", element: <AdminErrorPage/> },
       { path: "/store-management", element: <StoreManagement /> },
       { path: "/store-management/:id", element: <StoreBranchDetail /> }
     ]
@@ -70,11 +74,11 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  const token = localStorage.getItem('token');
-  const admtoken = localStorage.getItem('admtoken');
+  const token = localStorage.getItem("token");
+  const admtoken = localStorage.getItem('admtoken')
   const dispatch = useDispatch();
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(!open);
+  const [open, setOpen] = useState(false)
+  const handleOpen = () => setOpen(true);
 
   const keepLoginAdmin = async () => {
     try {
@@ -107,7 +111,7 @@ function App() {
       localStorage.removeItem('token');
       history.push('/signin');
     }
-  };
+  }
 
   useEffect(() => {
     if (token) {
@@ -116,15 +120,16 @@ function App() {
     if (admtoken) {
       keepLoginAdmin();
     }
-  }, [token]);
+  }, []);
 
   return (
     <>
-      <RouterProvider router={router}></RouterProvider>
-      <ExpiredToken
-        content={'Please login again'}
-        openDialog={open}
-        handleOpen={handleOpen} />
+      <RouterProvider router={router}>
+        <ExpiredToken
+          content={'Please login again'}
+          open={open}
+          handleOpen={handleOpen} />
+      </RouterProvider>
     </>
   );
 }

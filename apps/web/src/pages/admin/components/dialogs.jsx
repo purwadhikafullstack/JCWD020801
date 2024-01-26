@@ -41,10 +41,14 @@ export function SuccessDialog({ content, openSDialog, handleOpenSDialog, action 
     )
 }
 
-export function ExpiredToken({content, openDialog, handleOpen}){
-
+export function ExpiredToken({content, open, handleOpen}){
+    const navigate = useNavigate();
+    const handleLoginClick = () => {
+        navigate('/login-admin')
+      };
+    
     return(
-        <Dialog open={openDialog} handler={handleOpen} dismiss={{enabled: false}} size="xs">
+        <Dialog open={open} handler={handleOpen} dismiss={{enabled: false}} size="xs">
             <DialogHeader>Your session has expired</DialogHeader>
             <DialogBody>
                 <div className="flex flex-col items-center gap-2">
@@ -52,7 +56,7 @@ export function ExpiredToken({content, openDialog, handleOpen}){
                 </div>
             </DialogBody>
             <DialogFooter>
-                <Button variant="filled" color="green" fullWidth>
+                <Button onClick={() => handleLoginClick()} variant="filled" color="green" fullWidth>
                     <span>Login</span>
                 </Button> 
             </DialogFooter>

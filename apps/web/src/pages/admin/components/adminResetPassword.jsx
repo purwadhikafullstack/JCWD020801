@@ -23,10 +23,14 @@ export default function AdminResetPassword() {
                   Authorization: `Bearer ${params.token}`,
                 },
               })
-            toast.success(response.data.message)
+              toast.success(response.data.message, {
+                position: "top-center",
+                hideProgressBar: true,
+                theme: "colored"
+            });
         }catch(err){
             console.log(err);
-            toast.error(err.response.data.message);
+            toast.error(err.response.data.message, { position: "top-center" });
         }
     }
 
@@ -81,13 +85,6 @@ export default function AdminResetPassword() {
                 </div>
                 </form>
             </div>
-            <ToastContainer
-                position="top-center"
-                hideProgressBar={true}
-                theme="colored"
-                className={'rounded-lg'}
-                style={{ zIndex: 10001 }}
-            />
         </>
     )
 }

@@ -13,7 +13,7 @@ import eyeOffIcon from '../../assets/userDashboard/eye-off.svg';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
-import { setData } from '../../../redux/customerSlice';
+import { setData } from '../../redux/customerSlice';
 import { ModalUserForgotPassword } from './components/modalUserForgotPassword';
 import { registerWithGoogle } from '../../../../api/src/firebase';
 import { ModalUserReverify } from './components/modalUserReverify';

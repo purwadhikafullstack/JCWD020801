@@ -17,7 +17,6 @@ import {
 import { checkRoleAdmin, verifyTokenAdmin } from '../middleware/admin/admin.auth';
 import { checkLoginAdmin, checkRegisterAdmin } from '../middleware/admin/admin.validator';
 
-
 const adminRouter = Router();
 
 adminRouter.post('/', verifyTokenAdmin, checkRoleAdmin, checkRegisterAdmin, createAdmin); //create a new admin
