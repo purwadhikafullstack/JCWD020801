@@ -38,7 +38,7 @@ export const MapWithMarker = ({ coordinates, setAddress, setCoordinates }) => {
         markerRef.current = marker;
     }, [coordinates, setAddress, setCoordinates]);
 
-    return <div ref={mapRef} style={{ width: '100%', height: '300px' }} />;
+    return <div ref={mapRef} style={{ width: '100%' }} className="h-[230px] lg:h-[300px]" />;
 }
 
 MapWithMarker.propTypes = {

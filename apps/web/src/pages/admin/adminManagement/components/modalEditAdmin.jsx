@@ -8,11 +8,11 @@ import {
     Input,
 } from "@material-tailwind/react";
 import { useFormik } from "formik";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
 import axios from "../../../../api/axios";
 
-export default function ModalEditAdmin({openModalEdit, handleEdit, getAdminData, clickedData}){
+export default function ModalEditAdmin({openModalEdit, handleEdit, handleRefreshTable, clickedData}){
     const token = localStorage.getItem('admtoken')
     const handleClose = () => {
         formik.resetForm();
@@ -26,7 +26,7 @@ export default function ModalEditAdmin({openModalEdit, handleEdit, getAdminData,
                     Authorization: `Bearer ${token}`,
                 },
             })
-            getAdminData();
+            handleRefreshTable()
             handleClose();
             toast.success(response.data.message, {
                 position: "top-center",

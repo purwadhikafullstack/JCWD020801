@@ -1,6 +1,5 @@
 import appLogoSm from '../../assets/userSignIn/lemon-logo.svg';
 import googleIcon from '../../assets/userSignIn/google-icon.svg';
-// import facebookIcon from '../../assets/userSignIn/facebook-icon.svg';
 import registerBanner from "../../assets/userRegister/signup-vector.svg";
 import { motion, AnimatePresence } from "framer-motion";
 import { SyncLoader } from 'react-spinners'

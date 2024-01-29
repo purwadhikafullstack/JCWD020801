@@ -254,7 +254,7 @@ export const ModalBranchEdit = ({ modalEditOpen, handleModalEditOpen, branchDeta
             <DialogBody className="flex flex-col gap-4 items-center w-full px-4 md:px-10">
                 <form onSubmit={formik.handleSubmit} className="w-full">
                     {/* 1 */}
-                    <section className={`${activeStep == 0 ? "block" : "hidden"} w-full`}>
+                    <section id="modal-scroll" className={`${activeStep == 0 ? "block" : "hidden"} w-full w-full h-[52vh] lg:h-full overflow-auto pb-2 pr-2 lg:pr-0 lg:pb-0`}>
                         <div className="flex flex-col md:flex-row gap-3.5 md:gap-[2rem] w-full">
                             {/* Branch Name & Admin  */}
                             <div className="flex flex-col w-full gap-3.5">
@@ -570,12 +570,6 @@ export const ModalBranchEdit = ({ modalEditOpen, handleModalEditOpen, branchDeta
                             <GrPrevious size={20} className={`${activeStep == 0 ? 'hidden' : 'block'} text-[#657385]`} />
                         </div>
                         <div className={`${activeStep == 0 ? 'hidden' : 'block'} flex gap-3`}>
-                            {/* <button
-                                onClick={() => handleModalEditOpen()}
-                                className="shadow-sm rounded-xl px-5 py-2 border border-[#E5E7EB] text-[15px] font-medium text-gray-600 transition delay-100 ease-in-out hover:bg-gray-100"
-                            >
-                                Cancel
-                            </button> */}
                             <button
                                 type="submit"
                                 className="rounded-xl bg-[#00a67c] h-[44px] w-[138px] text-[15px] font-semibold text-white transition delay-100 ease-in-out hover:bg-[#00916D] "

@@ -50,22 +50,22 @@ export const StoreOverview = () => {
 
     return (
         <>
-            <div className="my-[20px] mx-[100px] flex flex-col gap-[1.4rem]">
+            <div className="my-[20px] lg:mx-[100px] flex flex-col gap-[0.6rem] lg:gap-[1.4rem]">
                 {/* Top Bar */}
-                <div className="bg-white py-5 px-7 rounded-lg shadow-sm gap-6 flex flex-col">
+                <div className="bg-white py-4 lg:py-5 px-5 lg:px-7 rounded-lg shadow-sm gap-3 lg:gap-6 flex flex-col">
                     <div className="flex flex-col gap-2">
-                        <h3 className="text-[23px] font-semibold text-[#28302A]">
+                        <h3 className="text-[21px] lg:text-[23px] font-bold text-[#28302A]">
                             Store Management
                         </h3>
-                        <p className="text-[15px] text-gray-600">
+                        <p className="text-[14px] lg:text-[15px] text-gray-600">
                             Manage your store branches data, product, admin, and others
                         </p>
                     </div>
                     {/*  */}
-                    <div className="items-center flex justify-between">
+                    <div className="lg:items-center flex flex-col lg:flex-row justify-between gap-3 lg:gap-0">
                         <button
                             onClick={handleModalAddOpen}
-                            className="shadow-sm items-center flex gap-2 rounded-lg bg-[#41907A] px-4 py-2.5 text-[15px] font-semibold text-white transition delay-100 ease-in-out hover:bg-[#3c8571] hover:shadow-md"
+                            className="w-max shadow-sm items-center flex gap-2 rounded-lg bg-[#41907A] px-4 py-2.5 text-[15px] font-semibold text-white transition delay-100 ease-in-out hover:bg-[#3c8571] hover:shadow-md"
                         >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"

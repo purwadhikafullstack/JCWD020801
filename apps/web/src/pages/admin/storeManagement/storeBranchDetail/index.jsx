@@ -52,9 +52,9 @@ export const StoreBranchDetail = () => {
     return (
         <>
             {adminDataRedux?.isSuperAdmin === true ? (
-                <div className="flex flex-row">
+                <div className="flex flex-col lg:flex-row">
                     <AdminSidebar />
-                    <div className="bg-[#EDF7F4] w-full py-[20px] px-[100px] flex flex-col gap-3">
+                    <div className="bg-[#EDF7F4] w-full py-[20px] px-[10px] lg:px-[100px] flex flex-col gap-3">
                         {/* section */}
                         <div
                             onClick={() => navigate('/store-management')}
@@ -113,7 +113,7 @@ export const StoreBranchDetail = () => {
                             </div>
                             <div className="flex items-center gap-3">
                                 <LuStore size={24} className="text-gray-900" />
-                                <h1 className="text-[#28302A] text-[26px] font-bold pt-2 pb-2">
+                                <h1 className="text-[#28302A] text-[22px] lg:text-[26px] font-bold pt-2 pb-2">
                                     {branchDetailData?.name}
                                 </h1>
                                 {branchDetailData?.isSuperStore && (
@@ -124,11 +124,11 @@ export const StoreBranchDetail = () => {
                                     </div>
                                 )}
                             </div>
-                            <div className="grid grid-cols-3 gap-4">
+                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 lg:gap-4">
                                 {/* Left */}
-                                <div className="flex flex-col col-span-2 border border-gray-300 rounded-xl py-4 px-5 shadow-sm">
+                                <div className="flex flex-col lg:col-span-2 border border-gray-300 rounded-xl py-4 px-5 shadow-sm">
                                     <div className="flex gap-4">
-                                        <div className="flex items-center justify-center rounded-md bg-[#F1F2F4] p-[0.5rem] h-max">
+                                        <div className="flex shrink-0 items-center justify-center rounded-md bg-[#F1F2F4] p-[0.5rem] h-max">
                                             <img src={addressIcon} alt="" />
                                         </div>
                                         <div className="flex flex-col">
@@ -148,7 +148,7 @@ export const StoreBranchDetail = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="w-full mt-4 h-full" id="gmap-frame">
+                                    <div className="w-full mt-4 h-[30vh] lg:h-full" id="gmap-frame">
                                         <iframe
                                             className="rounded-lg"
                                             width="100%"

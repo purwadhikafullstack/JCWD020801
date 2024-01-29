@@ -27,6 +27,7 @@ export const sidebarData = [
     {
         title: "Product Management",
         icon: <FaPlateWheat className="h-5 w-5" />,
+        admin: true,
         subMenus: [
             {
                 title: "Products",

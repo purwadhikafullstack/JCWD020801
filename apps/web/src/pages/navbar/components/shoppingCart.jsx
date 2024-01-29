@@ -120,14 +120,14 @@ export const ShoppingCart = ({ isOpenCart, toggleOpenCart }) => {
                     );
                     return (
                       <div
-                        className="flex justify-start gap-4 py-[0.8rem]"
+                        className="flex justify-start items-center gap-4 py-[0.8rem]"
                         key={product.id}
                       >
-                        <div className="flex shrink-0 items-center">
+                        <div className="flex shrink-0 h-max items-center">
                           <img
                             src={product.img}
                             alt=""
-                            className="h-full h-[6rem] w-[6rem] object-cover rounded-lg"
+                            className="h-[6.5rem] w-[6rem] object-cover rounded-lg"
                           />
                         </div>
                         <div className="flex flex-col gap-1">

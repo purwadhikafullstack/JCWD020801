@@ -5,7 +5,7 @@ import CustomerManagement from './pages/admin/customerManagement';
 import Overview from './pages/admin/overview';
 import Home from './pages/home/Home';
 import Required from './components/required';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { setDataAdmin } from './redux/adminSlice';
 import axios from './api/axios';
@@ -32,6 +32,8 @@ import { StoreLocator } from './pages/storeLocator';
 import { CheckoutPage } from './pages/checkout';
 import { ProductCatalogue } from './pages/productCatalogue';
 import { useGeoLocation } from './hooks/useGeoLocation';
+import AdminErrorPage from './pages/admin/components/adminErrorPage';
+import { ProductDetail } from './pages/productDetail';
 
 const router = createBrowserRouter([
   //Untuk yang tidak butuh token
@@ -47,6 +49,7 @@ const router = createBrowserRouter([
   { path: "/user-update-email/:token", element: <UserUpdateEmail /> },
   { path: "/store-locator", element: <StoreLocator /> },
   { path: "/catalogue", element: <ProductCatalogue /> },
+  { path: "/product-detail", element: <ProductDetail /> },
   {
     element: <Required />,
     children: [
@@ -65,6 +68,7 @@ const router = createBrowserRouter([
       { path: "/product-management", element: <ProductManagement /> },
       { path: "/admin-profile", element: <AdminProfile /> },
       { path: "/category-management", element: <CategoryManagement /> },
+      { path: "/error", element: <AdminErrorPage /> },
       { path: "/store-management", element: <StoreManagement /> },
       { path: "/store-management/:id", element: <StoreBranchDetail /> }
     ]
@@ -72,15 +76,13 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  const token = localStorage.getItem('token');
-  const admtoken = localStorage.getItem('admtoken');
+  const token = localStorage.getItem("token");
+  const admtoken = localStorage.getItem('admtoken')
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(!open);
 
   useGeoLocation();
-  // const { coordinates, loaded } = useSelector((state) => state.geolocation);
-  // console.log(coordinates);
 
   const keepLoginAdmin = async () => {
     try {
@@ -113,7 +115,7 @@ function App() {
       localStorage.removeItem('token');
       history.push('/signin');
     }
-  };
+  }
 
   useEffect(() => {
     if (token) {
@@ -126,11 +128,12 @@ function App() {
 
   return (
     <>
-      <RouterProvider router={router}></RouterProvider>
-      <ExpiredToken
-        content={'Please login again'}
-        openDialog={open}
-        handleOpen={handleOpen} />
+      <RouterProvider router={router}>
+        <ExpiredToken
+          content={'Please login again'}
+          open={open}
+          handleOpen={handleOpen} />
+      </RouterProvider>
     </>
   );
 }

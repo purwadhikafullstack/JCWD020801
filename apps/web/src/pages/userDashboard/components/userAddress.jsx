@@ -21,7 +21,6 @@ export const UserAddress = () => {
                 },
             });
             setUserAddressData(response.data.result.rows);
-            console.log("data updated", response.data.result.rows)
             setTotalPages(response.data.totalPages);
         } catch (error) {
             console.log("this");

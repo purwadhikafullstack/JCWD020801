@@ -16,9 +16,11 @@ import { setDataAdmin } from "../../../redux/adminSlice";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
 import axios from "../../../api/axios";
+import { SyncLoader } from 'react-spinners';
 
 export default function LoginAdmin() {
     const [open, setOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [rememberMe, setRememberMe] = useState(false);
     const handleOpen = () => setOpen(!open);
     const navigate = useNavigate();
@@ -51,13 +53,18 @@ export default function LoginAdmin() {
             if (/^\S+@\S+\.\S+$/.test(data.username)) {
                 data.email = data.username;
                 delete data.username;
+                setIsLoading(true)
                 const response = await axios.post(`admins/login`, data)
+                setIsLoading(false)
                 response_process(response)
             } else {
+                setIsLoading(true)
                 const response = await axios.post(`admins/login`, data)
+                setIsLoading(false)
                 response_process(response)
             }
         } catch (err) {
+            setIsLoading(false)
             toast.error(err.response.data.message, { position: "top-center" });
         }
     };
@@ -150,8 +157,9 @@ export default function LoginAdmin() {
                             />
                             <div onClick={handleOpen} className="cursor-pointer">Forgot Password</div>
                         </div>
-                        <Button type="submit" style={{ backgroundColor: '#41907a' }} variant="filled" className="mt-6 rounded-full" fullWidth>
-                            Log in
+                        <Button disabled={isLoading} type="submit" style={{ backgroundColor: '#41907a' }} variant="filled" className="mt-6 rounded-full" fullWidth>
+                            {isLoading ? <div className="flex justify-center items-center">
+                                <SyncLoader color="#c0cac2" size={9} /></div> : <>Log In</>}
                         </Button>
                     </form>
                 </Card>

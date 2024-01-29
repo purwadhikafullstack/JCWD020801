@@ -251,7 +251,7 @@ export const ModalAddressEdit = ({ modalEditOpen, setModalEditOpen, item, fetchU
             <DialogBody className="flex flex-col gap-4 items-center w-full px-4 md:px-10">
                 <form onSubmit={formik.handleSubmit} className="w-full">
                     {/* 1 */}
-                    <section className={`${activeStep == 0 ? "block" : "hidden"} w-full`}>
+                    <section id="modal-scroll" className={`${activeStep == 0 ? "block" : "hidden"} w-full h-[52vh] lg:h-full overflow-auto pb-2 pr-3 lg:pr-0 lg:pb-0`}>
                         <div className="flex flex-col md:flex-row gap-3.5 md:gap-[2rem] w-full">
                             {/* Label & Customer Name */}
                             <div className="flex flex-col w-full gap-3.5">
