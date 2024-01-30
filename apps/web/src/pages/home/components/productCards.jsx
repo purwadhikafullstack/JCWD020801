@@ -11,16 +11,11 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 
-export const ProductCards = () => {
+export const ProductCards = ({ branchData, coordinates }) => {
     const navigate = useNavigate();
-    const { coordinates, loaded } = useGeoLocation();
-    const [branchData, setBranchData] = useState(null);
-    //   console.log('coords from product cards', coordinates);
     const customer = useSelector((state) => state.customer.value);
-    // console.log(customer);
 
     const products = useSelector((state) => state.product.data);
-    //   console.log(products);
     const dispatch = useDispatch();
 
     const [keenSlider, setKeenSlider] = useState(null);
@@ -86,41 +81,6 @@ export const ProductCards = () => {
             setKeenSlider(slider);
         }
     }, []);
-
-    const fetchNearestBranch = async () => {
-        if (loaded) {
-            try {
-                const response = await axios.post(
-                    `branches/get-nearest?latitude=${coordinates.lat}&longitude=${coordinates.lng}`,
-                );
-                console.log(response.data.result);
-                setBranchData(response.data.result);
-            } catch (error) {
-                console.log(error);
-            }
-        }
-    };
-
-    const fetchMainBranch = async () => {
-        try {
-            const response = await axios.get('branches/super-store');
-            setBranchData(response.data.result);
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    useEffect(() => {
-        if (coordinates === null) {
-            console.log('Location permission denied. Fetching data from main store.');
-            fetchMainBranch();
-        } else if (coordinates && loaded) {
-            console.log(
-                'Location permission granted. Fetching data from nearest store.',
-            );
-            fetchNearestBranch();
-        }
-    }, [loaded, coordinates?.lat, coordinates?.lng]);
 
     const handleAddtoCart = (item) => {
         if (Object.keys(customer).length > 0 && customer.isVerified === true) {

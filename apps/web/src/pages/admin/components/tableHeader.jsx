@@ -7,13 +7,15 @@ import {
     Input,
     Tabs,
     TabsHeader,
-    TabsBody,
     Tab,
-    TabPanel,
+    Select,
+    Option,
 } from "@material-tailwind/react";
 import { UserPlusIcon, MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { IoMdAdd } from "react-icons/io";
 import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import axios from "../../../api/axios";
 
 const TABS = [
     {
@@ -29,18 +31,44 @@ const TABS = [
 export function TableHeader({
     title,
     description,
+    page,
     showAddButton,
     addButtonText,
     handleOpenAdd = () => { },
     handleReset = () => { },
     searchValue,
     setSearchValue,
-    onTabChange }) {
+    onTabChange,
+    handleFilterByCategory = () => { }, }) {
 
     const adminDataRedux = useSelector((state) => state.admin.value);
+    const [categoryData, setCategoryData] = useState([])
+    const token = localStorage.getItem('admtoken')
+
     const handleTabChange = (value) => {
         onTabChange(value)
     }
+
+    const fetchData = async () => {
+        try {
+            if (page === 'product') {
+                const response = await axios.get(`/categories?all=true}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                })
+                setCategoryData(response.data.result.rows)
+            }
+        } catch (err) {
+            console.error(err)
+        }
+    }
+
+    useEffect(() => {
+        if (page === 'product') {
+            fetchData()
+        }
+    }, [])
 
     return (
         <div className="w-screen md:w-5/6">
@@ -71,14 +99,16 @@ export function TableHeader({
                 <CardFooter className="pt-0">
                     <div className="flex flex-col gap-3 md:flex-row">
                         {showAddButton && (
-                            <Button onClick={handleOpenAdd} className="flex items-center gap-3 rounded-2xl bg-[#41907a]" size="sm">
+                            <Button onClick={handleOpenAdd} className="flex items-center gap-3 rounded-2xl bg-[#41907a] w-max" size="sm">
                                 {addButtonText === 'admin' ?
                                     <>
-                                        <UserPlusIcon strokeWidth={2} className="h-4 w-4" /> Add {addButtonText}
+                                        <UserPlusIcon strokeWidth={2} className="h-4 w-4" /> 
+                                        Add {addButtonText}
                                     </>
                                     :
                                     <>
-                                        <IoMdAdd strokeWidth={2} className="h-4 w-4" /> Add {addButtonText}
+                                        <IoMdAdd strokeWidth={2} className="h-4 w-4" /> 
+                                        Add {addButtonText}
                                     </>}
                             </Button>)}
                         <Button onClick={handleReset} variant="outlined" color="green" className="rounded-2xl">Reset Filter</Button>
@@ -90,6 +120,13 @@ export function TableHeader({
                                 icon={<MagnifyingGlassIcon className="h-5 w-5" />}
                             />
                         </div>
+                        {page === 'product' &&
+                            <Select label="Filter by category" onChange={(value) => handleFilterByCategory(value)}>
+                                {categoryData?.map((item, index) => (
+                                    <Option key={index} value={item.id}>{item.name}</Option>
+                                ))}
+                            </Select>
+                        }
                     </div>
                 </CardFooter>
             </Card>

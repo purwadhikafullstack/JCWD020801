@@ -17,7 +17,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import axios from "../../../../api/axios";
 import { useEffect, useState } from "react";
 
-export default function ModalAddProduct({ openModalAdd, handleOpenAdd }) {
+export default function ModalAddProduct({ openModalAdd, handleOpenAdd, handleRefreshTable }) {
     const token = localStorage.getItem('admtoken')
     const [isLoading, setIsLoading] = useState(false);
     const [categoryData, setCategoryData] = useState([]);
@@ -59,8 +59,13 @@ export default function ModalAddProduct({ openModalAdd, handleOpenAdd }) {
     }
 
     const RegisterSchema = Yup.object({
-        name: Yup.string().required("Name can't be empty"),
-        description: Yup.string().required("Description can't be empty"),
+        name: Yup.string().required("Please provide a name."),
+        description: Yup.string().required("Please provide a description."),
+        price: Yup.string().required("Please specify a price."),
+        weight: Yup.string().required("Please indicate the weight."),
+        // stock: Yup.string().required("Please enter the stock quantity."),
+        category_id: Yup.string().required("Please select a category."),
+        // branch_id: Yup.string().required("Please select a branch.")
     });
 
     const handleSubmit = async (data) => {
@@ -78,6 +83,8 @@ export default function ModalAddProduct({ openModalAdd, handleOpenAdd }) {
                 hideProgressBar: true,
                 theme: "colored"
             });
+            handleOpenAdd()
+            handleRefreshTable();
         } catch (err) {
             setIsLoading(false)
             console.log(err);
@@ -126,16 +133,16 @@ export default function ModalAddProduct({ openModalAdd, handleOpenAdd }) {
 
     return (
         <>
-            <Dialog                
+            <Dialog
                 size="lg"
                 open={openModalAdd}
                 handler={handleOpenAdd}
                 dismiss={{ outsidePress: (() => handleClose()) }}
                 className="bg-transparent shadow-none"
             >
-                <Card className="mx-auto w-full">
+                <Card id="modal-scroll" className="mx-auto w-full  h-[80vh] overflow-auto">
                     <form onSubmit={formik.handleSubmit}>
-                        <CardBody className="flex flex-col gap-4 h-[90vh] overflow-auto">
+                        <CardBody className="flex flex-col gap-4">
                             <Typography variant="h4" color="blue-gray">
                                 Add Product
                             </Typography>
@@ -176,25 +183,25 @@ export default function ModalAddProduct({ openModalAdd, handleOpenAdd }) {
                                 </div>
                             ) : null}
                             <div className="flex flex-row gap-2 items-center justify-center">
-                            <Typography variant="h6">
-                                {'Weight (gram)'}
-                            </Typography>
-                            <Input type="number" name="weight" autoComplete="new" label="Weight" size="lg"
-                                onChange={formik.handleChange}
-                                value={formik.values.weight}
-                                error={formik.touched.weight && Boolean(formik.errors.weight)} />
-                            <Typography variant="h6">
-                                Stock
-                            </Typography>
-                            <Input type="number" name="stock" autoComplete="new" label="Stock" size="lg"
-                                onChange={formik.handleChange}
-                                value={formik.values.stock}
-                                error={formik.touched.stock && Boolean(formik.errors.stock)} />
-                            {formik.touched.stock && formik.errors.stock ? (
-                                <div className=" text-red-900 text-xs">
-                                    {formik.errors.stock}
-                                </div>
-                            ) : null}
+                                <Typography variant="h6">
+                                    {'Weight (gram)'}
+                                </Typography>
+                                <Input type="number" name="weight" autoComplete="new" label="Weight" size="lg"
+                                    onChange={formik.handleChange}
+                                    value={formik.values.weight}
+                                    error={formik.touched.weight && Boolean(formik.errors.weight)} />
+                                <Typography variant="h6">
+                                    Stock
+                                </Typography>
+                                <Input type="number" name="stock" autoComplete="new" label="Stock" size="lg"
+                                    onChange={formik.handleChange}
+                                    value={formik.values.stock}
+                                    error={formik.touched.stock && Boolean(formik.errors.stock)} />
+                                {formik.touched.stock && formik.errors.stock ? (
+                                    <div className=" text-red-900 text-xs">
+                                        {formik.errors.stock}
+                                    </div>
+                                ) : null}
                             </div>
                             <Typography className="-mb-2" variant="h6">
                                 Image
@@ -213,11 +220,17 @@ export default function ModalAddProduct({ openModalAdd, handleOpenAdd }) {
                                         label="Select category"
                                         value={formik.values.category_id}
                                         onChange={(value) => { formik.setFieldValue("category_id", value); setCategoryId(value) }}
+                                        error={formik.touched.category_id && Boolean(formik.errors.category_id)}
                                     >
                                         {categoryData?.map((item, index) => (
                                             <Option key={index} value={item.id}>{item.name}</Option>
                                         ))}
                                     </Select>
+                                    {formik.touched.category_id && formik.errors.category_id ? (
+                                        <div className=" text-red-900 text-xs">
+                                            {formik.errors.category_id}
+                                        </div>
+                                    ) : null}
                                 </>
                             )}
                             {subCategoryData && subCategoryData.length > 0 && categoryId != 0 && (
@@ -238,7 +251,7 @@ export default function ModalAddProduct({ openModalAdd, handleOpenAdd }) {
                                     </Select>
                                 </>
                             )}
-                            {branchData && branchData.length > 0 &&(
+                            {branchData && branchData.length > 0 && (
                                 <>
                                     <Typography className="-mb-2" variant="h6">
                                         Branch
@@ -249,11 +262,17 @@ export default function ModalAddProduct({ openModalAdd, handleOpenAdd }) {
                                         label="Select branch"
                                         value={formik.values.branch_id}
                                         onChange={(value) => { formik.setFieldValue("branch_id", value); setBranchId(value) }}
+                                        error={formik.touched.branch_id && Boolean(formik.errors.branch_id)}
                                     >
                                         {branchData?.map((item, index) => (
                                             <Option key={index} value={item.id}>{item.name}</Option>
                                         ))}
                                     </Select>
+                                    {formik.touched.branch_id && formik.errors.branch_id ? (
+                                        <div className=" text-red-900 text-xs">
+                                            {formik.errors.branch_id}
+                                        </div>
+                                    ) : null}
                                 </>)}
                         </CardBody>
                         <CardFooter className="pt-0">

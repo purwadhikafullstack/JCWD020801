@@ -4,45 +4,45 @@ import { toast } from "react-toastify";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion"
 
-const categoryList = [
-    {
-        name: 'Meat & Poultry',
-        subcategory: {
-            list: ['Beef', 'Lamb', 'Chicken', 'Duck', 'Sausage & Hot Dogs'],
-        },
-    },
-    {
-        name: 'Seafood',
-        subcategory: {
-            list: [
-                'Fish Fillets',
-                'Fish Whole',
-                'Salmon',
-                'Crab',
-                'Lobster',
-                'Shrimp',
-            ],
-        },
-    },
-    {
-        name: 'Fresh',
-        subcategory: {
-            list: ['Fruits', 'Berries', 'Vegetables', 'Dried Fruits & Nuts'],
-        },
-    },
-    { name: 'Spice & Herbs' },
-    {
-        name: 'Dairy',
-        subcategory: { list: ['Eggs', 'Milk', 'Yoghurt', 'Sour Cream', 'Pudding'] },
-    },
-    { name: 'Drinks' },
-    { name: 'Frozen' },
-    { name: 'Snacks' },
-    { name: 'Beauty' },
-    { name: 'Healthcare' },
-    { name: 'Cleaning & Household' },
-    { name: 'Pet' },
-];
+// const categoryList = [
+//     {
+//         name: 'Meat & Poultry',
+//         subcategory: {
+//             list: ['Beef', 'Lamb', 'Chicken', 'Duck', 'Sausage & Hot Dogs'],
+//         },
+//     },
+//     {
+//         name: 'Seafood',
+//         subcategory: {
+//             list: [
+//                 'Fish Fillets',
+//                 'Fish Whole',
+//                 'Salmon',
+//                 'Crab',
+//                 'Lobster',
+//                 'Shrimp',
+//             ],
+//         },
+//     },
+//     {
+//         name: 'Fresh',
+//         subcategory: {
+//             list: ['Fruits', 'Berries', 'Vegetables', 'Dried Fruits & Nuts'],
+//         },
+//     },
+//     { name: 'Spice & Herbs' },
+//     {
+//         name: 'Dairy',
+//         subcategory: { list: ['Eggs', 'Milk', 'Yoghurt', 'Sour Cream', 'Pudding'] },
+//     },
+//     { name: 'Drinks' },
+//     { name: 'Frozen' },
+//     { name: 'Snacks' },
+//     { name: 'Beauty' },
+//     { name: 'Healthcare' },
+//     { name: 'Cleaning & Household' },
+//     { name: 'Pet' },
+// ];
 
 const cardsData = [
     {
@@ -97,7 +97,7 @@ const filterItems = [
     { title: "Name: Z - A" },
 ]
 
-export const BrowseProducts = () => {
+export const BrowseProducts = ({categoryList}) => {
     const [isFilterOpen, setIsFilterOpen] = useState(false)
 
     const addToCart = () => {

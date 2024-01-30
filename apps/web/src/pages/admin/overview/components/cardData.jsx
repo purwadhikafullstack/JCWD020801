@@ -88,7 +88,8 @@ export const getCardData = async () => {
             desc: 'See more', 
             path: '/customer-management',
             icon: <GoPeople style={{ fontSize: '34px' }} />, 
-            data: totalCustomer
+            data: totalCustomer,
+            admin: true
         },
         { 
             title: 'products',

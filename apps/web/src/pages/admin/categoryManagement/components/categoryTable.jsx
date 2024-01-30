@@ -10,12 +10,12 @@ import {
     Tooltip,
 } from "@material-tailwind/react";
 import { PencilIcon, TrashIcon, ChevronUpDownIcon } from "@heroicons/react/24/solid";
-import { Helper } from "../../components/icons";
 import { useSelector } from "react-redux";
 
 export default function CategoryTable({ tabValueFromChild, handleDelete, handleEdit, categoryData, currentPage, handlePageChange, totalPages, handleSortBy }) {
     const TABLE_HEAD = ["ID", "Name", "CreatedAt", "UpdatedAt", "Actions"]
     const adminDataRedux = useSelector((state) => state.admin.value);
+    console.log("WWWKK", categoryData);
 
     return (
         <div className="w-screen md:w-5/6">
@@ -68,20 +68,99 @@ export default function CategoryTable({ tabValueFromChild, handleDelete, handleE
                                             </td>
                                             <td className={classes}>
                                                 <div className="flex flex-col md:flex-row gap-3">
-                                                    <Typography
-                                                        variant="small"
-                                                        color="blue-gray"
-                                                        className="font-normal"
-                                                    >
-                                                        {item.name}
-                                                    </Typography>
+
+                                                    {tabValueFromChild === 0 &&
+                                                        <div className="flex flex-row gap-2">
+                                                            <Typography
+                                                                variant="small"
+                                                                color="blue-gray"
+                                                                className="font-normal"
+                                                            >
+                                                                {item.name}
+                                                            </Typography>
+                                                            {item.SubCategories?.length != 0 &&
+                                                                <Tooltip
+                                                                    content={
+                                                                        <div className="w-50">
+                                                                            <Typography variant="small">Subcategory</Typography>
+                                                                            {item.SubCategories?.map((item, index) => (
+                                                                                <Typography key={index} variant="small" color="white" className="font-normal opacity-80">
+                                                                                    {item.name}
+                                                                                </Typography>
+                                                                            ))}
+                                                                        </div>
+                                                                    }
+                                                                    animate={{
+                                                                        mount: { scale: 1, y: 0 },
+                                                                        unmount: { scale: 0, y: 25 },
+                                                                    }}
+                                                                >
+                                                                    <svg
+                                                                        xmlns="http://www.w3.org/2000/svg"
+                                                                        fill="none"
+                                                                        viewBox="0 0 24 24"
+                                                                        stroke="currentColor"
+                                                                        strokeWidth={2}
+                                                                        className="h-5 w-5 cursor-pointer text-blue-gray-500"
+                                                                    >
+                                                                        <path
+                                                                            strokeLinecap="round"
+                                                                            strokeLinejoin="round"
+                                                                            d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                                                                        />
+                                                                    </svg>
+                                                                </Tooltip>
+                                                            }
+                                                        </div>
+
+                                                    }
                                                     {tabValueFromChild === 1 &&
-                                                        <Chip
-                                                            variant="filled"
-                                                            size="sm"
-                                                            value={item.CategoryId != null ? "Assigned" : "Not assigned"}
-                                                            color={item.CategoryId ? "green" : "blue-gray"}
-                                                        />}
+                                                        <div className="flex flex-row gap-2">
+                                                            <Typography
+                                                                variant="small"
+                                                                color="blue-gray"
+                                                                className="font-normal"
+                                                            >
+                                                                {item.name}
+                                                            </Typography>
+                                                            <Chip
+                                                                variant="filled"
+                                                                size="sm"
+                                                                value={item.CategoryId != null ? "Assigned" : "Not assigned"}
+                                                                color={item.CategoryId ? "green" : "blue-gray"}
+                                                            />
+                                                            {item.Category?.name &&
+                                                                <Tooltip
+                                                                    content={
+                                                                        <div className="w-50">
+                                                                            <Typography variant="small" color="white" className="font-normal opacity-80">
+                                                                                Assigned to {item.Category?.name}
+                                                                            </Typography>
+                                                                        </div>
+                                                                    }
+                                                                    animate={{
+                                                                        mount: { scale: 1, y: 0 },
+                                                                        unmount: { scale: 0, y: 25 },
+                                                                    }}
+                                                                >
+                                                                    <svg
+                                                                        xmlns="http://www.w3.org/2000/svg"
+                                                                        fill="none"
+                                                                        viewBox="0 0 24 24"
+                                                                        stroke="currentColor"
+                                                                        strokeWidth={2}
+                                                                        className="h-5 w-5 cursor-pointer text-blue-gray-500"
+                                                                    >
+                                                                        <path
+                                                                            strokeLinecap="round"
+                                                                            strokeLinejoin="round"
+                                                                            d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                                                                        />
+                                                                    </svg>
+                                                                </Tooltip>
+                                                            }
+                                                        </div>
+                                                    }
                                                 </div>
                                             </td>
                                             <td className={classes}>
@@ -91,7 +170,7 @@ export default function CategoryTable({ tabValueFromChild, handleDelete, handleE
                                                         color="blue-gray"
                                                         className="font-normal"
                                                     >
-                                                        {item.createdAt}
+                                                        {item.formattedCreatedAt}
                                                     </Typography>
                                                 </div>
                                             </td>
@@ -102,27 +181,26 @@ export default function CategoryTable({ tabValueFromChild, handleDelete, handleE
                                                         color="blue-gray"
                                                         className="font-normal"
                                                     >
-                                                        {item.updatedAt}
+                                                        {item.formattedUpdatedAt}
                                                     </Typography>
                                                 </div>
                                             </td>
-                                            {adminDataRedux.isSuperAdmin === true && 
-                                            <td className={classes}>
-                                                
-                                                <>
-                                                <Tooltip content={`Edit ${item.name}`}>
-                                                    <IconButton onClick={() => handleEdit(item)} variant="text">
-                                                        <PencilIcon className="h-4 w-4" />
-                                                    </IconButton>
-                                                </Tooltip>
-                                                <Tooltip content={`Delete ${item.name}`}>
-                                                    <IconButton onClick={() => handleDelete(item)} variant="text">
-                                                        <TrashIcon className="h-4 w-4" color="red" />
-                                                    </IconButton>
-                                                </Tooltip>
-                                                </>
-                                            </td>
-                                                }
+                                            {adminDataRedux.isSuperAdmin === true &&
+                                                <td className={classes}>
+                                                    <>
+                                                        <Tooltip content={`Edit ${item.name}`}>
+                                                            <IconButton onClick={() => handleEdit(item)} variant="text">
+                                                                <PencilIcon className="h-4 w-4" />
+                                                            </IconButton>
+                                                        </Tooltip>
+                                                        <Tooltip content={`Delete ${item.name}`}>
+                                                            <IconButton onClick={() => handleDelete(item)} variant="text">
+                                                                <TrashIcon className="h-4 w-4" color="red" />
+                                                            </IconButton>
+                                                        </Tooltip>
+                                                    </>
+                                                </td>
+                                            }
                                         </tr>
                                     );
                                 },

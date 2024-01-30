@@ -1,4 +1,5 @@
 import Admin from '../models/admin.model';
+import Branch from '../models/branch.model'
 import bcrypt from 'bcrypt';
 import { Op } from "sequelize";
 import jwt from 'jsonwebtoken'
@@ -340,14 +341,15 @@ export const logoutAdmin = (req, res) => {
 
 export const getAllAdminNoPagination = async (req, res) => {
     try {
+
         const result = await Admin.findAll({
             where: {
                 isSuperAdmin: false
             },
             // order: 
         })
-        return res.status(200).send({ result: result })
 
+        return res.status(200).send({ result: result })
     } catch (error) {
         console.log(error);
         res.status(400).send({ message: error.message })

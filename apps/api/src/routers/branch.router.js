@@ -1,13 +1,14 @@
 import { Router } from 'express';
 import { checkRoleAdmin, verifyTokenAdmin } from '../middleware/admin/admin.auth';
-import { addBranch, changeStatus, deleteById, editBranch, getAll, getById, getNearestBranch, getSuperStore, getTotalBranch} from '../controllers/branch.controller';
+import { addBranch, changeStatus, deleteById, editBranch, getAll, getAllbyAdminId, getById, getNearestBranch, getSuperStore, getTotalBranch} from '../controllers/branch.controller';
 
 const branchRouter = Router()
 
 // GET
-branchRouter.get('/', verifyTokenAdmin, checkRoleAdmin, getAll)
+branchRouter.get('/', verifyTokenAdmin, getAll)
 branchRouter.get('/total', verifyTokenAdmin, getTotalBranch)
 branchRouter.get('/super-store', getSuperStore)
+branchRouter.get('/assigned', verifyTokenAdmin, getAllbyAdminId)
 branchRouter.get('/:id', verifyTokenAdmin, checkRoleAdmin, getById)
 
 // test

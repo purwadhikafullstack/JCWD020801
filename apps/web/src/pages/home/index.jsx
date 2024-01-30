@@ -1,5 +1,5 @@
 import { Navbar } from "../navbar"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { RxDotFilled } from "react-icons/rx"
 import { CgLoadbar } from "react-icons/cg"
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io"
@@ -11,6 +11,8 @@ import homeLogin from '../../assets/home/home-login.jpg'
 import { Link } from "react-router-dom"
 import { DiscountedProducts } from "./components/discountedProducts"
 import { useSelector } from "react-redux"
+import axios from "../../api/axios"
+import { useGeoLocation } from "../../hooks/useGeoLocation"
 
 const imgSlides = [
   {
@@ -31,6 +33,46 @@ export const HomePage = () => {
   const customer = useSelector((state) => state.customer.value);
   const [currentIndex, setCurrentIndex] = useState(0)
 
+  const { coordinates, loaded } = useGeoLocation();
+    const [branchData, setBranchData] = useState(null);
+  console.log(branchData);
+
+    const fetchNearestBranch = async () => {
+      if (loaded) {
+          try {
+              const response = await axios.post(
+                  `branches/get-nearest?latitude=${coordinates.lat}&longitude=${coordinates.lng}`,
+              );
+              console.log("WWW", response)
+              console.log(response.data.result[0]);
+              setBranchData(response.data.result[0]);
+          } catch (error) {
+              console.log(error);
+          }
+      }
+  };
+
+  const fetchMainBranch = async () => {
+      try {
+          const response = await axios.get('branches/super-store');
+          setBranchData(response.data.result);
+      } catch (error) {
+          console.error(error);
+      }
+  };
+
+  useEffect(() => {
+      if (coordinates === null) {
+          console.log('Location permission denied. Fetching data from main store.');
+          fetchMainBranch();
+      } else if (coordinates && loaded) {
+          console.log(
+              'Location permission granted. Fetching data from nearest store.',
+          );
+          fetchNearestBranch();
+      }
+  }, [loaded, coordinates?.lat, coordinates?.lng]);
+
   const prevSlide = () => {
     const isFirstSlide = currentIndex === 0;
     const newIndex = isFirstSlide ? imgSlides.length - 1 : currentIndex - 1
@@ -46,6 +88,21 @@ export const HomePage = () => {
   const goToSlide = (slideIndex) => {
     setCurrentIndex(slideIndex)
   }
+
+  const [categoryList, setCategoryList] = useState([])
+
+    const getCategory = async () => {
+        try {
+            const response = await axios.get(`/categories/all?all=true}`)
+            setCategoryList(response.data.result.rows)
+        } catch (err) {
+            console.error(err)
+        }
+    }
+
+    useEffect(() => {
+        getCategory();
+    }, [])
 
   return (
     <>
@@ -104,9 +161,9 @@ export const HomePage = () => {
           <IoIosArrowForward onClick={nextSlide} size={22} />
         </div>
       </div>
-      <ProductCards />
+      <ProductCards branchData={branchData} coordinates={coordinates}/>
       <DiscountedProducts />
-      <BrowseProducts />
+      <BrowseProducts branch categoryList={categoryList} />
       {/*  */}
       {/* bg-[#f9f9f9]  */}
       {!customer && (

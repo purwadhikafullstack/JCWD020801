@@ -14,7 +14,6 @@ export default function CustomerManagement() {
     const handleRefreshTable = () => setRefreshTable(!refreshTable)
     const token = localStorage.getItem('admtoken');
     const navigate = useNavigate();
-    console.log("YYY", customerData);
 
     /* FILTERING STATES AND HANDLES */
     const [currentPage, setCurrentPage] = useState(1);

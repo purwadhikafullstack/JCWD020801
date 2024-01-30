@@ -1,6 +1,7 @@
 import Category from '../models/category.model'
 import SubCategory from '../models/subcategory.model'
 import { Op } from "sequelize";
+import moment from 'moment'
 
 export const addCategory = async (req, res) => {
     try {
@@ -55,9 +56,15 @@ export const getAllCategory = async (req, res) => {
                         [Op.like]: `%${search}%`
                     }
                 },
+                include: [{ model: SubCategory }],
                 order: [[sortBy, sortOrder.toUpperCase()]],
                 limit: parseInt(limit),
                 offset: parseInt(offset),
+            });
+
+            allCategory.rows.forEach(row => {
+                row.dataValues.formattedCreatedAt = moment(row.createdAt).format('MMMM Do YYYY, h:mm:ss a');
+                row.dataValues.formattedUpdatedAt = moment(row.updatedAt).format('MMMM Do YYYY, h:mm:ss a');
             });
     
             const totalPages = Math.ceil(allCategory.count / limit);
@@ -148,6 +155,12 @@ export const getAllSubCategory = async (req, res) => {
 
         if (all) {
             const allSubCategory = await SubCategory.findAndCountAll({
+                include: [
+                    {
+                        model: Category,
+                        attributes: ['name']
+                    },
+                ],
                 where: {
                     name: {
                         [Op.like]: `%${search}%`
@@ -156,6 +169,10 @@ export const getAllSubCategory = async (req, res) => {
                 order: [[sortBy, sortOrder.toUpperCase()]],
                 limit: parseInt(limit),
                 offset: parseInt(offset),
+            });
+            allSubCategory.rows.forEach(row => {
+                row.dataValues.formattedCreatedAt = moment(row.createdAt).format('MMMM Do YYYY, h:mm:ss a');
+                row.dataValues.formattedUpdatedAt = moment(row.updatedAt).format('MMMM Do YYYY, h:mm:ss a');
             });
             const totalPages = Math.ceil(allSubCategory.count / limit);
             return res.status(200).send({ result: allSubCategory, totalPages })

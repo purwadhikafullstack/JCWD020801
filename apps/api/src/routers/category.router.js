@@ -7,6 +7,7 @@ const categoryRouter = Router()
 //category
 categoryRouter.post('/', verifyTokenAdmin, addCategory);
 categoryRouter.get('/', verifyTokenAdmin, getAllCategory);
+categoryRouter.get('/all', getAllCategory)
 categoryRouter.delete('/:id', verifyTokenAdmin, deleteCategory)
 categoryRouter.patch('/', verifyTokenAdmin, updateCategory)
 

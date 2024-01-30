@@ -31,6 +31,8 @@ import { StoreLocator } from './pages/storeLocator';
 import { CheckoutPage } from './pages/checkout';
 import { ProductCatalogue } from './pages/productCatalogue';
 import AdminErrorPage from './pages/admin/components/adminErrorPage';
+import StockManagement from './pages/admin/stockManagement';
+import StockReportProduct from './pages/admin/reports/stockReport/stockReportProduct';
 
 const router = createBrowserRouter([
   { path: "/", element: <Home /> },
@@ -68,7 +70,9 @@ const router = createBrowserRouter([
       { path: "/category-management", element: <CategoryManagement />},
       { path: "/error", element: <AdminErrorPage/> },
       { path: "/store-management", element: <StoreManagement /> },
-      { path: "/store-management/:id", element: <StoreBranchDetail /> }
+      { path: "/store-management/:id", element: <StoreBranchDetail /> },
+      { path: "/stock-management", element: <StockManagement/> },
+      { path: "/stock-report/:id", element: <StockReportProduct/> },
     ]
   }
 ]);
