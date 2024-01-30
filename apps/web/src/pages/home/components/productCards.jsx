@@ -99,9 +99,10 @@ export const ProductCards = ({ branchData, coordinates }) => {
         </>,
         {
           position: 'top-center',
+          autoClose: 2000,
         },
       );
-      // navigate('/signin');
+      setTimeout(() => navigate('/signin'), 3500);
     }
   };
 

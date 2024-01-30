@@ -1,13 +1,15 @@
+/* eslint-disable no-unused-vars */
 import { FaArrowRight } from 'react-icons/fa6';
 import { AddressDelivery } from './component/addressDelivery';
 import { OrderSummary } from './component/orderSummary';
 import appLogo from '../../assets/logo-app-1.png';
 import { IoMdArrowBack } from 'react-icons/io';
-import { useSelector } from 'react-redux';
+
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useSelector } from 'react-redux';
+
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const convertToIDR = (price) => {
   let newPrice = price.toLocaleString('id-ID', {
