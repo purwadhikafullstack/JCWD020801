@@ -16,10 +16,15 @@ const filterItems = [
   { title: 'Name: Z - A' },
 ];
 
-export const BrowseProducts = ({ categoryList, product, setCategoryId, branchId }) => {
+export const BrowseProducts = ({
+  categoryList,
+  product,
+  setCategoryId,
+  branchId,
+}) => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [productImage, setProductImage] = useState();
-  const [contoh, setContoh] = useState([])
+  const [contoh, setContoh] = useState([]);
   const customer = useSelector((state) => state.customer.value);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -61,15 +66,17 @@ export const BrowseProducts = ({ categoryList, product, setCategoryId, branchId 
   const getProductImages = async () => {
     try {
       const imagePromises = product.map(async (prod) => {
-        const response = await axios.get(`products/images/${prod?.Product?.id}`);
+        const response = await axios.get(
+          `products/images/${prod?.Product?.id}`,
+        );
         return response.data.imageProduct;
       });
       const images = await Promise.all(imagePromises);
       setProductImage(images);
     } catch (err) {
-      console.error(err)
+      console.error(err);
     }
-  }
+  };
 
   const handleLinkClick = () => {
     // window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -78,8 +85,8 @@ export const BrowseProducts = ({ categoryList, product, setCategoryId, branchId 
 
   useEffect(() => {
     getProductImages();
-    setContoh(product)
-  }, [product])
+    setContoh(product);
+  }, [product]);
 
   return (
     <>
