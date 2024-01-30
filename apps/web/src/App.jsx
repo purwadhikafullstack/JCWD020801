@@ -23,20 +23,21 @@ import { UserRegister } from './pages/userRegister';
 import { AccountVerification } from './pages/accountVerification';
 import { UserResetPassword } from './pages/userResetPassword';
 import { UserUpdateEmail } from './pages/userUpdateEmail';
-import { setData } from './redux/customerSlice';
+// import { setData } from './redux/customercustomerSliceSlice';
+import { setData } from './redux/customerSlice'
 import AdminRequired from './components/adminRequired';
 import { StoreManagement } from './pages/admin/storeManagement';
 import { StoreBranchDetail } from './pages/admin/storeManagement/storeBranchDetail';
 import { StoreLocator } from './pages/storeLocator';
 import { CheckoutPage } from './pages/checkout';
 import { ProductCatalogue } from './pages/productCatalogue';
+import { useGeoLocation } from './hooks/useGeoLocation';
 import AdminErrorPage from './pages/admin/components/adminErrorPage';
+import { ProductDetail } from './pages/productDetail';
 
 const router = createBrowserRouter([
+  //Untuk yang tidak butuh token
   { path: "/", element: <Home /> },
-  { path: "/login-admin", element: <LoginAdmin></LoginAdmin> },
-  { path: "/admin-verification/:token", element: <AdminVerification /> },
-  { path: "/admin-reset-password/:token", element: <AdminResetPassword /> },
   { path: "/login-admin", element: <LoginAdmin></LoginAdmin> },
   { path: "/admin-verification/:token", element: <AdminVerification /> },
   { path: "/admin-reset-password/:token", element: <AdminResetPassword /> },
@@ -48,6 +49,7 @@ const router = createBrowserRouter([
   { path: "/user-update-email/:token", element: <UserUpdateEmail /> },
   { path: "/store-locator", element: <StoreLocator /> },
   { path: "/catalogue", element: <ProductCatalogue /> },
+  { path: "/product-detail", element: <ProductDetail /> },
   {
     element: <Required />,
     children: [
@@ -65,8 +67,8 @@ const router = createBrowserRouter([
       { path: "/customer-management", element: <CustomerManagement /> },
       { path: "/product-management", element: <ProductManagement /> },
       { path: "/admin-profile", element: <AdminProfile /> },
-      { path: "/category-management", element: <CategoryManagement />},
-      { path: "/error", element: <AdminErrorPage/> },
+      { path: "/category-management", element: <CategoryManagement /> },
+      { path: "/error", element: <AdminErrorPage /> },
       { path: "/store-management", element: <StoreManagement /> },
       { path: "/store-management/:id", element: <StoreBranchDetail /> }
     ]
@@ -77,8 +79,10 @@ function App() {
   const token = localStorage.getItem("token");
   const admtoken = localStorage.getItem('admtoken')
   const dispatch = useDispatch();
-  const [open, setOpen] = useState(false)
-  const handleOpen = () => setOpen(true);
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(!open);
+
+  useGeoLocation();
 
   const keepLoginAdmin = async () => {
     try {
@@ -120,7 +124,7 @@ function App() {
     if (admtoken) {
       keepLoginAdmin();
     }
-  }, []);
+  }, [token]);
 
   return (
     <>

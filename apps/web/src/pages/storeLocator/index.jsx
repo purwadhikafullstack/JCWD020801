@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import axios from "../../api/axios";
-import { useGeoLocation } from "../../hooks/useGeoLocation";
 import { Navbar } from "../navbar"
 import { FiSearch } from "react-icons/fi"
 import { formatDistance } from "../../functions/functions";
@@ -8,15 +7,17 @@ import { StoreLocatorMap } from "./components/storeLocatorMap";
 import { Footer } from "../footer";
 import { Link } from "react-router-dom";
 import { AnimatePresence, motion } from 'framer-motion';
+import { useSelector } from "react-redux";
 
 export const StoreLocator = () => {
-    const { coordinates, loaded } = useGeoLocation();
+    const { coordinates, loaded } = useSelector((state) => state.geolocation);
+
     const [branchData, setBranchData] = useState([]);
     const [selectedStore, setSelectedStore] = useState(null)
     const [searchQuery, setSearchQuery] = useState('')
-
     const [listExpand, setListExpand] = useState(false)
 
+    console.log(branchData);
 
     const handleStoreClick = (index) => {
         setSelectedStore(filteredBranchData()[index]);
@@ -145,9 +146,11 @@ export const StoreLocator = () => {
                                                 <span className="text-[#212121] font-semibold">
                                                     {item?.name}
                                                 </span>
-                                                <span className="text-[14px] text-gray-500 font-medium">
-                                                    {formatDistance(item.distance)} away
-                                                </span>
+                                                {item?.distance < 25000 && (
+                                                    <span className="text-[14px] text-gray-500 font-medium">
+                                                        {formatDistance(item.distance)} away
+                                                    </span>
+                                                )}
                                             </div>
                                             <span className="text-[14px] line-clamp-2 mt-[0.4rem] font-normal text-gray-600">
                                                 {item?.address}

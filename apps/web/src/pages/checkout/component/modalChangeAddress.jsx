@@ -38,6 +38,12 @@ export const ModalChangeAddress = ({ modalChangeAddressOpen, setModalChangeAddre
         setCurrentPage(newPage);
     };
 
+    const handleGoToAddressList = () => {
+        navigate('/user-dashboard')
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        // window.scrollTo(0, 0)
+    }
+
     useEffect(() => {
         fetchAllAddress(currentPage);
     }, [currentPage])
@@ -86,9 +92,10 @@ export const ModalChangeAddress = ({ modalChangeAddressOpen, setModalChangeAddre
                                     item={item}
                                     fetchAllAddress={fetchAllAddress}
                                     fetchDeliveryAddress={fetchDeliveryAddress}
+                                    currentPage={currentPage}
                                 />
                             ))}
-                            <div className="flex items-center justify-between pr-1 mt-[2px]">
+                            <div className="flex items-center justify-between pr-1 mt-auto">
                                 <button
                                     onClick={() => handlePageChange(currentPage - 1)}
                                     disabled={currentPage === 1}
@@ -144,7 +151,7 @@ export const ModalChangeAddress = ({ modalChangeAddressOpen, setModalChangeAddre
                         </div>
                     )}
                     <div
-                        onClick={() => navigate('/user-dashboard')}
+                        onClick={handleGoToAddressList}
                         id="underline-wrapper"
                         className="text-gray-500 w-max flex self-end w-full mt-[0.7rem] items-center gap-1 cursor-pointer hover:text-gray-700 relative"
                     >
@@ -171,6 +178,7 @@ export const ModalChangeAddress = ({ modalChangeAddressOpen, setModalChangeAddre
                 modalAddOpen={modalAddOpen}
                 handleModalAddOpen={handleModalAddOpen}
                 fetchAllAddress={fetchAllAddress}
+                currentPage={currentPage}
             />
         </>
     );

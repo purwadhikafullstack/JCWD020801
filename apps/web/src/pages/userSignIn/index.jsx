@@ -1,9 +1,7 @@
 import appLogoSm from '../../assets/userSignIn/lemon-logo.svg';
 import googleIcon from '../../assets/userSignIn/google-icon.svg';
-// import facebookIcon from '../../assets/userSignIn/facebook-icon.svg';
 import loginBanner from '../../assets/userSignIn/login-vector.svg';
 import { SyncLoader } from 'react-spinners'
-// import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -20,8 +18,6 @@ import { ModalUserReverify } from './components/modalUserReverify';
 
 export const UserSignIn = () => {
     const navigate = useNavigate();
-    // const [socialHover1, setSocialHover1] = useState(false);
-    // const [socialHover2, setSocialHover2] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -34,7 +30,6 @@ export const UserSignIn = () => {
     const handleGoogleSignin = async () => {
         try {
             const userData = await registerWithGoogle();
-            console.log(userData);
 
             const response = await axios.post('customer/signin-google', { googleUserData: userData })
             localStorage.setItem('token', response.data.token)

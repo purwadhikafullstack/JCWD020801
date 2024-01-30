@@ -1,34 +1,14 @@
 import { Button, CardBody, CardFooter, IconButton, Tooltip, Typography } from '@material-tailwind/react'
 import { ChevronUpDownIcon } from '@heroicons/react/24/solid'
-import { useEffect, useState } from 'react'
-import axios from '../../../../api/axios'
 import { FaCircleInfo } from 'react-icons/fa6'
 import { useNavigate } from 'react-router-dom'
 import { formatDate, truncateString } from '../../../../functions/functions'
+import PropTypes from 'prop-types';
 
 const tableHead = ["Store branch", "Address", "Admin", "Status", "Created", "Action"]
 
-export const StoreTable = () => {
-    const [branchData, setBranchData] = useState([])
-    const token = localStorage.getItem('admtoken');
+export const StoreTable = ({ branchData, handlePageChange, currentPage, totalPages }) => {
     const navigate = useNavigate()
-
-    const fetchBranchData = async () => {
-        try {
-            const response = await axios.get('branches/', {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            })
-            setBranchData(response.data.result)
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    useEffect(() => {
-        fetchBranchData();
-    }, [])
 
     return (
         <>
@@ -80,9 +60,20 @@ export const StoreTable = () => {
                                                     d="M256 32C167.67 32 96 96.51 96 176c0 128 160 304 160 304s160-176 160-304c0-79.49-71.67-144-160-144m0 224a64 64 0 1 1 64-64a64.07 64.07 0 0 1-64 64"
                                                 />
                                             </svg>
-                                            <span className="font-medium text-[#263238] line-clamp-2 w-[10rem]">
+                                            <span
+                                                onClick={() =>
+                                                    navigate(`/store-management/${item.id}`)
+                                                }
+                                                className="font-medium text-[#263238] line-clamp-2 w-[10rem] cursor-pointer hover:underline hover:underline-offset-2"
+                                            >
                                                 {item.name} <br />
-                                                {item?.isSuperStore && (<div className="flex items-center py-[0.1rem] bg-[#DBEFDC] w-max rounded-md px-[0.5rem] mt-[0.3rem]"><span className="text-[14px] font-medium text-[#1B5E20]">main store</span></div>)}
+                                                {item?.isSuperStore && (
+                                                    <div className="flex items-center py-[0.1rem] bg-[#DBEFDC] w-max rounded-md px-[0.5rem] mt-[0.3rem]">
+                                                        <span className="text-[14px] font-medium text-[#1B5E20] ">
+                                                            main store
+                                                        </span>
+                                                    </div>
+                                                )}
                                                 {/* {truncateString(item.name, 20)} */}
                                             </span>
                                         </div>
@@ -122,13 +113,20 @@ export const StoreTable = () => {
                                     </td>
                                     <td>
                                         <div>
-                                            <span className="pl-3 text-gray-500 text-[14px]">{formatDate(item.createdAt)}</span>
+                                            <span className="pl-3 text-gray-500 text-[14px]">
+                                                {formatDate(item.createdAt)}
+                                            </span>
                                         </div>
                                     </td>
                                     <td className="">
                                         <div className="flex justify-center">
                                             <Tooltip content="Branch Detail">
-                                                <IconButton onClick={() => navigate(`/store-management/${item.id}`)} variant="text">
+                                                <IconButton
+                                                    onClick={() =>
+                                                        navigate(`/store-management/${item.id}`)
+                                                    }
+                                                    variant="text"
+                                                >
                                                     {/* <PencilIcon className="h-4 w-4 text-[#616161]" /> */}
                                                     <FaCircleInfo className="h-4 w-4 text-[#616161]" />
                                                 </IconButton>
@@ -140,15 +138,32 @@ export const StoreTable = () => {
                         </tbody>
                     </table>
                 </CardBody>
+                {/* Pagination */}
                 <CardFooter className="flex items-center justify-between border-t border-gray-200 p-4">
-                    <Typography variant="small" color="blue-gray" className="font-normal text-gray-600">
-                        Page 1 of 10
+                    <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal text-gray-600"
+                    >
+                        Page {currentPage} of {totalPages}
                     </Typography>
                     <div className="flex gap-2">
-                        <Button variant="outlined" size="sm" className="border-gray-500 text-gray-500">
+                        <Button
+                            onClick={() => handlePageChange(currentPage - 1)}
+                            disabled={currentPage === 1}
+                            variant="outlined"
+                            size="sm"
+                            className="border-gray-500 text-gray-500"
+                        >
                             Previous
                         </Button>
-                        <Button variant="outlined" size="sm" className="border-gray-500 text-gray-500">
+                        <Button
+                            onClick={() => handlePageChange(currentPage + 1)}
+                            disabled={currentPage === totalPages}
+                            variant="outlined"
+                            size="sm"
+                            className="border-gray-500 text-gray-500"
+                        >
                             Next
                         </Button>
                     </div>
@@ -156,4 +171,13 @@ export const StoreTable = () => {
             </div>
         </>
     );
+}
+
+StoreTable.propTypes = {
+    branchData: PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        address: PropTypes.string.isRequired,
+        id: PropTypes.number.isRequired,
+        AdminId: PropTypes.number.isRequired,
+    })
 }

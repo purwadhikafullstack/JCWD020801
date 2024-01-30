@@ -1,6 +1,5 @@
 import appLogoSm from '../../assets/userSignIn/lemon-logo.svg';
 import googleIcon from '../../assets/userSignIn/google-icon.svg';
-// import facebookIcon from '../../assets/userSignIn/facebook-icon.svg';
 import registerBanner from "../../assets/userRegister/signup-vector.svg";
 import { motion, AnimatePresence } from "framer-motion";
 import { SyncLoader } from 'react-spinners'
@@ -13,7 +12,7 @@ import { ModalError } from './components/modalError';
 import { registerWithGoogle } from '../../../../api/src/firebase'
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { setData } from '../../redux/customerSlice';
+import { setData } from '../../redux/customerSlice'
 import { toast } from 'react-toastify';
 
 export const UserRegister = () => {

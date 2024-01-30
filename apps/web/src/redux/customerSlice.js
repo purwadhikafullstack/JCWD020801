@@ -20,4 +20,4 @@ export const customerSlice = createSlice({
 export const { setData, updateProfilePicture } =
     customerSlice.actions;
 
-export default customerSlice.reducer
+export default customerSlice.reducer 

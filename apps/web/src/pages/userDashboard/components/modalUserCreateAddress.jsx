@@ -18,7 +18,7 @@ import axios from '../../../api/axios'
 import Select from 'react-select'
 import { IoIosWarning } from "react-icons/io";
 
-export const ModalUserCreateAddress = ({ modalAddOpen, handleModalAddOpen, fetchUserAddressData, fetchAllAddress }) => {
+export const ModalUserCreateAddress = ({ modalAddOpen, handleModalAddOpen, fetchUserAddressData, fetchAllAddress, currentPage }) => {
     const token = localStorage.getItem('token');
     const customer = useSelector((state) => state.customer.value);
 
@@ -109,13 +109,19 @@ export const ModalUserCreateAddress = ({ modalAddOpen, handleModalAddOpen, fetch
                 }
             );
 
+            if (typeof fetchUserAddressData === 'function') {
+                fetchUserAddressData(currentPage);
+            }
+
+            if (typeof fetchAllAddress === 'function') {
+                fetchAllAddress(currentPage);
+            }
+
             setIsLoading(false);
             toast.success(response.data.message, {
                 position: 'top-center',
             });
             handleModalAddOpen()
-            fetchUserAddressData()
-            fetchAllAddress()
             formik.resetForm();
         } catch (error) {
             console.log(error);
@@ -244,7 +250,7 @@ export const ModalUserCreateAddress = ({ modalAddOpen, handleModalAddOpen, fetch
             <DialogBody className="flex flex-col gap-4 items-center w-full px-4 md:px-10">
                 <form onSubmit={formik.handleSubmit} className="w-full">
                     {/* 1 */}
-                    <section className={`${activeStep == 0 ? "block" : "hidden"} w-full`}>
+                    <section id="modal-scroll" className={`${activeStep == 0 ? "block" : "hidden"} w-full h-[52vh] lg:h-full overflow-auto pb-2 pr-3 lg:pr-0 lg:pb-0`}>
                         <div className="flex flex-col md:flex-row gap-3.5 md:gap-[2rem] w-full">
                             {/* Label & Customer Name */}
                             <div className="flex flex-col w-full gap-3.5">
@@ -566,6 +572,7 @@ export const ModalUserCreateAddress = ({ modalAddOpen, handleModalAddOpen, fetch
 };
 
 ModalUserCreateAddress.propTypes = {
+    currentPage: PropTypes.number.isRequired,
     modalAddOpen: PropTypes.bool.isRequired,
     handleModalAddOpen: PropTypes.func.isRequired,
     fetchUserAddressData: PropTypes.func.isRequired,

@@ -14,7 +14,7 @@ import { LuMapPin } from "react-icons/lu";
 import { IoIosWarning } from "react-icons/io";
 import Select from 'react-select'
 
-export const ModalAddBranch2 = ({ modalAddOpen, handleModalAddOpen }) => {
+export const ModalAddBranch2 = ({ modalAddOpen, handleModalAddOpen, fetchBranchData, currentPage }) => {
     const token = localStorage.getItem('admtoken');
 
     const [isLoading, setIsLoading] = useState(false);
@@ -129,6 +129,7 @@ export const ModalAddBranch2 = ({ modalAddOpen, handleModalAddOpen }) => {
             toast.success(response.data.message, {
                 position: 'top-center',
             });
+            fetchBranchData(currentPage);
             handleModalAddOpen()
             formik.resetForm();
 
@@ -277,7 +278,7 @@ export const ModalAddBranch2 = ({ modalAddOpen, handleModalAddOpen }) => {
             <DialogBody className="flex flex-col gap-4 items-center w-full px-4 md:px-10">
                 <form onSubmit={formik.handleSubmit} className="w-full">
                     {/* 1 */}
-                    <section className={`${activeStep == 0 ? "block" : "hidden"} w-full`}>
+                    <section id="modal-scroll" className={`${activeStep == 0 ? "block" : "hidden"} w-full h-[52vh] lg:h-full overflow-auto pb-2 pr-2 lg:pr-0 lg:pb-0`}>
                         <div className="flex flex-col md:flex-row gap-3.5 md:gap-[2rem] w-full">
                             {/* Branch name & Admin */}
                             <div className="flex flex-col w-full gap-3.5">
@@ -478,7 +479,7 @@ export const ModalAddBranch2 = ({ modalAddOpen, handleModalAddOpen }) => {
                     </section>
                     {/* 2 */}
                     {/* Map */}
-                    <div className={`${activeStep == 1 ? "block" : "hidden"} flex flex-col`}>
+                    <div className={`${activeStep == 1 ? "block" : "hidden"} flex flex-col `}>
                         <PlacesAutocomplete
                             value={address}
                             onChange={setAddress}
@@ -635,4 +636,6 @@ export const ModalAddBranch2 = ({ modalAddOpen, handleModalAddOpen }) => {
 ModalAddBranch2.propTypes = {
     modalAddOpen: PropTypes.bool.isRequired,
     handleModalAddOpen: PropTypes.func.isRequired,
+    fetchBranchData: PropTypes.func.isRequired,
+    currentPage: PropTypes.number.isRequired
 };

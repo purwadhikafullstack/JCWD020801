@@ -28,6 +28,5 @@ export const getAllCities = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(400).send({ message: error.message })
-
     }
 }

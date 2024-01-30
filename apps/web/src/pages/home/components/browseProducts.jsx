@@ -5,36 +5,11 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion"
 
 const categoryList = [
-    {
-        name: 'Meat & Poultry',
-        subcategory: {
-            list: ['Beef', 'Lamb', 'Chicken', 'Duck', 'Sausage & Hot Dogs'],
-        },
-    },
-    {
-        name: 'Seafood',
-        subcategory: {
-            list: [
-                'Fish Fillets',
-                'Fish Whole',
-                'Salmon',
-                'Crab',
-                'Lobster',
-                'Shrimp',
-            ],
-        },
-    },
-    {
-        name: 'Fresh',
-        subcategory: {
-            list: ['Fruits', 'Berries', 'Vegetables', 'Dried Fruits & Nuts'],
-        },
-    },
+    { name: 'Meat & Poultry' },
+    { name: 'Seafood' },
+    { name: 'Fresh' },
     { name: 'Spice & Herbs' },
-    {
-        name: 'Dairy',
-        subcategory: { list: ['Eggs', 'Milk', 'Yoghurt', 'Sour Cream', 'Pudding'] },
-    },
+    { name: 'Dairy' },
     { name: 'Drinks' },
     { name: 'Frozen' },
     { name: 'Snacks' },
@@ -123,8 +98,10 @@ export const BrowseProducts = () => {
                         <div>{/* view all */}</div>
                     </div>
                     {/* Category */}
-                    <section className="relative group">
-                        <div className="no-scrollbar flex overflow-auto mt-4 mb-3 gap-2.5">
+                    <div className="relative group">
+                        <div
+                            className="no-scrollbar flex overflow-auto mt-4 mb-3 gap-2"
+                        >
                             {categoryList?.map((item, index) => (
                                 <>
                                     <div
@@ -138,8 +115,11 @@ export const BrowseProducts = () => {
                                 </>
                             ))}
                         </div>
+                        {/* Button slider */}
                         <div className="absolute -left-7 top-0 hidden group-hover:block ">
-                            <div className="bg-white rounded-full p-2 border border-gray-300 shadow-md">
+                            <div
+                                className="bg-white rounded-full p-2 border border-gray-300 shadow-md"
+                            >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     fill="none"
@@ -157,7 +137,8 @@ export const BrowseProducts = () => {
                             </div>
                         </div>
                         <div className="absolute -right-7 top-0 hidden group-hover:block ">
-                            <div className="bg-white rounded-full p-2 border border-gray-300 shadow-md">
+                            <div
+                                className="bg-white rounded-full p-2 border border-gray-300 shadow-md">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     fill="none"
@@ -174,7 +155,7 @@ export const BrowseProducts = () => {
                                 </svg>
                             </div>
                         </div>
-                    </section>
+                    </div>
                     {/* Filter & Sort */}
                     <section className="w-full flex justify-between mb-4">
                         <div className="relative ml-auto">

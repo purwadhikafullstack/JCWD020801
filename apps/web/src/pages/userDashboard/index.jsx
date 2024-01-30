@@ -8,6 +8,7 @@ import wishlistIcon from '../../assets/userDashboard/wishlist.svg';
 import logoutIcon from '../../assets/userDashboard/logout.svg';
 import toHomeIcon from '../../assets/userDashboard/toHome.svg';
 import emailIcon from '../../assets/userDashboard/email.svg';
+import voucherIcon from '../../assets/userDashboard/voucherIcon.svg'
 
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
@@ -20,10 +21,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ModalSignOut } from '../navbar/components/modalSignOut';
 import { ChangeEmail } from './components/changeEmail';
 import { Footer } from '../footer';
+import { MyVoucher } from './components/myVoucher';
 
 const menuList = [
     { title: 'Personal Information', icon: personIcon },
     { title: 'Address List', icon: addressIcon },
+    { title: 'My Voucher', icon: voucherIcon },
     { title: 'Reset Password', icon: passwordIcon },
     { title: 'Change Email', icon: emailIcon },
     { title: 'Order History', icon: orderIcon },
@@ -123,9 +126,9 @@ export const UserDashboard = () => {
                     {/*  */}
                     <div className="mt-4 flex flex-col lg:flex-row justify-start gap-[0.6rem] lg:gap-[2rem]">
                         {/* Left Col: Menu */}
-                        <div className="flex h-max flex-col gap-[0.2rem] rounded-2xl border border-[#E6E6E5] bg-white pt-5 pb-3.5">
+                        <div className="flex h-max flex-col gap-[0.2rem] rounded-2xl border border-[#E6E6E5] bg-white py-3.5 lg:pt-5">
                             {/* profile & hamburger */}
-                            <div className="flex justify-between lg:justify-start items-center lg:border-b lg:border-[#E6E6E5] px-5 pb-2 lg:pb-4">
+                            <div className="flex justify-between lg:justify-start items-center lg:border-b lg:border-[#E6E6E5] px-5 lg:pb-4">
                                 <div className="flex gap-3 items-center">
                                     <img
                                         src={
@@ -185,10 +188,14 @@ export const UserDashboard = () => {
                             <AnimatePresence>
                                 {navMenuOpen && (
                                     <motion.div
-                                        initial={{ opacity: 0, y: -25 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0, y: -25 }}
-                                        transition={{ duration: 0.3 }}
+                                        initial={{ opacity: 0, y: 0, height: 0 }}
+                                        animate={{ opacity: 1, y: 0, height: "auto" }}
+                                        exit={{ opacity: 0, y: 0, height: 0 }}
+                                        transition={{
+                                            type: "spring",
+                                            bounce: 0,
+                                            duration: 0.7,
+                                        }}
                                     >
                                         {filteredMenuList.map((item, index) => (
                                             <div
@@ -196,12 +203,12 @@ export const UserDashboard = () => {
                                                 className={`${selectedOption === index
                                                     ? 'border-[#00A67C] bg-[#F0FAF7] text-[#00A67C]'
                                                     : 'text-gray-600 border-white'
-                                                    } group flex cursor-pointer gap-4 border-l-[2px] px-7 py-3 hover:bg-[#F0FAF7]`}
+                                                    } group flex cursor-pointer gap-4 border-l-[2px] px-7 py-3 hover:bg-[#F0FAF7] first:mt-3 lg:first:mt-0`}
                                                 key={index}
                                                 id={item.id}
                                                 onClick={() => handleMenuClick(index)}
                                             >
-                                                <img src={item.icon} alt=""></img>
+                                                <img src={item.icon} alt="" className="fill-red-500"></img>
                                                 <span className="text-[15px] font-medium">
                                                     {item.title}
                                                 </span>
@@ -239,13 +246,16 @@ export const UserDashboard = () => {
                             <AnimationWrapper selectedOption={selectedOption} index={1}>
                                 <UserAddress />
                             </AnimationWrapper>
+                            <AnimationWrapper selectedOption={selectedOption} index={2}>
+                                <MyVoucher />
+                            </AnimationWrapper>
 
                             {!customer.socialRegister && (
                                 <>
-                                    <AnimationWrapper selectedOption={selectedOption} index={2}>
+                                    <AnimationWrapper selectedOption={selectedOption} index={3}>
                                         <ResetPassword />
                                     </AnimationWrapper>
-                                    <AnimationWrapper selectedOption={selectedOption} index={3}>
+                                    <AnimationWrapper selectedOption={selectedOption} index={4}>
                                         <ChangeEmail />
                                     </AnimationWrapper>
                                 </>
