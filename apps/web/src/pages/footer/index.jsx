@@ -1,5 +1,5 @@
 import appLogo from '../../assets/yellow_white_logo.svg';
-import tiki from '../../assets/home/tiki.png';
+import tiki from '../../assets/home/Tiki.png';
 import jne from '../../assets/home/jne.png';
 import pos from '../../assets/home/pos.png';
 import { Link } from 'react-router-dom';
