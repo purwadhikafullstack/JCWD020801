@@ -3,7 +3,7 @@ import adminSlice from './adminSlice';
 import customerSlice from './customerSlice';
 import cartSlice from './cartSlice';
 import productSlice from './productSlice';
-import geolocationSlice from './geoLocationSlice';
+import geolocationSlice from './geolocationSlice';
 
 export const store = configureStore({
   reducer: {
