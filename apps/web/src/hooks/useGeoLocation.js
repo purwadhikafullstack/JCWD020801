@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { updateGeolocation } from '../redux/geoLocationSlice';
+import { updateGeolocation } from '../redux/geolocationSlice';
 
 export const useGeoLocation = () => {
     const dispatch = useDispatch()
