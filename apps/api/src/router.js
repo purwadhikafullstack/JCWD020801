@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { sampleRouter } from './routers/sample.router';
 import { adminRouter } from './routers/admin.router';
-import { categoryRouter } from './routers/category.router';
+// import { categoryRouter } from './routers/category.router';
 import { productRouter } from './routers/product.router';
 import { customerRouter } from './routers/customer.router';
 import { customerAddressRouter } from './routers/customeraddress.router';

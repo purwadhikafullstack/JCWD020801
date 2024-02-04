@@ -232,7 +232,7 @@ export const ProductCards = ({ branchData, coordinates, products }) => {
                 </div>
               </Tooltip>
             </div>
-            {coordinates?.lat && (
+            {!coordinates?.lat && (
               <div className="pulse-effect rounded-full bg-[#E1F5EF] px-4 py-[0.7rem] ml-[0.5rem]">
                 <span className="text-[15px] font-semibold text-[#00A67C] truncate">
                   {formatDistance(branchData?.distance)}
