@@ -90,7 +90,7 @@ export const BrowseProducts = ({
 
   return (
     <>
-      <div className="my-[16px] mx-[16px] md:mx-[32px] lg:mx-[160px] my-[2rem]">
+      <div className="my-[16px] mx-[16px] md:mx-[32px] lg:mx-[160px] lg:my-[2rem]">
         <section>
           <div className="flex justify-between">
             <h2 className="text-[25px] md:text-[29px] font-semibold text-gray-900 tracking-tight">
@@ -208,7 +208,7 @@ export const BrowseProducts = ({
                         key={index}
                         className="text-gray-600 text-[15px] font-medium py-1 px-5 hover:bg-[#F0FAF7] cursor-pointer transition ease-in-out delay-100 hover:text-[#3A826E]"
                       >
-                        {item.title}
+                        {item.name}
                       </motion.span>
                     ))}
                   </motion.div>
