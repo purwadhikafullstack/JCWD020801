@@ -8,58 +8,58 @@ import { addToCart } from '../../../redux/cartSlice';
 import { useNavigate } from 'react-router-dom';
 
 const categoryList = [
-  { name: 'Meat & Poultry' },
-  { name: 'Seafood' },
-  { name: 'Fresh' },
-  { name: 'Spice & Herbs' },
-  { name: 'Dairy' },
-  { name: 'Drinks' },
-  { name: 'Frozen' },
-  { name: 'Snacks' },
-  { name: 'Beauty' },
-  { name: 'Healthcare' },
-  { name: 'Cleaning & Household' },
-  { name: 'Pet' },
+  { title: 'Meat & Poultry' },
+  { title: 'Seafood' },
+  { title: 'Fresh' },
+  { title: 'Spice & Herbs' },
+  { title: 'Dairy' },
+  { title: 'Drinks' },
+  { title: 'Frozen' },
+  { title: 'Snacks' },
+  { title: 'Beauty' },
+  { title: 'Healthcare' },
+  { title: 'Cleaning & Household' },
+  { title: 'Pet' },
 ];
 
 const cardsData = [
   {
-    title: 'card 2',
+    name: 'card 2',
     img: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     price: '25000',
     stock: 54,
     desc: 'Just FreshDirect 100% Grass-Fed Local 80% Lean Ground Beef, Fresh, Premium Packaging',
   },
   {
-    title: 'card 1',
+    name: 'card 1',
     img: 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?q=80&w=1965&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     price: '25000',
     stock: 54,
     desc: 'FreshDirect Rotisserie Chicken, Raised w/o Antibiotics',
   },
   {
-    title: 'card 3',
+    name: 'card 3',
     img: 'https://images.unsplash.com/photo-1519996529931-28324d5a630e?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     price: '2500000',
     stock: 54,
     desc: 'Siggis Skyr Icelandic-Style Strained Non-Fat Yogurt, Mixed Berry and Acai',
   },
   {
-    title: 'card 4',
+    name: 'card 4',
     img: 'https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?q=80&w=1915&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     price: '25000',
     stock: 54,
     desc: 'Just FreshDirect Local Angus RWA 90% Lean Ground Beef, Premium Packaging',
   },
   {
-    title: 'card 5',
+    name: 'card 5',
     img: 'https://images.unsplash.com/photo-1557800636-894a64c1696f?q=80&w=1965&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     price: '25000000',
     stock: 54,
     desc: 'Sprouts Organic Chicken Thin Sliced Boneless Breast',
   },
   {
-    title: 'card 6',
+    name: 'card 6',
     img: 'https://plus.unsplash.com/premium_photo-1671379041175-782d15092945?q=80&w=1920&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     price: '250000',
     stock: 54,
@@ -83,9 +83,16 @@ export const BrowseProducts = () => {
 
   const handleAddtoCart = (item) => {
     if (Object.keys(customer).length > 0 && customer.isVerified === true) {
-      dispatch(addToCart({ id: item.id, quantity: 1, amount: item.price }));
+      dispatch(
+        addToCart({
+          id: item.id,
+          quantity: 1,
+          amount: item.price,
+          name: item.name,
+        }),
+      );
 
-      toast.success(`${item.title} has been added to cart`, {
+      toast.success(`${item.name} has been added to cart`, {
         position: 'top-center',
         autoClose: 3000,
         hideProgressBar: true,
@@ -110,7 +117,7 @@ export const BrowseProducts = () => {
 
   return (
     <>
-      <div className="my-[16px] mx-[16px] md:mx-[32px] lg:mx-[160px] my-[2rem]">
+      <div className="my-[16px] mx-[16px] md:mx-[32px] lg:mx-[160px] lg:my-[2rem]">
         <section>
           <div className="flex justify-between">
             <h2 className="text-[25px] md:text-[29px] font-semibold text-gray-900 tracking-tight">
@@ -227,7 +234,7 @@ export const BrowseProducts = () => {
                         key={index}
                         className="text-gray-600 text-[15px] font-medium py-1 px-5 hover:bg-[#F0FAF7] cursor-pointer transition ease-in-out delay-100 hover:text-[#3A826E]"
                       >
-                        {item.title}
+                        {item.name}
                       </motion.span>
                     ))}
                   </motion.div>

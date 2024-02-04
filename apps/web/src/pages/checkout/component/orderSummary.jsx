@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 
 export const OrderSummary = ({ carts, total, convertToIDR }) => {
   const data = useSelector((state) => state.product.data);
-  // console.log(carts);
+  console.log(carts);
 
   return (
     <>
@@ -19,12 +19,12 @@ export const OrderSummary = ({ carts, total, convertToIDR }) => {
               <div key={index} className="flex gap-4 py-3">
                 <img
                   src={product.img}
-                  alt={product.title}
+                  alt={product.name}
                   className="w-[6rem] object-cover rounded-lg"
                 />
                 <div className="flex flex-col w-[20rem]">
                   <span className="text-[14px] font-medium text-gray-800 line-clamp-2">
-                    {product.desc}
+                    {product.name}
                   </span>
                   <div className="flex gap-2 mt-[0.3rem]">
                     <span className="text-[14px] font-medium text-gray-600">

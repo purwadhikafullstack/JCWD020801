@@ -10,6 +10,9 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import axios from '../../api/axios';
+import { button } from '@material-tailwind/react';
+import { useEffect } from 'react';
 
 const convertToIDR = (price) => {
   let newPrice = price.toLocaleString('id-ID', {
@@ -22,15 +25,63 @@ const convertToIDR = (price) => {
 };
 
 export const CheckoutPage = () => {
-  const customer = useSelector((state) => state.customer.value);
-  const [isPaymentOpen, setIsPaymentOpen] = useState(false);
-
   const navigate = useNavigate();
+  const token = localStorage.getItem('token');
+  const [isPaymentOpen, setIsPaymentOpen] = useState(false);
+  const customer = useSelector((state) => state.customer.value);
   const carts = useSelector((state) => state.cart.data);
   const total = carts.reduce(
-    (total, item) => total + item.amount * item.quantity,
+    (total, item) => total + item.price * item.quantity,
     0,
   );
+
+  // console.log(carts);
+  // console.log(carts.map((item) => item.id));
+
+  useEffect(() => {
+    const snapScript = 'https://app.sandbox.midtrans.com/snap/snap.js';
+
+    // const clientKey = 'B-Mid-client-urE3rf1GnO8V_XKX';
+    const clientKey = import.meta.env.VITE_MIDTRANS_CLIENT_KEY;
+
+    const script = document.createElement('script');
+    script.src = snapScript;
+    script.setAttribute('data-client-key', clientKey);
+    script.async = true;
+
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
+  const checkout = async (data) => {
+    // try {
+
+    const products = data.map((item) => ({
+      id: String(item.id),
+      productName: item.name,
+      price: item.price,
+      quantity: item.quantity,
+    }));
+    // console.log(products);
+    // console.log(typeof products[0].price);
+    // id: item.id,
+    // productName: item.name,
+    // price: item.price,
+    // quantity: item.quantity,
+
+    const response = await axios.post('payment/tokenizer', products);
+    console.log(response.data);
+
+    window.snap.pay(response.data);
+    // alert(response.data);
+    // } catch (error) {
+    //   console.log(error);
+    // }
+  };
+
   const discount = 30000;
   const delivery = 24000;
 
@@ -235,7 +286,10 @@ export const CheckoutPage = () => {
                       {convertToIDR(total + delivery - discount)}
                     </h4>
                   </div>
-                  <button className="flex items-center justify-center gap-2 mt-[1.2rem] px-4 rounded-lg w-full bg-[#00A67C] font-semibold text-white py-[0.6rem] text-[15px] hover:bg-[#00916D] transition ease-in-out delay-100">
+                  <button
+                    onClick={() => checkout(carts)}
+                    className="flex items-center justify-center gap-2 mt-[1.2rem] px-4 rounded-lg w-full bg-[#00A67C] font-semibold text-white py-[0.6rem] text-[15px] hover:bg-[#00916D] transition ease-in-out delay-100"
+                  >
                     <span>Pay Now</span>
                     {/* <img src={arrowLong} alt="" className="mt-[0.1rem]" /> */}
                     <FaArrowRight className="mt-[0.1rem]" />

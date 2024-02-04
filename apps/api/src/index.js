@@ -58,7 +58,7 @@ const main = async () => {
     app.use(cors());
     app.use(json());
     app.use('/api', router);
-    // app.use("/public", express.static("./public"));
+    app.use('/public', express.static('./public'));
     app.use('/public', express.static(path.join(__dirname, './public')));
     // path.join(__dirname, '../../src/templates/template_verify.html');
 

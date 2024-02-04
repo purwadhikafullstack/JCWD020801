@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+
 import 'keen-slider/keen-slider.min.css';
 import KeenSlider from 'keen-slider';
 import { useEffect, useRef, useState } from 'react';
@@ -8,11 +10,20 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../../../redux/cartSlice';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router-dom';
 
-export const ProductCards = ({ branchData, coordinates }) => {
+export const ProductCards = () => {
+  const navigate = useNavigate();
+  const { coordinates, loaded } = useSelector((state) => state.geolocation);
+
+  // console.log(loaded);
+  // console.log(coordinates);
+  const [branchData, setBranchData] = useState(null);
+
   const customer = useSelector((state) => state.customer.value);
 
   const products = useSelector((state) => state.product.data);
+  console.log(products);
   const dispatch = useDispatch();
 
   const [keenSlider, setKeenSlider] = useState(null);
@@ -81,9 +92,16 @@ export const ProductCards = ({ branchData, coordinates }) => {
 
   const handleAddtoCart = (item) => {
     if (Object.keys(customer).length > 0 && customer.isVerified === true) {
-      dispatch(addToCart({ id: item.id, quantity: 1, amount: item.price }));
+      dispatch(
+        addToCart({
+          id: item.id,
+          quantity: 1,
+          price: item.price,
+          name: item.name,
+        }),
+      );
 
-      toast.success(`${item.title} has been added to cart`, {
+      toast.success(`${item.name} has been added to cart`, {
         position: 'top-center',
         autoClose: 3000,
         hideProgressBar: true,
@@ -110,7 +128,7 @@ export const ProductCards = ({ branchData, coordinates }) => {
     <>
       <div className="my-[16px] mx-[16px] md:mx-[32px] lg:mx-[160px]">
         {/* Shopping From */}
-        <div className="flex w-full justify-start">
+        <div className="flex w-full justify-start items-end">
           <section className="flex gap-[0.7rem] mb-5 items-center w-max p-1 bg-[#00A67C] rounded-full">
             <div
               className={`${
@@ -140,7 +158,7 @@ export const ProductCards = ({ branchData, coordinates }) => {
                 {branchData?.name}
               </span>
             </div>
-            {coordinates?.lat && (
+            {!coordinates?.lat && (
               <div className="pulse-effect rounded-full bg-[#E1F5EF] px-4 py-[0.7rem] ml-[0.5rem]">
                 <span className="text-[15px] font-semibold text-[#00A67C]">
                   {formatDistance(branchData?.distance)}

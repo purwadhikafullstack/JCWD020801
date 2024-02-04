@@ -21,7 +21,6 @@ export const Navbar = () => {
   const customer = useSelector((state) => state.customer.value);
   const totalProduct = useSelector((state) => state.cart.totalProduct);
 
-  // const { coordinates, loaded } = useGeoLocation();
   const { coordinates, loaded } = useSelector((state) => state.geolocation);
   const [formattedAddress, setFormattedAddress] = useState('');
 
@@ -86,7 +85,7 @@ export const Navbar = () => {
     <div className="relative z-[200]">
       {/* Top Navbar */}
       {/* {isNavbarVisible && ()} */}
-      <div className="w-full fixed flex items-center justify-between bg-[#71C1AB] px-[16px] h-[34px] lg:px-[160px] z-50">
+      <div className="w-full fixed flex items-center justify-between bg-[#090b0a] px-[16px] h-[34px] lg:px-[160px] z-50">
         <div className="flex items-center gap-2.5 w-max">
           <div className="flex items-center gap-1.5 w-max">
             <LiaShippingFastSolid size={21} className="text-white " />
