@@ -1,9 +1,9 @@
-import { Router } from 'express';
-// import { verifyToken } from '../middleware/auth';
-import { tokenMidtrans } from '../controllers/payment.controller';
+// import { Router } from 'express';
+// // import { verifyToken } from '../middleware/auth';
+// import { tokenMidtrans } from '../controllers/payment.controller';
 
-const paymentRouter = Router();
+// const paymentRouter = Router();
 
-paymentRouter.post('/tokenizer', tokenMidtrans);
+// paymentRouter.post('/tokenizer', tokenMidtrans);
 
-export { paymentRouter };
+// export { paymentRouter };

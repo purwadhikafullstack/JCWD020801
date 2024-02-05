@@ -12,7 +12,7 @@ import {
 } from '../controllers/category.controller';
 import { verifyTokenAdmin } from '../middleware/admin/admin.auth';
 
-// const categoryRouter = Router()
+const categoryRouter = Router();
 
 //category
 categoryRouter.post('/', verifyTokenAdmin, addCategory);
@@ -36,4 +36,4 @@ categoryRouter.patch(
 categoryRouter.patch('/sub-category/', verifyTokenAdmin, updateSubCategory);
 categoryRouter.delete('/sub-category/:id', verifyTokenAdmin, deleteSubCategory);
 
-// export { categoryRouter };
+export { categoryRouter };

@@ -29,6 +29,15 @@ export const ProductCards = () => {
   const [keenSlider, setKeenSlider] = useState(null);
   const sliderRef = useRef(null);
 
+  const fetchProduct = async () => {
+    try {
+      const response = await axios.get(`products`);
+      // setProductImage(response.data?.imageProduct.image)
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const slidePrev = () => {
     if (keenSlider) {
       keenSlider.prev();

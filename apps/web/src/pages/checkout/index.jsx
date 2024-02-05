@@ -59,8 +59,9 @@ export const CheckoutPage = () => {
         total,
       };
 
-      const response = await axios.post('payment/tokenizer', data);
-      window.snap.pay(response.data);
+      const response = await axios.post('order', data);
+      // console.log(response);
+      window.snap.pay(response.data.token);
     } catch (error) {
       console.log(error);
     }

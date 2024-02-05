@@ -1,63 +1,36 @@
-// import OrderDetail from '../models/order.model';
-// // import ProductImage from '../models/productimage.model';
-// // import Category from '../models/category.model';
-// // import SubCategory from '../models/subcategory.model';
-// // import { Op } from 'sequelize';
-// // require('dotenv').config();
+import OrderDetail from '../models/orderdetail.model';
 
-// export const createOderDetail = async (req, res) => {
-//   try {
-//     const { status, payment_method, payment_proof, isPaid, redeem_voucher } =
-//       req.body;
-//     console.log('BODY', req.body);
+export const createOderDetail = async (req, res) => {
+  try {
+    const data = req.body;
+    console.log('data>>>>>>', data);
+    // console.log('total', total);
+    // console.log('product', product);
 
-//     const result = await Order.create({
-//       status,
-//       payment_method: 'automatic',
-//       isPaid,
-//     });
+    const params = data.map((item) => ({
+      quantity: item.quantity,
+      total: item.price * item.quantity,
+      // ProductId: item.id,
+    }));
 
-//     // const findProduct = await Product.findOne(
-//     //     {
-//     //         where: {
-//     //             name: name
-//     //         }
-//     //     }
-//     // )
+    const result = await OrderDetail.bulkCreate(params);
 
-//     // if (findProduct) {
-//     //     return res.status(400).send({ message: "Product already exist" })
-//     // }
+    // console.log('result>>>>'.result);
 
-//     // const result = await Product.create({
-//     //   name: name,
-//     //   description: description,
-//     //   price: price,
-//     //   weight: weight,
-//     //   CategoryId: category_id,
-//     // });
+    return res.status(201).send({
+      result,
+      message: 'order details has been created successfully',
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({ message: error.message });
+  }
+};
 
-//     // await ProductImage.create({
-//     //     image: `${process.env.BASE_URL_API}/public/products/${req.file?.filename}`,
-//     //     ProductId: result.id
-//     // })
+export const getAllOrderDetails = async (req, res) => {
+  const result = await OrderDetail.findAll();
 
-//     // if (subcategory_id) {
-//     //     await Product.update(
-//     //         {
-//     //             SubCategoryId: subcategory_id
-//     //         },
-//     //         {
-//     //             where: {
-//     //                 name: name
-//     //             }
-//     //         }
-//     //     )
-//     // }
-//     // return res.status(201).send({ message: "A new product has been created successfully" })
-//     return res.status(201).send({ message: 'success' });
-//   } catch (error) {
-//     console.error(error);
-//     // return res.status(500).send({ message: error.message })
-//   }
-// };
+  console.log('data>>>>>>', result);
+
+  return res.status(200).send({ result });
+};

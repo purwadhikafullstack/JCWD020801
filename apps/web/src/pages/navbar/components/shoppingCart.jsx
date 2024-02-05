@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { AnimatePresence, motion } from 'framer-motion';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,6 +11,7 @@ import {
   subtractQuantity,
 } from '../../../redux/cartSlice';
 import { useNavigate } from 'react-router-dom';
+import axios from '../../../api/axios';
 
 const convertToIDR = (price) => {
   let newPrice = price.toLocaleString('id-ID', {
@@ -69,13 +71,29 @@ export const ShoppingCart = ({ isOpenCart, toggleOpenCart }) => {
     });
   };
 
-  // const handleCheckout = (data) => {
-  //   console.log(data);
-  //   localStorage.setItem('carts', carts);
-  //   // const cart = localStorage.getItem('carts');
-  //   // console.log(cart);
+  const handleCheckout = async (data) => {
+    try {
+      // const params = {
+      //   product: data,
+      //   quantity:tota,
+      //   total: total
+      // }
+      const response = await axios.post('/order-details', data);
+      // console.log(response);
+      navigate('/checkout');
+    } catch (error) {
+      console.log(error);
+    }
+    // const productId = data.map((item) => item.id);
+    // console.log(productId);
+    // const params = {
+    //   products: data,
 
-  // };
+    // }
+    // localStorage.setItem('carts', carts);
+    // const cart = localStorage.getItem('carts');
+    // console.log(cart);
+  };
 
   return (
     <AnimatePresence>
@@ -197,7 +215,7 @@ export const ShoppingCart = ({ isOpenCart, toggleOpenCart }) => {
                   </div>
                   <div className="">
                     <button
-                      onClick={() => navigate('/checkout')}
+                      onClick={() => handleCheckout(carts)}
                       className="cssbuttons-io-button w-full font-semibold"
                     >
                       Go to Checkout
