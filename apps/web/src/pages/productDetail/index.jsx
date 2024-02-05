@@ -1,26 +1,28 @@
-import { Navbar } from "../navbar"
-import stockAvail from '../../assets/home/stock_avail.svg'
-import { MinusIcon, PlusIcon } from "@heroicons/react/24/solid"
-import { Footer } from "../footer"
-import { useParams } from "react-router-dom"
-import { useEffect, useState } from "react"
-import axios from "../../api/axios"
-import { useDispatch, useSelector } from "react-redux"
-import { addToCart } from "../../redux/cartSlice"
-import { toast } from "react-toastify"
+import { Navbar } from '../navbar';
+import stockAvail from '../../assets/home/stock_avail.svg';
+import { MinusIcon, PlusIcon } from '@heroicons/react/24/solid';
+import { Footer } from '../footer';
+import { useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import axios from '../../api/axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { addToCart } from '../../redux/cartSlice';
+import { toast } from 'react-toastify';
 
 const dummyImg = [
   {
-    id: 1, img: "https://www.instacart.com/assets/domains/product-image/file/large_ec9119c1-ec2f-4e6a-8387-6d6249180f7f.jpg",
+    id: 1,
+    img: 'https://www.instacart.com/assets/domains/product-image/file/large_ec9119c1-ec2f-4e6a-8387-6d6249180f7f.jpg',
   },
   {
-    id: 2, img: "https://www.instacart.com/assets/domains/product-image/file/large_b96dbb95-ee6a-4f58-83fd-53b1342a567d.jpg",
+    id: 2,
+    img: 'https://www.instacart.com/assets/domains/product-image/file/large_b96dbb95-ee6a-4f58-83fd-53b1342a567d.jpg',
   },
   {
-    id: 3, img: "https://www.instacart.com/assets/domains/product-image/file/large_6a7da7e2-02a5-4df5-a6fe-e3adc96ed63c.jpg"
+    id: 3,
+    img: 'https://www.instacart.com/assets/domains/product-image/file/large_6a7da7e2-02a5-4df5-a6fe-e3adc96ed63c.jpg',
   },
-]
-
+];
 
 export const ProductDetail = () => {
   const params = useParams();
@@ -181,53 +183,76 @@ export const ProductDetail = () => {
             {/* Breadcrumb */}
             <div className="flex gap-[0.2rem] font-medium text-[#067627]">
               <span>{productData?.Product?.Category?.name}</span>
-              {productData?.Product?.SubCategory?.name && <><span>/</span><span>{productData?.Product?.SubCategory?.name}</span></>}
+              {productData?.Product?.SubCategory?.name && (
+                <>
+                  <span>/</span>
+                  <span>{productData?.Product?.SubCategory?.name}</span>
+                </>
+              )}
             </div>
             {/* Title */}
-            <h2 className="mt-3 text-[24px] lg:text-[27px] font-semibold tracking-tight">{productData?.Product?.name}</h2>
+            <h2 className="mt-3 text-[24px] lg:text-[27px] font-semibold tracking-tight">
+              {productData?.Product?.name}
+            </h2>
             <div className="flex flex-col gap-[0.5rem] mt-[1.2rem]">
               <div className="flex items-center gap-[0.5rem]">
-                {productData?.hasDiscount &&
+                {productData?.hasDiscount && (
                   <div className="mr-[0.5rem] rounded-lg bg-[#FFDC23] px-[0.75rem] py-[0.2rem] w-max font-semibold text-[13.5px] text-[#28302A]">
                     {productData?.percentage}
                   </div>
-                }
-                {productData?.hasDiscount ?
+                )}
+                {productData?.hasDiscount ? (
                   <div className="font-bold text-[#28302A] text-[19px]">
                     Rp {discountedPrice}
                   </div>
-                  :
+                ) : (
                   <div className="font-bold text-[#28302A] text-[19px]">
                     Rp {price}
                   </div>
-                }
-                {productData?.hasDiscount &&
+                )}
+                {productData?.hasDiscount && (
                   <div className="font-semibold text-[#757575] text-[15px] line-through">
                     Rp {price}
                   </div>
-                }
+                )}
               </div>
-              {productData?.Discounts[0]?.type === 'minimum_purchase' &&
+              {productData?.Discounts[0]?.type === 'minimum_purchase' && (
                 <div className="mr-[0.5rem] rounded-lg bg-[#FFDC23] px-[0.75rem] py-[0.2rem] font-medium text-[13.5px] text-[#28302A]">
-                  Minimum purchase of {productData?.Discounts[0]?.min_purchase_amount} items with a maximum discount of Rp.{productData?.Discounts[0]?.max_discount}
+                  Minimum purchase of{' '}
+                  {productData?.Discounts[0]?.min_purchase_amount} items with a
+                  maximum discount of Rp.
+                  {productData?.Discounts[0]?.max_discount}
                 </div>
-              }
-              <span className="text-[#757575] font-medium">{productData?.Product?.weight}gr</span>
+              )}
+              <span className="text-[#757575] font-medium">
+                {productData?.Product?.weight}gr
+              </span>
             </div>
             <div className="flex gap-2 items-center mt-[0.8rem]">
               <img src={stockAvail} alt="" className="h-[1rem] w-[1rem]" />
-              {productData?.stock > 0 ?
-                <span className="font-medium text-[#067627] text-[16px]">stock: {productData?.stock}</span>
-                :
-                <span className="font-medium text-[#067627] text-[16px]">stock kosong</span>
-              }
+              {productData?.stock > 0 ? (
+                <span className="font-medium text-[#067627] text-[16px]">
+                  stock: {productData?.stock}
+                </span>
+              ) : (
+                <span className="font-medium text-[#067627] text-[16px]">
+                  stock kosong
+                </span>
+              )}
             </div>
             <div className="mt-[1.5rem] tracking-normal">
-              <span className="font-medium text-[15px] text-gray-800 ">Product Description</span>
-              <p className="mt-[0.4rem] text-gray-600 text-[15px]">{productData?.Product?.description}</p>
+              <span className="font-medium text-[15px] text-gray-800 ">
+                Product Description
+              </span>
+              <p className="mt-[0.4rem] text-gray-600 text-[15px]">
+                {productData?.Product?.description}
+              </p>
             </div>
             <div className="flex gap-[0.6rem] mt-[1.8rem]">
-              <button onClick={() => handleAddtoCart(productData)} className="bg-[#00A67C] flex items-center justify-center py-[0.5rem] rounded-full w-full text-white text-[15px] font-medium hover:bg-[#008d69] cursor-pointer transition delay-50 ease-in-out">
+              <button
+                onClick={() => handleAddtoCart(productData)}
+                className="bg-[#00A67C] flex items-center justify-center py-[0.5rem] rounded-full w-full text-white text-[15px] font-medium hover:bg-[#008d69] cursor-pointer transition delay-50 ease-in-out"
+              >
                 Add to Cart
               </button>
               {/* <div className="flex items-center">
