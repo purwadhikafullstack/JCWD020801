@@ -26,22 +26,18 @@ const convertToIDR = (price) => {
 
 export const CheckoutPage = () => {
   const navigate = useNavigate();
+  const carts = useSelector((state) => state.cart.data);
   const token = localStorage.getItem('token');
   const [isPaymentOpen, setIsPaymentOpen] = useState(false);
   const customer = useSelector((state) => state.customer.value);
-  const carts = useSelector((state) => state.cart.data);
   const total = carts.reduce(
     (total, item) => total + item.price * item.quantity,
     0,
   );
 
-  // console.log(carts);
-  // console.log(carts.map((item) => item.id));
-
   useEffect(() => {
     const snapScript = 'https://app.sandbox.midtrans.com/snap/snap.js';
 
-    // const clientKey = 'B-Mid-client-urE3rf1GnO8V_XKX';
     const clientKey = import.meta.env.VITE_MIDTRANS_CLIENT_KEY;
 
     const script = document.createElement('script');
@@ -56,30 +52,18 @@ export const CheckoutPage = () => {
     };
   }, []);
 
-  const checkout = async (data) => {
-    // try {
+  const handleCheckout = async () => {
+    try {
+      const data = {
+        id: ~~(Math.random() * 100) + 1,
+        total,
+      };
 
-    const products = data.map((item) => ({
-      id: String(item.id),
-      productName: item.name,
-      price: item.price,
-      quantity: item.quantity,
-    }));
-    // console.log(products);
-    // console.log(typeof products[0].price);
-    // id: item.id,
-    // productName: item.name,
-    // price: item.price,
-    // quantity: item.quantity,
-
-    const response = await axios.post('payment/tokenizer', products);
-    console.log(response.data);
-
-    window.snap.pay(response.data);
-    // alert(response.data);
-    // } catch (error) {
-    //   console.log(error);
-    // }
+      const response = await axios.post('payment/tokenizer', data);
+      window.snap.pay(response.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const discount = 30000;
@@ -287,7 +271,7 @@ export const CheckoutPage = () => {
                     </h4>
                   </div>
                   <button
-                    onClick={() => checkout(carts)}
+                    onClick={() => handleCheckout()}
                     className="flex items-center justify-center gap-2 mt-[1.2rem] px-4 rounded-lg w-full bg-[#00A67C] font-semibold text-white py-[0.6rem] text-[15px] hover:bg-[#00916D] transition ease-in-out delay-100"
                   >
                     <span>Pay Now</span>

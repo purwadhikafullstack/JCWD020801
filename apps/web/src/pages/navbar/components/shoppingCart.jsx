@@ -24,9 +24,9 @@ const convertToIDR = (price) => {
 export const ShoppingCart = ({ isOpenCart, toggleOpenCart }) => {
   const navigate = useNavigate();
   const data = useSelector((state) => state.product.data);
-  console.log(data);
+  // console.log(data);
   const carts = useSelector((state) => state.cart.data);
-  console.log(carts);
+  // console.log(carts);
   const total = carts.reduce(
     (total, item) => total + item.price * item.quantity,
     0,
@@ -68,7 +68,14 @@ export const ShoppingCart = ({ isOpenCart, toggleOpenCart }) => {
       autoClose: 3000,
     });
   };
-  ``;
+
+  // const handleCheckout = (data) => {
+  //   console.log(data);
+  //   localStorage.setItem('carts', carts);
+  //   // const cart = localStorage.getItem('carts');
+  //   // console.log(cart);
+
+  // };
 
   return (
     <AnimatePresence>

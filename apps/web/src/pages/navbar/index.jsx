@@ -2,7 +2,7 @@ import appLogo from '../../assets/logo-app-1.png';
 import appLogoSm from '../../assets/lemon-logo.svg';
 import categoryIcon from '../../assets/navbar/category.svg';
 import searchIcon from '../../assets/navbar/search.svg';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { NavbarMobile } from './components/navbarMobile';
 import { ModalCategory } from './components/modalCategory';
