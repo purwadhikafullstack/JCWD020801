@@ -23,6 +23,7 @@ export const UserAddress = () => {
             setUserAddressData(response.data.result.rows);
             setTotalPages(response.data.totalPages);
         } catch (error) {
+            console.log("this");
             console.log(error);
         }
     };

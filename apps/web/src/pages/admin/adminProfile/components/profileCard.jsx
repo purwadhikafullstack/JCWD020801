@@ -8,7 +8,7 @@ export function AdminProfileCard({ adminData }) {
         <div className="flex flex-col p-8 bg-white shadow-md rounded-3xl w-96 h-auto items-center">
             <div className="flex flex-col items-center">
                 <CardHeader floated={false}>
-                    <img src="https://docs.material-tailwind.com/img/team-3.jpg" alt="profile-picture" />
+                    <img src={adminData.profile_picture ? adminData.profile_picture : "https://th.bing.com/th/id/OIP.0CZd1ESLnyWIHdO38nyJDAAAAA?rs=1&pid=ImgDetMain"} alt="profile-picture" />
                 </CardHeader>
                 <div className="flex flex-row w-full -mb-3 p-3 gap-2 items-center">
                     <Typography variant="h3" className="text-gray-700">{adminData?.name}</Typography>

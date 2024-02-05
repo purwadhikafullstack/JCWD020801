@@ -34,6 +34,10 @@ export default function ProductManagement() {
     const [orderChange, setOrderChange] = useState(false)
     const [sortBy, setSortBy] = useState('createdAt');
     const [debouncedSearchValue] = useDebounce(searchValue, 500)
+    const [filterByCategory, setFilterByCategory] = useState(0);
+    const handleFilterByCategory = (item) => {
+        setFilterByCategory(item)
+    }
     
     const handlePageChange = (newPage) => {
         setCurrentPage(newPage);
@@ -42,12 +46,14 @@ export default function ProductManagement() {
         handleSortBy(columnName, setSortBy, orderChange, setSortOrder, setOrderChange);
     };
     const handleResetButtonClick = () => {
-        handleReset(setSortBy, setOrderChange, setSortOrder, setSearchValue, refreshTable);
+        // handleReset(setSortBy, setOrderChange, setSortOrder, setSearchValue, refreshTable);
+        setSearchValue('')
+        setFilterByCategory(0)
     };
 
     const getProductData = async (page, sort, order, search) => {
         try {
-            const response = await axios.get(`products?page=${page}&sortBy=${sort}&sortOrder=${order}&search=${search}`, {
+            const response = await axios.get(`products?page=${page}&sortBy=${sort}&sortOrder=${order}&category=${filterByCategory}&search=${search}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -62,26 +68,30 @@ export default function ProductManagement() {
 
     useEffect(() => {
         getProductData(currentPage, sortBy.toLowerCase(), sortOrder, debouncedSearchValue)
-    }, [currentPage, debouncedSearchValue, sortOrder, sortBy, refreshTable])
+    }, [currentPage, debouncedSearchValue, sortOrder, sortBy, filterByCategory, refreshTable])
 
     return (
-        <div className="flex flex-row">
+        <div className="flex flex-col lg:flex-row">
             <AdminSidebar subMenuStatus={true} />
             <div className="flex flex-col p-5 gap-3 bg-[#edf7f4] w-full items-center">
                 <TableHeader
                     title={'Product Management'}
+                    page={'product'}
                     description={'The current list of products.'}
                     handleOpenAdd={handleOpenAdd}
+                    handleReset={handleResetButtonClick}
                     showAddButton={adminDataRedux.isSuperAdmin === true ? true : false}
                     addButtonText={'product'}
                     searchValue={searchValue}
-                    setSearchValue={setSearchValue} />
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 p-9 items-center">
+                    setSearchValue={setSearchValue}
+                    handleFilterByCategory={handleFilterByCategory} />
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 p-2 md:p-9 items-center">
                     {productData?.map((item, index) => (
                         !item.isDeleted && (
                             <ProductCard
                                 key={index}
                                 productData={item}
+                                adminDataRedux={adminDataRedux}
                                 handleRefreshTable={handleRefreshTable}
                             />
                         )

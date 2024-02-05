@@ -1,11 +1,15 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 
 export const ModalCategory = ({ isOpenCategory, categoryList }) => {
+    const navigate = useNavigate();
     return (
         <AnimatePresence>
             {isOpenCategory && (
                 <motion.div
+                    // onHoverStart={onHoverStart}
+                    // onHoverEnd={onHoverEnd}
                     initial={{ opacity: 0, y: -50 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -50 }}
@@ -17,7 +21,7 @@ export const ModalCategory = ({ isOpenCategory, categoryList }) => {
                         {categoryList.map((item, index) => (
                             <>
                                 <div key={index} className="group border-l-2 border-white py-1 hover:border-[#3A826E] hover:bg-[#F0FAF7]">
-                                    <span className="px-4 text-[15px] font-medium group-hover:font-semibold text-gray-600 group-hover:text-[#3A826E]">
+                                    <span onClick={() => navigate(`/catalogue/${item.id}`)} className="px-4 text-[15px] font-medium group-hover:font-semibold text-gray-600 group-hover:text-[#3A826E]">
                                         {item.name}
                                     </span>
                                 </div>
@@ -32,5 +36,5 @@ export const ModalCategory = ({ isOpenCategory, categoryList }) => {
 
 ModalCategory.propTypes = {
     isOpenCategory: PropTypes.bool.isRequired,
-    categoryList: PropTypes.array.isRequired,
+    categoryList: PropTypes.array.isRequired
 };

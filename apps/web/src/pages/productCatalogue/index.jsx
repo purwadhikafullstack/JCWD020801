@@ -6,7 +6,7 @@ import { Footer } from "../footer";
 import { useSelector } from "react-redux";
 import axios from "../../api/axios";
 import { formatDistance } from "../../functions/functions";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 const categoryList = [
     {
@@ -65,14 +65,39 @@ export const ProductCatalogue = () => {
 
     const { coordinates, loaded } = useSelector((state) => state.geolocation);
     const [branchData, setBranchData] = useState(null);
+    const [count, setCount] = useState(0)
 
-    console.log(branchData);
+    const params = useParams()
+    const [categoryList, setCategoryList] = useState([])
+    const [categoryId, setCategoryId] = useState(params.category_id);
+    const [searhValue, setSearchValue] = useState(params.search)
+    const [branchId, setBranchId] = useState();
+
+    const [nearestBranchProduct, setNearestBranchProduct] = useState([])
+
+    const fetchNearestBranchProduct = async (branch_id) => {
+        try {
+            if (searhValue) {
+                const response = await axios.get(`products/all?page=1&sortBy=createdAt&sortOrder=desc&branch_id=${branch_id}&category_id=${categoryId}&search=${searhValue}`)
+                setNearestBranchProduct(response.data.result.rows)
+                setCount(response.data.result.count)
+            } else {
+                const response = await axios.get(`products/all?page=1&sortBy=createdAt&sortOrder=desc&branch_id=${branch_id}&category_id=${categoryId}&search=`)
+                setNearestBranchProduct(response.data.result.rows)
+                setCount(response.data.result.count)
+            }
+        } catch (err) {
+            console.error(err)
+        }
+    }
 
     const fetchNearestBranch = async () => {
         if (loaded) {
             try {
                 const response = await axios.post(`branches/get-nearest?latitude=${coordinates.lat}&longitude=${coordinates.lng}&limit=1`);
                 setBranchData(response.data.result[0])
+                fetchNearestBranchProduct(response.data.result[0].id)
+                setBranchId(response.data.result[0].id)
             } catch (error) {
                 console.log(error);
             }
@@ -95,7 +120,7 @@ export const ProductCatalogue = () => {
             fetchMainBranch();
         }
 
-    }, [coordinates?.lat, coordinates?.lng]);
+    }, [coordinates?.lat, coordinates?.lng, categoryId, searhValue]);
 
     useEffect(() => {
         const handleResize = () => {
@@ -113,6 +138,23 @@ export const ProductCatalogue = () => {
 
         return () => window.removeEventListener('resize', handleResize);
     }, [])
+
+    const getCategory = async () => {
+        try {
+            const response = await axios.get(`/categories/all?all=true}`)
+            setCategoryList(response.data.result.rows)
+        } catch (err) {
+            console.error(err)
+        }
+    }
+    useEffect(() => {
+        getCategory();
+    }, [])
+
+    useEffect(() => {
+        setCategoryId(params.category_id)
+        setSearchValue(params.search)
+    }, [params])
 
     return (
         <>
@@ -188,7 +230,7 @@ export const ProductCatalogue = () => {
                                     onClick={() => setIsCategoryOpen(!isCategoryOpen)}
                                     className="flex justify-between items-center pt-3 lg:border-t lg:border-[#e4e4e4] cursor-pointer lg:cursor-default"
                                 >
-                                    <h4 className="font-medium lg:underline underline-offset-2 mx-[0.8rem]">
+                                    <h4 className="font-semibold lg:underline underline-offset-2 mx-[0.8rem]">
                                         All Category
                                     </h4>
                                     <div className="lg:hidden">
@@ -199,7 +241,7 @@ export const ProductCatalogue = () => {
                                             viewBox="0 0 24 24"
                                         >
                                             <path
-                                                fill="#949494"
+                                                fill="#bbc0c5"
                                                 d="M9 5a1 1 0 1 0 0 2a1 1 0 0 0 0-2M6.17 5a3.001 3.001 0 0 1 5.66 0H19a1 1 0 1 1 0 2h-7.17a3.001 3.001 0 0 1-5.66 0H5a1 1 0 0 1 0-2zM15 11a1 1 0 1 0 0 2a1 1 0 0 0 0-2m-2.83 0a3.001 3.001 0 0 1 5.66 0H19a1 1 0 1 1 0 2h-1.17a3.001 3.001 0 0 1-5.66 0H5a1 1 0 1 1 0-2zM9 17a1 1 0 1 0 0 2a1 1 0 0 0 0-2m-2.83 0a3.001 3.001 0 0 1 5.66 0H19a1 1 0 1 1 0 2h-7.17a3.001 3.001 0 0 1-5.66 0H5a1 1 0 1 1 0-2z"
                                             />
                                         </svg>
@@ -232,11 +274,13 @@ export const ProductCatalogue = () => {
                                                                     ? 'text-[#009771]'
                                                                     : 'text-gray-700 '
                                                                     } w-full font-medium py-[0.45rem]  group-hover:text-[#009771]  cursor-pointer transition ease-in-out delay-100`}
-                                                                onClick={() =>
+                                                                onClick={() => {
                                                                     setSelectedCategory((prev) =>
                                                                         prev === item.name ? null : item.name,
                                                                     )
-                                                                }
+                                                                    setCategoryId(item.id)
+                                                                    setSearchValue('')
+                                                                }}
                                                             >
                                                                 {item.name}
                                                             </h5>
@@ -273,12 +317,12 @@ export const ProductCatalogue = () => {
                                                                     }}
                                                                     className=""
                                                                 >
-                                                                    {item.subcategory?.map((sub, index) => (
+                                                                    {item.SubCategories?.map((sub, index) => (
                                                                         <div
                                                                             key={index}
                                                                             className="first:mt-1 last:mb-1 py-[0.3rem] px-[1.8rem] text-[#009771] font-medium cursor-pointer"
                                                                         >
-                                                                            {sub}
+                                                                            {sub.name}
                                                                         </div>
                                                                     ))}
                                                                 </motion.div>
@@ -299,14 +343,14 @@ export const ProductCatalogue = () => {
                         <section className="flex flex-col w-full">
                             <div className="order-last lg:order-first mb-4 lg:mb-0 flex items-end tracking-tight gap-[0.7rem]">
                                 <div className="flex text-[24px]">
-                                    <h4 className="text-[#343538] font-semibold">Seafood</h4>
-                                    <h4 className="text-[#067627] font-semibold whitespace-pre">
+                                    <h4 className="text-[#343538] font-semibold">{nearestBranchProduct[0]?.Product?.Category?.name}</h4>
+                                    {/* <h4 className="text-[#067627] font-semibold whitespace-pre">
                                         {' '}
                                         / Fish Fillets
-                                    </h4>
+                                    </h4> */}
                                 </div>
                                 <span className="text-[#939393] font-medium mb-[0.2rem]">
-                                    36 results
+                                    {count} results
                                 </span>
                             </div>
                             {/* Filter & Sort */}
@@ -383,7 +427,7 @@ export const ProductCatalogue = () => {
                             </div>
                         </section>
                         {/* Product Cards  */}
-                        <ProductCatalogueData />
+                        <ProductCatalogueData product={nearestBranchProduct} branchId={branchId} />
                     </section>
                 </section>
             </section>

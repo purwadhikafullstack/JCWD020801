@@ -61,7 +61,7 @@ export default function ModalDelete ({api, openDelete, handleDelete, getData, cl
                 <Card className="mx-auto w-full max-w-[24rem]">
                     <CardBody className="flex flex-col gap-4">
                         <Typography variant="h4" color="blue-gray">
-                        Delete {clickedData?.name}
+                        Delete {api === '/products/branch-product' ? clickedData?.Product?.name : clickedData?.name}
                         </Typography>
                         <Typography className="font-normal">
                         Warning: This action will permanently delete the selected data. Are you sure you want to proceed?

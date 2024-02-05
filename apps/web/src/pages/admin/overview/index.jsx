@@ -22,7 +22,7 @@ export default function Overview() {
   }, []);
 
   return (
-    <div className="flex flex-row h-screen">
+    <div className="flex flex-col lg:flex-row h-screen">
       <AdminSidebar />
       <div className="flex flex-col p-1 md:p-9 w-full bg-[#edf7f4]">
         <p className="font-bold text-lg">Overview</p>

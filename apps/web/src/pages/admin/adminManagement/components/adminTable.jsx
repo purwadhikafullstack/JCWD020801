@@ -18,7 +18,7 @@ export default function AdminTable({ handleDelete, handleEdit, adminData, curren
     return (
             <div className="w-screen md:w-5/6">
                 <Card className="h-full w-full">
-                    <CardBody className="px-0 py-0">
+                    <CardBody className="overflow-auto px-0 py-0">
                         <table className="mt-4 w-full min-w-max table-auto text-left">
                             <thead>
                                 <tr>
@@ -53,7 +53,7 @@ export default function AdminTable({ handleDelete, handleEdit, adminData, curren
                                             <tr key={item.name}>
                                                 <td className={classes}>
                                                     <div className="flex items-center gap-3">
-                                                        <Avatar src="https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png" alt={item.name} size="sm" />
+                                                        <Avatar src={item.profile_picture ? item.profile_picture : "https://th.bing.com/th/id/OIP.0CZd1ESLnyWIHdO38nyJDAAAAA?rs=1&pid=ImgDetMain"} alt={item.name} size="sm" />
                                                         <div className="flex flex-col">
                                                             <Typography
                                                                 variant="small"
@@ -97,11 +97,11 @@ export default function AdminTable({ handleDelete, handleEdit, adminData, curren
                                                     </div>
                                                 </td>
                                                 <td className={classes}>
-                                                    <Tooltip content="Edit User">
+                                                    {/* <Tooltip content="Edit User">
                                                         <IconButton onClick={() => handleEdit(item)} variant="text">
                                                             <PencilIcon className="h-4 w-4" />
                                                         </IconButton>
-                                                    </Tooltip>
+                                                    </Tooltip> */}
                                                     <Tooltip content={`Delete ${item.name}`}>
                                                         <IconButton onClick={() => handleDelete(item)} variant="text">
                                                             <TrashIcon className="h-4 w-4" color="red" />

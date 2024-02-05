@@ -93,17 +93,48 @@ export const getById = async (req, res) => {
     }
 }
 
+export const getAllbyAdminId = async (req, res) => {
+    try{
+        const { id } = req.query
+        const findBranches = await Branch.findAll({
+            where:{
+                AdminId: id
+            }
+        })
+
+        if (!findBranches || findBranches.count === 0) {
+            return res.status(404).send({ message: "You're not assigned to any branches" })
+        }
+
+        return res.status(200).send({ result: findBranches })
+    }catch(error){
+        console.error(error)
+        return res.status(500).send({ message: error.message })
+    }
+}
+
 export const addBranch = async (req, res) => {
     try {
         const { name, address, contactNumber, latitude, longitude, AdminId, fullAddress, province_id, CityId, maxDeliveryDistance } = req.body
 
         const findBranch = await Branch.findOne({
             where: {
-                address
+                address,
+                AdminId: AdminId
             }
         })
 
-        if (findBranch == null) {
+        const findBranchAdmin = await Branch.findOne({
+            where:{
+                AdminId: AdminId
+            }
+        })
+
+        if(findBranchAdmin){
+            return res.status(400).send({ message: "The administrator you've chosen is already registered, please select another administrator" })
+        }
+
+        if (findBranch == null && findBranchAdmin == null) {
             const result = await Branch.create({
                 ...req.body,
             })
@@ -251,6 +282,26 @@ export const getNearestBranch = async (req, res) => {
         res.status(400).send({ message: error.message });
     }
 };
+
+export const getTotalBranch = async (req, res) => {
+    try {
+        const totalBranch = await Branch.count();
+        res.status(200).send({ totalBranch })
+    } catch (error) {
+        console.error(error)
+        return res.status(500).send({ message: error.message })
+    }
+}
+
+export const getAllBranch = async (req, res) => {
+    try{
+        const result = await Branch.findAll();
+        res.status(200).send({ result: result })
+    }catch(err){
+        console.error(error)
+        return res.status(500).send({ message: error.message })
+    }
+}
 
 // export const getNearestBranch = async (req, res) => {
 //     try {
