@@ -23,7 +23,17 @@ export const roleCheck = (navigate, isSuperAdmin) => {
 
 export const handleSortBy = (columnName, setSortBy, orderChange, setSortOrder, setOrderChange) => {
     if (columnName !== 'Action') {
-        setSortBy(columnName);
+        if(columnName === 'Product Name'){
+            setSortBy('ProductId')
+        }else if(columnName === 'Branch'){
+            setSortBy('BranchId')
+        }else if(columnName === 'Min. Purchase'){
+            setSortBy('min_purchase_amount')
+        }else if(columnName === 'Max. Discount'){
+            setSortBy('max_discount')
+        }else{
+            setSortBy(columnName);
+        }
         const sortOrder = orderChange ? 'asc' : 'desc';
         setSortOrder(sortOrder);
         setOrderChange(!orderChange);

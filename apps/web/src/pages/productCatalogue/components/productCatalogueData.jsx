@@ -1,5 +1,8 @@
 import { convertToIDR } from "../../../functions/functions";
 import stockAvail from "../../../assets/home/stock_avail.svg"
+import { useNavigate } from "react-router-dom";
+import axios from "../../../api/axios";
+import { useEffect, useState } from "react";
 
 const cardsData = [
     {
@@ -47,17 +50,37 @@ const cardsData = [
 ];
 
 
-export const ProductCatalogueData = () => {
+export const ProductCatalogueData = ({ product, branchId }) => {
+    const [productImage, setProductImage] = useState();
+    const navigate = useNavigate();
+
+    const getProductImages = async () => {
+        try {
+            const imagePromises = product.map(async (prod) => {
+                const response = await axios.get(`products/images/${prod?.Product?.id}`);
+                return response.data.imageProduct;
+            });
+            const images = await Promise.all(imagePromises);
+            setProductImage(images);
+        } catch (err) {
+            console.error(err)
+        }
+    }
+
+    useEffect(() => {
+        getProductImages();
+    }, [product])
+
     return (
         <>
             {/* Card Grid */}
             <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 md:gap-3">
-                {cardsData.map((item, index) => (
-                    <div className="cursor-pointer col-span-1" key={index}>
+                {product.map((item, index) => (
+                    <div onClick={() => navigate(`/product-detail/${item.Product?.id}/${branchId}`)} className="cursor-pointer col-span-1" key={index}>
                         <div className="flex h-full flex-col justify-between bg-white p-2 border border-[#D1D5D8] rounded-xl gap-3 hover:border-[#00A67C] transition delay-75 ease-in-out">
                             <div>
                                 <img
-                                    src={item.img}
+                                    src={productImage[index]?.image ? productImage[index]?.image : 'https://www.pngkey.com/png/detail/233-2332677_ega-png.png'}
                                     alt=""
                                     className="rounded-lg h-[140px] md:h-[145px] xl:h-[180px] w-full object-cover"
                                 />
@@ -65,12 +88,23 @@ export const ProductCatalogueData = () => {
                             <div className="px-1.5 flex flex-col gap-1">
                                 <div className="flex gap-1">
                                     <span className="font-bold text-[13px]">Rp</span>
-                                    <p className="text-[16px] md:text-[15px] font-bold text-rose-600 tracking-tight">
-                                        {convertToIDR(item.price)}
-                                    </p>
+                                    {item?.hasDiscount ?
+                                                <p className="text-[16px] md:text-[18px] font-bold text-rose-600 tracking-tight">
+                                                    {convertToIDR(item?.discounted_price)}
+                                                </p>
+                                                :
+                                                <p className="text-[16px] md:text-[18px] font-bold text-rose-600 tracking-tight">
+                                                    {convertToIDR(item.original_price)}
+                                                </p>
+                                            }
+                                            {item?.hasDiscount &&
+                                                <div className="font-semibold text-[#757575] text-[15px] line-through">
+                                                    Rp {item?.original_price}
+                                                </div>
+                                            }
                                 </div>
                                 <p className="leading-relaxed text-gray-700 text-[14px] line-clamp-2">
-                                    {item.desc}
+                                    {item.Product?.description}
                                 </p>
 
                                 <div className="flex gap-1.5 items-center">

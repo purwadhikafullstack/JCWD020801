@@ -1,4 +1,5 @@
 import Admin from '../models/admin.model';
+import Branch from '../models/branch.model'
 import bcrypt from 'bcrypt';
 import { Op } from "sequelize";
 import jwt from 'jsonwebtoken'
@@ -76,8 +77,8 @@ export const getAllAdmin = async (req, res) => {
         const dataAdmin = await Admin.findAndCountAll({
             where: {
                 isSuperAdmin: false,
-                name: { 
-                    [Op.like]: `%${search}%` 
+                name: {
+                    [Op.like]: `%${search}%`
                 }
             },
             attributes: {
@@ -120,6 +121,7 @@ export const updateAdmin = async (req, res) => {
     const { id, name, username, email, password } = req.body;
 
     try {
+
         const updateFields = {
             ...(name && { name }),
             ...(username && { username }),
@@ -130,7 +132,14 @@ export const updateAdmin = async (req, res) => {
             const hashPassword = await bcrypt.hash(password, salt);
             updateFields.password = hashPassword;
         }
-        const [updatedCount] = await Admin.update(updateFields, { where: { id: id } });
+        if (req.file) {
+            updateFields.profile_picture = `${process.env.BASE_URL_API}/public/products/${req.file?.filename}`
+        }
+        const [updatedCount] = await Admin.update(
+            updateFields, {
+            where: { id: id }
+        }
+        );
 
         if (updatedCount > 0) {
             return res.status(200).send({ message: "Admin updated" });
@@ -340,14 +349,15 @@ export const logoutAdmin = (req, res) => {
 
 export const getAllAdminNoPagination = async (req, res) => {
     try {
+
         const result = await Admin.findAll({
             where: {
                 isSuperAdmin: false
             },
             // order: 
         })
-        return res.status(200).send({ result: result })
 
+        return res.status(200).send({ result: result })
     } catch (error) {
         console.log(error);
         res.status(400).send({ message: error.message })

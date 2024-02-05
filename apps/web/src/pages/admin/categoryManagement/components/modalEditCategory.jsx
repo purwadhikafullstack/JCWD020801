@@ -15,7 +15,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import axios from "../../../../api/axios";
 import { useEffect, useState } from "react";
 
-export default function ModalEditCategory({ openModalEdit, handleEdit, clickedData, handleRefreshTable }) {
+export default function ModalEditCategory({api, tabValueFromChild, openModalEdit, handleEdit, clickedData, handleRefreshTable }) {
     const [subCategory, setSubCategory] = useState([]);
     const [subCategoryInCategory, setSubCategoryInCategory] = useState([])
     const [refreshModal, setRefreshModal] = useState(false)
@@ -28,7 +28,7 @@ export default function ModalEditCategory({ openModalEdit, handleEdit, clickedDa
     const handleSubmit = async (data) => {
         data.id = clickedData.id
         try {
-            const response = await axios.patch('categories/', data, {
+            const response = await axios.patch(api, data, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -75,7 +75,7 @@ export default function ModalEditCategory({ openModalEdit, handleEdit, clickedDa
     }
 
     const removeSubCategoryFromCategory = async (item) => {
-        try{
+        try {
             const fields = {}
             fields.subId = item
             const response = await axios.patch('categories/sub-category/remove', fields, {
@@ -89,7 +89,7 @@ export default function ModalEditCategory({ openModalEdit, handleEdit, clickedDa
                 hideProgressBar: true,
                 theme: "colored"
             });
-        }catch(error){
+        } catch (error) {
             console.log(error);
         }
     }
@@ -115,7 +115,7 @@ export default function ModalEditCategory({ openModalEdit, handleEdit, clickedDa
                             </Typography>
                             {subCategoryInCategory && subCategoryInCategory.length > 0 && (
                                 <>
-                                    <Typography className="-mb-2" variant="h6">Sub Category</Typography>
+                                    <Typography className="-mb-2" variant="h6">Subcategory</Typography>
                                     <div className="flex flex-col gap-2">
                                         {subCategoryInCategory.map((item, index) => (
                                             <div key={index} className="flex flex-row gap-2">
@@ -132,24 +132,28 @@ export default function ModalEditCategory({ openModalEdit, handleEdit, clickedDa
                             <Input name="name" autoComplete="new" label={clickedData?.name} size="lg"
                                 onChange={formik.handleChange}
                                 value={formik.values.name} />
+                            {tabValueFromChild === 0 &&
+                            <>
                             {subCategory && subCategory.length > 0 && (
                                 <>
-                            <Typography className="-mb-2" variant="h6">
-                                Assign Sub Category
-                            </Typography>
-                                <Select
-                                    name="sub_category"
-                                    color="teal"
-                                    label="Select sub category"
-                                    value={formik.values.sub_category}
-                                    onChange={(value) => formik.setFieldValue("sub_category", value)}
-                                >
-                                    {subCategory?.map((item, index) => (
-                                        <Option key={index} value={item.name}>{item.name}</Option>
-                                    ))}
-                                </Select>
+                                    <Typography className="-mb-2" variant="h6">
+                                        Add subcategory to {clickedData?.name}
+                                    </Typography>
+                                    <Select
+                                        name="sub_category"
+                                        color="teal"
+                                        label="Select available subcategory"
+                                        value={formik.values.sub_category}
+                                        onChange={(value) => formik.setFieldValue("sub_category", value)}
+                                    >
+                                        {subCategory?.map((item, index) => (
+                                            <Option key={index} value={item.name}>{item.name}</Option>
+                                        ))}
+                                    </Select>
                                 </>
                             )}
+                            </>
+                                        }
                         </CardBody>
                         <CardFooter className="pt-0">
                             <div className="flex flex-row gap-3">

@@ -34,17 +34,62 @@ export const apiTotalProduct = async () => {
     }
 }
 
+export const apiTotalCustomer = async () => {
+    const token = localStorage.getItem('admtoken')
+    try {
+        const response = await axios.get('customer/total', {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        return response.data.totalCustomer
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+export const apiTotalBranch = async () => {
+    const token = localStorage.getItem('admtoken')
+    try {
+        const response = await axios.get('branches/total', {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        return response.data.totalBranch
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+export const apiTotalDiscount = async () => {
+    const token = localStorage.getItem('admtoken')
+    try {
+        const response = await axios.get('products/discount/total', {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        return response.data.totalDiscount
+    } catch (err) {
+        console.log(err)
+    }
+}
+
 export const getCardData = async () => {
     const totalAdmin = await apiTotalAdmin();
     const totalProduct = await apiTotalProduct();
+    const totalCustomer = await apiTotalCustomer();
+    const totalBranch = await apiTotalBranch();
+    const totalDiscount = await apiTotalDiscount();
 
     const card_data = [
         { 
             title: 'branches', 
             desc: 'Manage branch', 
-            path: '/', 
+            path: '/store-management', 
             icon: <FaStoreAlt style={{ fontSize: '34px' }} />, 
-            data: 5 
+            data: totalBranch 
         },
         { 
             title: 'admins', 
@@ -58,7 +103,8 @@ export const getCardData = async () => {
             desc: 'See more', 
             path: '/customer-management',
             icon: <GoPeople style={{ fontSize: '34px' }} />, 
-            data: 127
+            data: totalCustomer,
+            admin: true
         },
         { 
             title: 'products',
@@ -76,18 +122,20 @@ export const getCardData = async () => {
             data: 'Rp.2.200.000' 
         },
         { 
-            title: 'promos available',
-            desc: 'Manage promo', 
-            path: '/',
+            title: 'discounts available',
+            desc: 'Manage discount', 
+            path: '/discount-management',
             icon: <MdOutlineDiscount style={{ fontSize: '34px' }} />, 
-            data: 8
+            data: totalDiscount,
+            admin: true
         },
         { 
             title: 'Recent orders',
             desc: 'Manage recent orders', 
             path: '/',
             icon: <TbFileInvoice style={{ fontSize: '34px' }} />, 
-            data: ''
+            data: '',
+            admin: true
         },
     ];
 

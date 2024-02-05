@@ -31,13 +31,17 @@ import { StoreBranchDetail } from './pages/admin/storeManagement/storeBranchDeta
 import { StoreLocator } from './pages/storeLocator';
 import { CheckoutPage } from './pages/checkout';
 import { ProductCatalogue } from './pages/productCatalogue';
-import { useGeoLocation } from './hooks/useGeoLocation';
 import AdminErrorPage from './pages/admin/components/adminErrorPage';
+import StockManagement from './pages/admin/stockManagement';
+import { useGeoLocation } from './hooks/useGeoLocation';
 import { ProductDetail } from './pages/productDetail';
+import DiscountManagement from './pages/admin/discountManagement';
 
 const router = createBrowserRouter([
-  //Untuk yang tidak butuh token
   { path: "/", element: <Home /> },
+  { path: "/login-admin", element: <LoginAdmin></LoginAdmin> },
+  { path: "/admin-verification/:token", element: <AdminVerification /> },
+  { path: "/admin-reset-password/:token", element: <AdminResetPassword /> },
   { path: "/login-admin", element: <LoginAdmin></LoginAdmin> },
   { path: "/admin-verification/:token", element: <AdminVerification /> },
   { path: "/admin-reset-password/:token", element: <AdminResetPassword /> },
@@ -48,8 +52,8 @@ const router = createBrowserRouter([
   { path: "/user-reset-password/:token", element: <UserResetPassword /> },
   { path: "/user-update-email/:token", element: <UserUpdateEmail /> },
   { path: "/store-locator", element: <StoreLocator /> },
-  { path: "/catalogue", element: <ProductCatalogue /> },
-  { path: "/product-detail", element: <ProductDetail /> },
+  { path: "/catalogue/:category_id?/:search?", element: <ProductCatalogue /> },
+  { path: "/product-detail/:id?/:branch_id?", element: <ProductDetail /> },
   {
     element: <Required />,
     children: [
@@ -67,10 +71,12 @@ const router = createBrowserRouter([
       { path: "/customer-management", element: <CustomerManagement /> },
       { path: "/product-management", element: <ProductManagement /> },
       { path: "/admin-profile", element: <AdminProfile /> },
-      { path: "/category-management", element: <CategoryManagement /> },
-      { path: "/error", element: <AdminErrorPage /> },
+      { path: "/category-management", element: <CategoryManagement />},
+      { path: "/error", element: <AdminErrorPage/> },
       { path: "/store-management", element: <StoreManagement /> },
-      { path: "/store-management/:id", element: <StoreBranchDetail /> }
+      { path: "/store-management/:id", element: <StoreBranchDetail /> },
+      { path: "/stock-management", element: <StockManagement/> },
+      { path: "/discount-management", element: <DiscountManagement/> },
     ]
   }
 ]);
@@ -79,8 +85,8 @@ function App() {
   const token = localStorage.getItem("token");
   const admtoken = localStorage.getItem('admtoken')
   const dispatch = useDispatch();
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(!open);
+  const [open, setOpen] = useState(false)
+  const handleOpen = () => setOpen(true);
 
   useGeoLocation();
 
@@ -124,7 +130,7 @@ function App() {
     if (admtoken) {
       keepLoginAdmin();
     }
-  }, [token]);
+  }, []);
 
   return (
     <>

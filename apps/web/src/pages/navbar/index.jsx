@@ -2,7 +2,7 @@ import appLogo from '../../assets/logo-app-1.png';
 import appLogoSm from '../../assets/lemon-logo.svg';
 import categoryIcon from '../../assets/navbar/category.svg';
 import searchIcon from '../../assets/navbar/search.svg';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { NavbarMobile } from './components/navbarMobile';
 import { ModalCategory } from './components/modalCategory';
@@ -13,48 +13,9 @@ import { fetchAddressFromCoordinates } from '../../api/fetchAddressFromCoordinat
 import { truncateString } from '../../functions/functions';
 import { Tooltip } from '@material-tailwind/react';
 import { LiaShippingFastSolid } from "react-icons/lia";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Headroom from 'react-headroom'
-
-const categoryList = [
-  {
-    name: 'Meat & Poultry',
-    subcategory: {
-      list: ['Beef', 'Lamb', 'Chicken', 'Duck', 'Sausage & Hot Dogs'],
-    },
-  },
-  {
-    name: 'Seafood',
-    subcategory: {
-      list: [
-        'Fish Fillets',
-        'Fish Whole',
-        'Salmon',
-        'Crab',
-        'Lobster',
-        'Shrimp',
-      ],
-    },
-  },
-  {
-    name: 'Fresh',
-    subcategory: {
-      list: ['Fruits', 'Berries', 'Vegetables', 'Dried Fruits & Nuts'],
-    },
-  },
-  { name: 'Spice & Herbs' },
-  {
-    name: 'Dairy',
-    subcategory: { list: ['Eggs', 'Milk', 'Yoghurt', 'Sour Cream', 'Pudding'] },
-  },
-  { name: 'Drinks' },
-  { name: 'Frozen' },
-  { name: 'Snacks' },
-  { name: 'Beauty' },
-  { name: 'Healthcare' },
-  { name: 'Cleaning & Household' },
-  { name: 'Pet' },
-];
+import axios from '../../api/axios';
 
 export const Navbar = () => {
   const customer = useSelector((state) => state.customer.value);
@@ -85,15 +46,39 @@ export const Navbar = () => {
     setIsOpenCart(!isOpenCart);
   };
 
+  const [categoryList, setCategoryList] = useState([])
+  const [searchValue, setSearchValue] = useState([])
+  const navigate = useNavigate();
+
+  const getCategory = async () => {
+    try {
+      const response = await axios.get(`/categories/all?all=true}`)
+      setCategoryList(response.data.result.rows)
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
   useEffect(() => {
     if (loaded) {
       const getAddress = async () => {
         const address = await fetchAddressFromCoordinates(coordinates?.lat, coordinates?.lng);
         setFormattedAddress(address)
+        
       };
       getAddress();
     }
   }, [coordinates?.lat, coordinates?.lng])
+
+  useEffect(() => {
+      getCategory();
+  }, [])
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+        navigate(`/catalogue/0/${searchValue}`);
+    }
+};
 
   return (
 
@@ -199,7 +184,7 @@ export const Navbar = () => {
               Search
             </label>
             <div className="relative w-full">
-              <div className="absolute inset-y-0 left-0 flex cursor-pointer items-center pl-3">
+              <div onClick={() => navigate(`/catalogue/0/${searchValue}`)} className="absolute inset-y-0 left-0 flex cursor-pointer items-center pl-3">
                 <img src={searchIcon}></img>
               </div>
               <input
@@ -207,6 +192,8 @@ export const Navbar = () => {
                 id="table-search"
                 className="block w-full rounded-full border border-[#F6F7F8] bg-[#F6F7F8] p-2.5 pl-10 text-sm text-gray-900 transition-colors  duration-300 focus:border-blue-500 focus:outline-none focus:ring-blue-500 "
                 placeholder="Search a product..."
+                onChange={(e) => setSearchValue(e.target.value)}
+                onKeyDown={handleKeyPress}
               />
             </div>
           </div>

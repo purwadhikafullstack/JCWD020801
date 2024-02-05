@@ -5,6 +5,7 @@ export default class ProductBranch extends Model {
     ProductBranch.belongsTo(models.Product);
     ProductBranch.belongsTo(models.Branch);
     ProductBranch.hasMany(models.Discount);
+    ProductBranch.hasMany(models.StockHistory)
   }
 }
 

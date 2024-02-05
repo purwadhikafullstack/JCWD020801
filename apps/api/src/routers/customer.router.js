@@ -1,5 +1,6 @@
 import { Router } from 'express';
-import { userRegister, getAllUser, userVerification, userLogin, keepLogin, userRegisterWithGoogle, userImgUpdate, userDataUpdate, userLogout, resetPassword, resetPasswordVerification, findEmailForgotPassword, userEmailUpdate, userSignInWithGoogle, userEmailUpdateVerification, userReverification, userLoginWithGoogle } from '../controllers/customer.controller'
+import { userRegister, getAllUser, userVerification, userLogin, keepLogin, userRegisterWithGoogle, userImgUpdate, userDataUpdate, userLogout, resetPassword, resetPasswordVerification, findEmailForgotPassword, userEmailUpdate, userSignInWithGoogle, userEmailUpdateVerification, userReverification, userLoginWithGoogle, getTotalCustomer, getAllCustomer } from '../controllers/customer.controller'
+import { verifyTokenAdmin } from '../middleware/admin/admin.auth';
 const { verifyToken } = require('../middleware/auth')
 const { multerUpload } = require('../middleware/multer')
 const customerRouter = Router();
@@ -14,6 +15,8 @@ customerRouter.get('/keep-login', verifyToken, keepLogin)
 customerRouter.get('/reset-password', verifyToken, resetPassword)
 customerRouter.get('/forgot-password', findEmailForgotPassword)
 customerRouter.get('/email-reverification', userReverification)
+customerRouter.get('/total', verifyTokenAdmin, getTotalCustomer)
+customerRouter.get('/all', verifyTokenAdmin, getAllCustomer)
 
 // POST
 customerRouter.post('/register', userRegister)

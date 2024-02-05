@@ -1,4 +1,4 @@
-import { Avatar, Button } from "@material-tailwind/react";
+import { Avatar, Button, Typography } from "@material-tailwind/react";
 import { NavLink } from "react-router-dom";
 import { sidebarData } from "./sidebarData";
 import { useSelector } from "react-redux";
@@ -9,7 +9,7 @@ import axios from "../../../api/axios";
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion"
 
-export default function AdminSidebar({ subMenuStatus = false }) {
+export default function AdminSidebar({subMenuStatus = false}) {
     const adminData = useSelector((state) => state.admin.value);
     const token = localStorage.getItem('admtoken');
     const [subMenuOpen, setSubMenuOpen] = useState(subMenuStatus);
@@ -50,7 +50,7 @@ export default function AdminSidebar({ subMenuStatus = false }) {
         <div className="relative w-full lg:max-w-[20rem] px-4 pt-2.5 pb-2 md:px-[5rem]  lg:p-4 shadow-xl shadow-blue-gray-900/5 gap-5 bg-[#4eaf94] border-b border-[#4ba88e] lg:border-none">
             <div className="flex flex-col items-center justify-between lg:justify-center lg:pt-[0.5rem] gap-2 lg:pb-5 lg:border-b border-[#78c3ae]">
                 <div className="flex justify-between lg:justify-start items-center w-full gap-[1rem]">
-                    <Avatar size="xl" src="https://docs.material-tailwind.com/img/team-3.jpg" alt="avatar" className=" h-[2.6rem] w-[2.6rem] lg:h-[3rem] lg:w-[3rem]" />
+                    <Avatar size="xl" src={adminData.profile_picture ? adminData.profile_picture : "https://th.bing.com/th/id/OIP.0CZd1ESLnyWIHdO38nyJDAAAAA?rs=1&pid=ImgDetMain"} alt="avatar" className=" h-[2.6rem] w-[2.6rem] lg:h-[3rem] lg:w-[3rem]" />
                     <div className="flex flex-col justify-center text-white">
                         <span className="font-semibold text-[15px] lg:text-[15px]">{adminData?.name || 'undefined'}</span>
                         <span className="font-normal text-[14px] text-[#e8fcf2] lg:text-[14px]">{adminData?.isSuperAdmin ? <>Super Admin</> : <>Admin</>}</span>

@@ -1,11 +1,12 @@
-import { Button, Chip, IconButton, Typography } from "@material-tailwind/react";
+import { Chip, IconButton, Typography } from "@material-tailwind/react";
 import { useEffect, useState } from "react";
 import ModalEditProduct from "../productManagement/components/modalEditProduct";
 import ModalDelete from "./modalDelete";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/solid";
+import { IoMdAdd } from "react-icons/io";
 import axios from "../../../api/axios";
 
-export default function ProductCard({ productData, handleRefreshTable }) {
+export default function ProductCard({ productData, adminDataRedux, handleRefreshTable }) {
     const [clickedData, setClickedData] = useState([]);
     const [openModalEdit, setOpenEdit] = useState(false); //Modal Edit
     const [openDelete, setDelete] = useState(false); //Modal Delete
@@ -14,10 +15,10 @@ export default function ProductCard({ productData, handleRefreshTable }) {
     const [productImage, setProductImage] = useState();
 
     const getProductImage = async () => {
-        try{
+        try {
             const response = await axios.get(`products/images/${productData?.id}`)
             setProductImage(response.data?.imageProduct.image)
-        }catch(err){
+        } catch (err) {
             console.log(err);
         }
     }
@@ -52,17 +53,21 @@ export default function ProductCard({ productData, handleRefreshTable }) {
                         </Typography>
                     </div>
                     <div className="flex flex-row justify-end gap-1">
-                        <Chip
-                            variant="filled"
-                            size="sm"
-                            value={productData?.isDisabled != false ? "Disabled" : "Enabled"}
-                            color={productData?.isDisabled ? "red" : "green"}
-                        />
+                        {adminDataRedux?.isSuperAdmin === true &&
+                            <>
+                                <Chip
+                                    variant="filled"
+                                    size="sm"
+                                    value={productData?.isDisabled != false ? "Disabled" : "Enabled"}
+                                    color={productData?.isDisabled ? "red" : "green"}
+                                />
+                                <IconButton variant="text" onClick={() => handleDelete(productData)}>
+                                    <TrashIcon className="h-4 w-4" color="red" />
+                                </IconButton>
+                            </>
+                        }
                         <IconButton variant="text" onClick={() => handleEdit(productData)}>
-                            <PencilIcon className="h-4 w-4" />
-                        </IconButton>
-                        <IconButton variant="text" onClick={() => handleDelete(productData)}>
-                            <TrashIcon className="h-4 w-4" color="red" />
+                            {adminDataRedux?.isSuperAdmin === true ? <PencilIcon className="h-4 w-4" /> : <IoMdAdd className="h-5 w-5"/>}
                         </IconButton>
                     </div>
                 </div>
@@ -71,6 +76,7 @@ export default function ProductCard({ productData, handleRefreshTable }) {
                 openModalEdit={openModalEdit}
                 handleEdit={handleEdit}
                 clickedData={clickedData}
+                adminDataRedux={adminDataRedux}
                 handleRefreshTable={handleRefreshTable}
             />
             <ModalDelete

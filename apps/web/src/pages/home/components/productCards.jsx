@@ -9,11 +9,8 @@ import { addToCart } from '../../../redux/cartSlice';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export const ProductCards = () => {
-    const { coordinates, loaded } = useSelector((state) => state.geolocation);
+export const ProductCards = ({ branchData, coordinates }) => {
 
-    // const { coordinates, loaded } = useGeoLocation();
-    const [branchData, setBranchData] = useState(null);
     const customer = useSelector((state) => state.customer.value);
 
     const products = useSelector((state) => state.product.data);
@@ -82,36 +79,6 @@ export const ProductCards = () => {
             setKeenSlider(slider);
         }
     }, []);
-
-    const fetchNearestBranch = async () => {
-        if (loaded) {
-            try {
-                const response = await axios.post(`branches/get-nearest?latitude=${coordinates.lat}&longitude=${coordinates.lng}&limit=1`);
-                // console.log(response.data.result);
-                setBranchData(response.data.result[0])
-            } catch (error) {
-                console.log(error);
-            }
-        }
-    };
-
-    const fetchMainBranch = async () => {
-        try {
-            const response = await axios.get('branches/super-store');
-            setBranchData(response.data.result)
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
-    useEffect(() => {
-        if (coordinates.lat && coordinates.lng) {
-            fetchNearestBranch();
-        } else {
-            fetchMainBranch();
-        }
-
-    }, [coordinates?.lat, coordinates?.lng]);
 
     const handleAddtoCart = (item) => {
         if (Object.keys(customer).length > 0 && customer.isVerified === true) {
