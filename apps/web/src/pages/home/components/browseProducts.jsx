@@ -102,10 +102,10 @@ export const BrowseProducts = () => {
                         <div
                             className="no-scrollbar flex overflow-auto mt-4 mb-3 gap-2"
                         >
-                            {categoryList?.map((item, index) => (
+                            {categoryList?.map((item) => (
                                 <>
                                     <div
-                                        key={index}
+                                        key={item.id}
                                         className="text-gray-700 rounded-full py-[0.4rem] hover:text-white px-4 bg-[#F6F7F8] border border-gray-150 cursor-pointer hover:bg-[#28302A] hover:border-[#28302A] transition ease-in-out delay-100"
                                     >
                                         <span className="whitespace-pre  text-[15px] font-medium ">

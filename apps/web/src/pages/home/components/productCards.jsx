@@ -2,22 +2,22 @@ import 'keen-slider/keen-slider.min.css';
 import KeenSlider from 'keen-slider';
 import { useEffect, useRef, useState } from 'react';
 import stockAvail from '../../../assets/home/stock_avail.svg';
+import stockNonAvail from '../../../assets/home/stock_nonAvail.svg';
 import { convertToIDR, formatDistance } from '../../../functions/functions';
-import axios from '../../../api/axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../../../redux/cartSlice';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Tooltip } from '@material-tailwind/react';
+import PropTypes from 'prop-types';
 
-export const ProductCards = () => {
-    const { coordinates, loaded } = useSelector((state) => state.geolocation);
-
-    // const { coordinates, loaded } = useGeoLocation();
-    const [branchData, setBranchData] = useState(null);
+export const ProductCards = ({ branchData, coordinates }) => {
     const customer = useSelector((state) => state.customer.value);
 
     const products = useSelector((state) => state.product.data);
     const dispatch = useDispatch();
+
+    console.log(products);
 
     const [keenSlider, setKeenSlider] = useState(null);
     const sliderRef = useRef(null);
@@ -83,36 +83,6 @@ export const ProductCards = () => {
         }
     }, []);
 
-    const fetchNearestBranch = async () => {
-        if (loaded) {
-            try {
-                const response = await axios.post(`branches/get-nearest?latitude=${coordinates.lat}&longitude=${coordinates.lng}&limit=1`);
-                // console.log(response.data.result);
-                setBranchData(response.data.result[0])
-            } catch (error) {
-                console.log(error);
-            }
-        }
-    };
-
-    const fetchMainBranch = async () => {
-        try {
-            const response = await axios.get('branches/super-store');
-            setBranchData(response.data.result)
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
-    useEffect(() => {
-        if (coordinates.lat && coordinates.lng) {
-            fetchNearestBranch();
-        } else {
-            fetchMainBranch();
-        }
-
-    }, [coordinates?.lat, coordinates?.lng]);
-
     const handleAddtoCart = (item) => {
         if (Object.keys(customer).length > 0 && customer.isVerified === true) {
             dispatch(addToCart({ id: item.id, quantity: 1, amount: item.price }));
@@ -165,7 +135,33 @@ export const ProductCards = () => {
                                 } flex flex-col text-white`}
                         >
                             <span className="text-[14px] font-normal">Shopping from:</span>
-                            <span className="text-[16px] font-medium">{branchData?.name}</span>
+                            <Tooltip
+                                content={branchData?.address}
+                                placement="bottom"
+                                className="bg-white text-gray-600 border border-blue-gray-50 shadow-xl shadow-black/10 py-[0.4rem] px-[0.6rem]"
+                                animate={{
+                                    mount: { scale: 1, y: 0 },
+                                    unmount: { scale: 0, y: -15 },
+                                }}
+                            >
+                                <div className="flex items-center gap-[0.3rem] cursor-pointer">
+                                    <span className="text-[16px] font-medium">
+                                        {branchData?.name}
+                                    </span>
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        // width="1em"
+                                        // height="1em"
+                                        viewBox="0 0 24 24"
+                                        className="mt-[2.4px] h-[1rem] w-[1rem] fill-[#E1F5EF]"
+                                    >
+                                        <path
+                                            // fill="currentColor"
+                                            d="M11 17h2v-6h-2zm1-8q.425 0 .713-.288T13 8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8q0 .425.288.713T12 9m0 13q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12q0-3.35-2.325-5.675T12 4Q8.65 4 6.325 6.325T4 12q0 3.35 2.325 5.675T12 20m0-8"
+                                        />
+                                    </svg>
+                                </div>
+                            </Tooltip>
                         </div>
                         {coordinates?.lat && (
                             <div className="pulse-effect rounded-full bg-[#E1F5EF] px-4 py-[0.7rem] ml-[0.5rem]">
@@ -183,7 +179,7 @@ export const ProductCards = () => {
                         <div className="pb-[2rem] pt-[1.4rem]">
                             <div className="items-center justify-between sm:flex">
                                 <h2 className="text-[25px] md:text-[28px] font-semibold text-gray-900 tracking-tight">
-                                    Recommended Products
+                                    Best Selling Products
                                 </h2>
 
                                 <div className="flex items-center justify-between gap-5 mt-3 md:mt-0">
@@ -266,11 +262,12 @@ export const ProductCards = () => {
 
                                                     <div className="flex gap-1.5 items-center">
                                                         <img
-                                                            src={stockAvail}
+                                                            src={item.stock === 0 || null ? stockNonAvail : stockAvail}
                                                             alt=""
                                                             className=" h-3 pt-[0.1rem]"
                                                         />
-                                                        <span className="text-[#067627] font-medium text-[13px] md:text-[14px]">
+
+                                                        <span className={`${item.stock === 0 || null ? 'text-gray-500' : 'text-[#067627] '} font-medium text-[13px] md:text-[14px]`}>
                                                             stock:{' '}
                                                             <span className="text-[13px] md:text-[14px]">
                                                                 {item.stock}
@@ -281,7 +278,7 @@ export const ProductCards = () => {
                                                 <button
                                                     disabled={item.stock > 0 ? false : true}
                                                     onClick={() => handleAddtoCart(item)}
-                                                    className={`mt-1 mb-[0.2rem] w-full rounded-full  text-white py-[0.4rem] text-[14px] ${item.stock > 0 ? 'bg-[#00A67C]' : ' bg-gray-600'
+                                                    className={`mt-1 mb-[0.2rem] w-full rounded-full  text-white py-[0.4rem] text-[14px] ${item.stock > 0 ? 'bg-[#00A67C]' : ' bg-gray-500'
                                                         }`}
                                                 >
                                                     {item.stock > 0 ? 'Add to Cart' : 'Out of Stock'}
@@ -298,3 +295,13 @@ export const ProductCards = () => {
         </>
     );
 };
+
+ProductCards.propTypes = {
+    coordinates: PropTypes.number.isRequired,
+    branchData: PropTypes.shape({
+        address: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
+        id: PropTypes.number.isRequired,
+        distance: PropTypes.number.isRequired,
+    })
+}

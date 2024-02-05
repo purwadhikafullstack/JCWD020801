@@ -27,10 +27,9 @@ export const UserRegister = () => {
     const handleGoogleRegister = async () => {
         try {
             const userData = await registerWithGoogle();
-            console.log(userData);
+            // console.log(userData);
 
             const response = await axios.post('customer/register-google', { googleUserData: userData })
-            console.log(response.data);
             localStorage.setItem('token', response.data.token)
             dispatch(setData(response.data.result))
             toast.success(
@@ -56,11 +55,18 @@ export const UserRegister = () => {
             setIsLoading(true);
             await axios.post('http://localhost:8000/api/customer/register', values);
             setIsLoading(false)
+            console.log(values);
             setModalOpen(true)
         } catch (error) {
             console.log(error);
             setIsLoading(false)
-            setModalErrorOpen(true)
+            if (error.response.data.message === "Email is already registered") {
+                setModalErrorOpen(true)
+            } else {
+                toast.error(error.response.data.message, {
+                    position: "top-center",
+                })
+            }
         }
     }
 
@@ -74,7 +80,8 @@ export const UserRegister = () => {
         initialValues: {
             firstname: "",
             lastname: "",
-            email: ""
+            email: "",
+            referral_code: ""
         },
         validationSchema: userRegisterSchema,
         onSubmit: (values) => {
@@ -191,7 +198,9 @@ export const UserRegister = () => {
                                                     <label className="relative block rounded-full border border-[#D4D4D5] focus-within:border-[#4ECCA3] focus-within:outline-1 focus-within:outline-[#4ECCA3] focus-within:outline">
                                                         <input
                                                             type="text"
-                                                            name="username"
+                                                            name="referral_code"
+                                                            value={formik.values.referral_code}
+                                                            onChange={formik.handleChange}
                                                             className="peer w-full border-none bg-transparent px-4 py-2 placeholder-transparent focus:border-transparent focus:outline-none focus:ring-0"
                                                             placeholder="Event Title"
                                                             autoComplete="off"
@@ -226,55 +235,6 @@ export const UserRegister = () => {
                                 </p>
                                 <hr className="mt-[0.2rem] h-px w-full border-0 bg-gray-300"></hr>
                             </div>
-                            {/* <div className="flex items-center justify-center gap-5">
-                                <motion.div
-                                    onClick={handleGoogleRegister}
-                                    className="flex h-12 cursor-pointer gap-3 rounded-full bg-[#f0f0f0] p-3 hover:bg-[#e6e6e6]"
-                                    onHoverStart={() => setSocialHover1(true)}
-                                    onHoverEnd={() => setSocialHover1(false)}
-                                    initial={{ opacity: 1, x: 0 }}
-                                    animate={{ opacity: 1, x: socialHover1 ? 10 : 0 }}
-                                    transition={{ duration: 0.3 }}
-                                >
-                                    <img src={googleIcon} alt="" className=""></img>
-                                    <AnimatePresence>
-                                        {socialHover1 && (
-                                            <motion.span
-                                                initial={{ opacity: 0, x: -50 }}
-                                                animate={{ opacity: 1, x: 0 }}
-                                                exit={{ opacity: 0, x: -50 }}
-                                                transition={{ duration: 0.3 }}
-                                                className="mr-0 whitespace-nowrap text-[14px] font-semibold text-gray-600 md:mr-1.5"
-                                            >
-                                                Register with Google
-                                            </motion.span>
-                                        )}
-                                    </AnimatePresence>
-                                </motion.div>
-                                <motion.div
-                                    className="flex h-12 cursor-pointer gap-3 rounded-full bg-[#1977F3] p-3"
-                                    onHoverStart={() => setSocialHover2(true)}
-                                    onHoverEnd={() => setSocialHover2(false)}
-                                    initial={{ opacity: 1, x: 0 }}
-                                    animate={{ opacity: 1, x: socialHover1 ? 10 : 0 }}
-                                    transition={{ duration: 0.3 }}
-                                >
-                                    <img src={facebookIcon} alt="" className=""></img>
-                                    <AnimatePresence>
-                                        {socialHover2 && (
-                                            <motion.span
-                                                initial={{ opacity: 0, x: -50 }}
-                                                animate={{ opacity: 1, x: 0 }}
-                                                exit={{ opacity: 0, x: -50 }}
-                                                transition={{ duration: 0.3 }}
-                                                className="mr-0 whitespace-nowrap text-[14px] font-semibold text-white md:mr-1.5"
-                                            >
-                                                Register with Facebook
-                                            </motion.span>
-                                        )}
-                                    </AnimatePresence>
-                                </motion.div>
-                            </div> */}
                             <button
                                 onClick={handleGoogleRegister}
                                 className="w-full flex justify-center items-center h-[46px] gap-2.5 bg-[#f0f0f0] rounded-full hover:bg-[#e6e6e6]">

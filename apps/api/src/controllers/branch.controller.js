@@ -226,7 +226,8 @@ export const getNearestBranch = async (req, res) => {
                 ]
             ],
             where: {
-                isActive: true
+                isActive: true,
+                isDeleted: false
             },
             order: [
                 [

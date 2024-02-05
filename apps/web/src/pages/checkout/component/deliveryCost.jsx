@@ -22,7 +22,7 @@ export const DeliveryCost = ({ deliveryAddress, finalDistance }) => {
         setSelectedCourier(value);
     };
 
-    console.log(deliveryAddress?.maxDeliveryDistance);
+    // console.log(deliveryAddress?.maxDeliveryDistance);
 
     const calculateShippingCost = async () => {
         try {
@@ -69,7 +69,7 @@ export const DeliveryCost = ({ deliveryAddress, finalDistance }) => {
                         <div className="w-full md:w-max">
                             <Select
                                 color="teal"
-                                // variant="standard"
+                                variant="standard"
                                 label="Select Courier"
                                 id="courier"
                                 onChange={(value) => handleCourierChange(value)}
@@ -80,11 +80,8 @@ export const DeliveryCost = ({ deliveryAddress, finalDistance }) => {
                             </Select>
                         </div>
                         <div className="flex flex-col gap-1.5 order-first md:order-last mb-[12px] md:mb-0">
-                            <div className="flex gap-2 text-[14px] text-[#989D9E] font-[450] md:place-self-end">
-                                <FiPackage size={16} className="text-[#989D9E] place-self-start mt-[2.5px]" />
-                                <span className=" ">Shipped from Bandung</span>
-                            </div>
                             <div className="flex items-center text-[14px] text-[#989D9E] font-[450]">
+                                <FiPackage size={16} className="text-[#989D9E] place-self-start mt-[3px] mr-[0.42rem]" />
                                 <span className=" ">Weight: {formatWeight(dummyWeight)}</span>
                                 <span className="text-gray-400 text-[10px] px-1 ">•</span>
                                 <span className=" ">Distance: {finalDistance.toFixed(1)} km</span>

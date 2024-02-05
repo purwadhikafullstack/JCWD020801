@@ -117,7 +117,7 @@ export const ProductCatalogue = () => {
     return (
         <>
             <Navbar />
-            <section className="mx-[16px] md:mx-[32px] lg:mx-[100px]">
+            <section className="mx-[16px] md:mx-[32px] lg:mx-[80px] xl:mx-[100px]">
                 <section className="flex flex-col lg:flex-row lg:gap-[1rem] mb-10">
                     {/* Left Side */}
                     <div className="">
@@ -188,7 +188,7 @@ export const ProductCatalogue = () => {
                                     onClick={() => setIsCategoryOpen(!isCategoryOpen)}
                                     className="flex justify-between items-center pt-3 lg:border-t lg:border-[#e4e4e4] cursor-pointer lg:cursor-default"
                                 >
-                                    <h4 className="font-semibold lg:underline underline-offset-2 mx-[0.8rem]">
+                                    <h4 className="font-medium lg:underline underline-offset-2 mx-[0.8rem]">
                                         All Category
                                     </h4>
                                     <div className="lg:hidden">
@@ -199,7 +199,7 @@ export const ProductCatalogue = () => {
                                             viewBox="0 0 24 24"
                                         >
                                             <path
-                                                fill="#bbc0c5"
+                                                fill="#949494"
                                                 d="M9 5a1 1 0 1 0 0 2a1 1 0 0 0 0-2M6.17 5a3.001 3.001 0 0 1 5.66 0H19a1 1 0 1 1 0 2h-7.17a3.001 3.001 0 0 1-5.66 0H5a1 1 0 0 1 0-2zM15 11a1 1 0 1 0 0 2a1 1 0 0 0 0-2m-2.83 0a3.001 3.001 0 0 1 5.66 0H19a1 1 0 1 1 0 2h-1.17a3.001 3.001 0 0 1-5.66 0H5a1 1 0 1 1 0-2zM9 17a1 1 0 1 0 0 2a1 1 0 0 0 0-2m-2.83 0a3.001 3.001 0 0 1 5.66 0H19a1 1 0 1 1 0 2h-7.17a3.001 3.001 0 0 1-5.66 0H5a1 1 0 1 1 0-2z"
                                             />
                                         </svg>

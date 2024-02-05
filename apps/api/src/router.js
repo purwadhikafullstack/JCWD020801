@@ -9,6 +9,7 @@ import { branchRouter } from './routers/branch.router';
 import { provinceRouter } from './routers/province.router';
 import { cityRouter } from './routers/city.router';
 import { shippingCostRouter } from './routers/shippingcost.router';
+import { voucherRouter } from './routers/voucher.router';
 
 const router = Router();
 
@@ -26,6 +27,7 @@ router.use('/branches', branchRouter)
 router.use('/provinces', provinceRouter)
 router.use('/cities', cityRouter)
 router.use('/shipping', shippingCostRouter)
+router.use('/vouchers', voucherRouter)
 
 // add another router here ...
 

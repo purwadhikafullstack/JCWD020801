@@ -81,7 +81,7 @@ export const Footer = () => {
                                     Home
                                 </Link>
                                 <Link to={'/catalogue'} onClick={() => window.scrollTo(0, 0)} className="cursor-pointer  hover:underline hover:underline-offset-2">
-                                    Product Catalogue
+                                    Catalogue
                                 </Link>
                             </div>
                         </div>

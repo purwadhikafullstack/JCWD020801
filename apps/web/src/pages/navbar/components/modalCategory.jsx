@@ -1,13 +1,11 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import PropTypes from 'prop-types';
 
-export const ModalCategory = ({ isOpenCategory, categoryList, onHoverStart, onHoverEnd }) => {
+export const ModalCategory = ({ isOpenCategory, categoryList }) => {
     return (
         <AnimatePresence>
             {isOpenCategory && (
                 <motion.div
-                    onHoverStart={onHoverStart}
-                    onHoverEnd={onHoverEnd}
                     initial={{ opacity: 0, y: -50 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -50 }}
@@ -35,6 +33,4 @@ export const ModalCategory = ({ isOpenCategory, categoryList, onHoverStart, onHo
 ModalCategory.propTypes = {
     isOpenCategory: PropTypes.bool.isRequired,
     categoryList: PropTypes.array.isRequired,
-    onHoverStart: PropTypes.func.isRequired,
-    onHoverEnd: PropTypes.func.isRequired,
 };

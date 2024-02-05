@@ -51,7 +51,7 @@ export const ProductCatalogueData = () => {
     return (
         <>
             {/* Card Grid */}
-            <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 md:gap-3">
+            <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 md:gap-[0.6rem]">
                 {cardsData.map((item, index) => (
                     <div className="cursor-pointer col-span-1" key={index}>
                         <div className="flex h-full flex-col justify-between bg-white p-2 border border-[#D1D5D8] rounded-xl gap-3 hover:border-[#00A67C] transition delay-75 ease-in-out">
@@ -59,7 +59,7 @@ export const ProductCatalogueData = () => {
                                 <img
                                     src={item.img}
                                     alt=""
-                                    className="rounded-lg h-[140px] md:h-[145px] xl:h-[180px] w-full object-cover"
+                                    className="rounded-lg h-[8.75rem] md:h-[11.5rem] lg:h-[9rem] xl:h-[10rem] w-full object-cover"
                                 />
                             </div>
                             <div className="px-1.5 flex flex-col gap-1">

@@ -107,7 +107,7 @@ export const DiscountedProducts = () => {
                     '(min-width: 1280px)': {
                         slides: {
                             origin: 'auto',
-                            perView: 4.25,
+                            perView: 4.5,
                             spacing: 15,
                         },
                     },

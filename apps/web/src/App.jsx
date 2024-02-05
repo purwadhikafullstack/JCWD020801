@@ -23,7 +23,6 @@ import { UserRegister } from './pages/userRegister';
 import { AccountVerification } from './pages/accountVerification';
 import { UserResetPassword } from './pages/userResetPassword';
 import { UserUpdateEmail } from './pages/userUpdateEmail';
-// import { setData } from './redux/customercustomerSliceSlice';
 import { setData } from './redux/customerSlice'
 import AdminRequired from './components/adminRequired';
 import { StoreManagement } from './pages/admin/storeManagement';
@@ -34,6 +33,8 @@ import { ProductCatalogue } from './pages/productCatalogue';
 import { useGeoLocation } from './hooks/useGeoLocation';
 import AdminErrorPage from './pages/admin/components/adminErrorPage';
 import { ProductDetail } from './pages/productDetail';
+import { About } from './pages/about';
+import { Admin404 } from './pages/404admin';
 
 const router = createBrowserRouter([
   //Untuk yang tidak butuh token
@@ -49,7 +50,9 @@ const router = createBrowserRouter([
   { path: "/user-update-email/:token", element: <UserUpdateEmail /> },
   { path: "/store-locator", element: <StoreLocator /> },
   { path: "/catalogue", element: <ProductCatalogue /> },
+  { path: "/about", element: <About /> },
   { path: "/product-detail", element: <ProductDetail /> },
+  { path: "/404-admin", element: <Admin404 /> },
   {
     element: <Required />,
     children: [

@@ -166,8 +166,6 @@ export const Navbar = () => {
               <ModalCategory
                 isOpenCategory={isOpenCategory}
                 categoryList={categoryList}
-                onHoverStart={() => setIsOpenCategory(true)}
-                onHoverEnd={() => setIsOpenCategory(false)}
               />
               <img src={categoryIcon}></img>
               <div
