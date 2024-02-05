@@ -1,12 +1,12 @@
 import { Dialog, DialogBody } from "@material-tailwind/react"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PropTypes from 'prop-types';
 import { SyncLoader } from 'react-spinners';
 import axios from '../../../api/axios'
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import avaDummy from '../../../assets/userDashboard/ava-dummy.png';
-import { updateProfilePicture } from "../../../redux/customerSlice";
+import { updateProfilePicture } from "../../../redux/customerSlice"
 
 export const ModalUpdateImage = ({ modalImgOpen, setModalImgOpen }) => {
     const customer = useSelector((state) => state.customer.value);
@@ -67,7 +67,9 @@ export const ModalUpdateImage = ({ modalImgOpen, setModalImgOpen }) => {
                         },
                     },
                 );
+
                 dispatch(updateProfilePicture(response.data.profile_picture));
+
                 toast.success('Profile picture updated!', {
                     position: 'top-center',
                 });
@@ -77,6 +79,7 @@ export const ModalUpdateImage = ({ modalImgOpen, setModalImgOpen }) => {
                 setIsLoading(false)
                 console.log('Error uploading file', error);
             }
+
         } else {
             toast.error('You need to select a file', {
                 position: 'top-center',

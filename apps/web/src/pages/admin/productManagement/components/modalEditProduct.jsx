@@ -100,7 +100,7 @@ export default function ModalEditProduct({ openModalEdit, handleEdit, clickedDat
                 setSubCategoryData(response2.data.result)
             }
             if (adminDataRedux?.isSuperAdmin === true) {
-                const response_branch = await axios.get(`/branches/`, {
+                const response_branch = await axios.get(`/branches/all`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     },

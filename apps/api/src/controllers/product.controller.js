@@ -7,6 +7,8 @@ import Branch from '../models/branch.model'
 import { Op } from "sequelize";
 import StockHistory from '../models/stockhistory.model';
 import moment from 'moment'
+import Discount from '../models/discount.model';
+import Admin from '../models/admin.model';
 require("dotenv").config();
 
 export const addProduct = async (req, res) => {
@@ -76,7 +78,7 @@ export const addProduct = async (req, res) => {
 export const getAllProducts = async (req, res) => {
     try {
         const { page, sortBy, sortOrder = 'asc', search = '', category } = req.query;
-        
+
         const limit = 6;
         const offset = (page - 1) * limit;
         let whereCondition = {
@@ -273,12 +275,19 @@ export const getProductImages = async (req, res) => {
 
 export const getAllBranchProduct = async (req, res) => {
     try {
-        const { page, sortBy, sortOrder = 'asc', search = '', admid } = req.query;
+        const {cond, page, sortBy, sortOrder = 'asc', search = '', admid } = req.query;
+        
         const limit = 6;
         const offset = (page - 1) * limit;
 
+        const findAdmin = await Admin.findOne({
+            where: {
+                id: admid
+            }
+        })
+
         let whereCondition = {};
-        if (admid && admid !== '1') {
+        if (admid && findAdmin.isSuperAdmin === false) {
             const findBranches = await Branch.findAll({
                 where: {
                     AdminId: admid
@@ -300,6 +309,29 @@ export const getAllBranchProduct = async (req, res) => {
                     }
                 }
             };
+        }
+
+        if(cond && cond === 'disc'){
+            const allBranchProducts = await ProductBranch.findAndCountAll({
+                include: [
+                    {
+                        model: Product,
+                    },
+                    {
+                        model: Branch
+                    },
+                    {
+                        model: Discount
+                    }
+                ],
+                where:{
+                    [Op.and]: [
+                        whereCondition,
+                        { '$Discounts.id$': null }
+                    ]
+                } 
+            })
+            return res.status(200).send({ result: allBranchProducts})
         }
 
         const allBranchProducts = await ProductBranch.findAndCountAll({
@@ -326,15 +358,25 @@ export const getAllBranchProduct = async (req, res) => {
 
 export const getAllBranchProductCustomer = async (req, res) => {
     try {
-        const { page, sortBy, sortOrder = 'asc', search = '', branch_id} = req.query;
+        const { page, sortBy, sortOrder = 'asc', search = '', branch_id, category_id } = req.query;
+
         const limit = 6;
         const offset = (page - 1) * limit;
 
         let whereCondition = {
-            BranchId: branch_id
+            BranchId: branch_id,
+            '$Product.isDeleted$': false,
+            '$Product.isDisabled$': false
         };
 
-        if (search) {
+        if (category_id && category_id != 0) {
+            whereCondition = {
+                ...whereCondition,
+                '$Product.CategoryId$': category_id
+            }
+        }
+
+        if (search || search != undefined) {
             whereCondition = {
                 ...whereCondition,
                 [Op.and]: {
@@ -349,6 +391,21 @@ export const getAllBranchProductCustomer = async (req, res) => {
             include: [
                 {
                     model: Product,
+                    where: {
+                        isDeleted: false,
+                        isDisabled: false
+                    },
+                    include: [
+                        {
+                            model: Category
+                        },
+                        {
+                            model: SubCategory
+                        }
+                    ]
+                },
+                {
+                    model: Discount
                 },
                 {
                     model: Branch
@@ -360,7 +417,93 @@ export const getAllBranchProductCustomer = async (req, res) => {
             offset: parseInt(offset),
         })
         const totalPages = Math.ceil(allBranchProducts.count / limit);
+
+        allBranchProducts.rows.forEach(productBranch => {
+            let discounted_price = 0;
+            let percentage = '';
+            if (productBranch.Discounts.length > 0) {
+                if (productBranch.Discounts[0].value === 'percentage') {
+                    discounted_price = productBranch.Product.price - (productBranch.Product.price * productBranch.Discounts[0].amount)
+                    percentage = (productBranch.Discounts[0].amount * 100).toString() + '%';
+                } else {
+                    discounted_price = productBranch.Product.price - productBranch.Discounts[0].amount
+                    percentage = ((productBranch.Discounts[0].amount / productBranch.Product.price) * 100).toString() + '%'
+                }
+                productBranch.dataValues.hasDiscount = true;
+            }
+
+            productBranch.dataValues.discounted_price = discounted_price
+            productBranch.dataValues.original_price = productBranch.Product.price;
+            productBranch.dataValues.percentage = percentage
+        });
+
         return res.status(200).send({ result: allBranchProducts, page, totalPages })
+    } catch (error) {
+        console.error(error)
+        return res.status(500).send({ message: error.message })
+    }
+}
+
+export const getProductBranchById = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const branch_id = req.params.branch_id
+
+        const findBranchProduct = await ProductBranch.findOne({
+            where: {
+                ProductId: id,
+                BranchId: branch_id
+            },
+            include: [
+                {
+                    model: Product,
+                    include: [
+                        {
+                            model: Category,
+                            attributes: ['name']
+                        },
+                        {
+                            model: SubCategory,
+                            attributes: ['name']
+                        }
+                    ]
+                },
+                {
+                    model: Discount
+                }
+            ]
+        })
+
+        if (!findBranchProduct) {
+            return res.status(404).send({ message: 'Product not found' })
+        }
+        
+
+        let discounted_price = 0;
+        let percentage;
+        if (findBranchProduct.Discounts.length > 0) {
+            if (findBranchProduct.Discounts[0].type === 'regular' || findBranchProduct.Discounts[0].type === 'minimum_purchase') {
+                if (findBranchProduct.Discounts[0].value === 'percentage') {
+                    discounted_price = findBranchProduct.Product.price - (findBranchProduct.Product.price * findBranchProduct.Discounts[0].amount)
+                    percentage = (findBranchProduct.Discounts[0].amount * 100).toString() + '%';
+                } else {
+                    discounted_price = findBranchProduct.Product.price - findBranchProduct.Discounts[0].amount
+                    percentage = Math.round((findBranchProduct.Discounts[0].amount / findBranchProduct.Product.price) * 100).toString() + '%'
+                }
+                findBranchProduct.dataValues.percentage = percentage
+                findBranchProduct.dataValues.discounted_price = discounted_price
+                findBranchProduct.dataValues.original_price = findBranchProduct.Product.price;
+            }else if(findBranchProduct.Discount[0].type === 'buy1get1'){
+                findBranchProduct.dataValues.discounted_price = discounted_price
+                findBranchProduct.dataValues.original_price = findBranchProduct.Product.price;
+            }
+            findBranchProduct.dataValues.hasDiscount = true;
+        }else{
+            findBranchProduct.dataValues.discounted_price = discounted_price
+                findBranchProduct.dataValues.original_price = findBranchProduct.Product.price;
+        }
+
+        return res.status(200).send({ result: findBranchProduct })
     } catch (error) {
         console.error(error)
         return res.status(500).send({ message: error.message })
@@ -381,15 +524,11 @@ export const updateStockBranchProduct = async (req, res) => {
             return res.status(404).send({ message: "Product not found" })
         }
 
-        if(findBranchProduct.stock === stock_input){
-            return res.status(404).send({ message: "The entered quantity matches the current stock level." })
-        }
-
         let final_stock = 0;
-        if(operation === 'add'){
+        if (operation === 'add') {
             final_stock = findBranchProduct.stock + stock_input;
-        }else if(operation === 'subtract'){
-            final_stock = findBranchProduct.stock - stock_input; 
+        } else if (operation === 'subtract') {
+            final_stock = findBranchProduct.stock - stock_input;
         }
 
         const findStockHistory = await StockHistory.findOne({

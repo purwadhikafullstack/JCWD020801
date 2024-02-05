@@ -23,7 +23,8 @@ import { UserRegister } from './pages/userRegister';
 import { AccountVerification } from './pages/accountVerification';
 import { UserResetPassword } from './pages/userResetPassword';
 import { UserUpdateEmail } from './pages/userUpdateEmail';
-import { setData } from './redux/customerSlice';
+// import { setData } from './redux/customercustomerSliceSlice';
+import { setData } from './redux/customerSlice'
 import AdminRequired from './components/adminRequired';
 import { StoreManagement } from './pages/admin/storeManagement';
 import { StoreBranchDetail } from './pages/admin/storeManagement/storeBranchDetail';
@@ -32,7 +33,9 @@ import { CheckoutPage } from './pages/checkout';
 import { ProductCatalogue } from './pages/productCatalogue';
 import AdminErrorPage from './pages/admin/components/adminErrorPage';
 import StockManagement from './pages/admin/stockManagement';
-import StockReportProduct from './pages/admin/reports/stockReport/stockReportProduct';
+import { useGeoLocation } from './hooks/useGeoLocation';
+import { ProductDetail } from './pages/productDetail';
+import DiscountManagement from './pages/admin/discountManagement';
 
 const router = createBrowserRouter([
   { path: "/", element: <Home /> },
@@ -49,7 +52,8 @@ const router = createBrowserRouter([
   { path: "/user-reset-password/:token", element: <UserResetPassword /> },
   { path: "/user-update-email/:token", element: <UserUpdateEmail /> },
   { path: "/store-locator", element: <StoreLocator /> },
-  { path: "/catalogue", element: <ProductCatalogue /> },
+  { path: "/catalogue/:category_id?/:search?", element: <ProductCatalogue /> },
+  { path: "/product-detail/:id?/:branch_id?", element: <ProductDetail /> },
   {
     element: <Required />,
     children: [
@@ -72,7 +76,7 @@ const router = createBrowserRouter([
       { path: "/store-management", element: <StoreManagement /> },
       { path: "/store-management/:id", element: <StoreBranchDetail /> },
       { path: "/stock-management", element: <StockManagement/> },
-      { path: "/stock-report/:id", element: <StockReportProduct/> },
+      { path: "/discount-management", element: <DiscountManagement/> },
     ]
   }
 ]);
@@ -83,6 +87,8 @@ function App() {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true);
+
+  useGeoLocation();
 
   const keepLoginAdmin = async () => {
     try {

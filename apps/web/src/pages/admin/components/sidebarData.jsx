@@ -54,7 +54,7 @@ export const sidebarData = [
     },
     {
         title: "Discount Management",
-        path: "/",
+        path: "/discount-management",
         icon: <MdOutlineDiscount className="h-5 w-5" />,
         admin: true
     },

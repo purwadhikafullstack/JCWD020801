@@ -27,6 +27,10 @@ export const handleSortBy = (columnName, setSortBy, orderChange, setSortOrder, s
             setSortBy('ProductId')
         }else if(columnName === 'Branch'){
             setSortBy('BranchId')
+        }else if(columnName === 'Min. Purchase'){
+            setSortBy('min_purchase_amount')
+        }else if(columnName === 'Max. Discount'){
+            setSortBy('max_discount')
         }else{
             setSortBy(columnName);
         }

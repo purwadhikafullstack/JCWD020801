@@ -15,12 +15,11 @@ import { useSelector } from "react-redux";
 export default function CategoryTable({ tabValueFromChild, handleDelete, handleEdit, categoryData, currentPage, handlePageChange, totalPages, handleSortBy }) {
     const TABLE_HEAD = ["ID", "Name", "CreatedAt", "UpdatedAt", "Actions"]
     const adminDataRedux = useSelector((state) => state.admin.value);
-    console.log("WWWKK", categoryData);
 
     return (
         <div className="w-screen md:w-5/6">
             <Card className="h-full w-full">
-                <CardBody className="px-0 py-0">
+                <CardBody className="overflow-auto px-0 py-0">
                     <table className="mt-4 w-full min-w-max table-auto text-left">
                         <thead>
                             <tr>

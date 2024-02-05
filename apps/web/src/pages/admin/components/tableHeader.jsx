@@ -28,6 +28,17 @@ const TABS = [
     },
 ];
 
+const TABS_DISCOUNT_VOUCHER = [
+    {
+        label: "Discount",
+        value: 0,
+    },
+    {
+        label: "Voucher",
+        value: 1,
+    },
+];
+
 export function TableHeader({
     title,
     description,
@@ -87,6 +98,17 @@ export function TableHeader({
                             <Tabs value={0} className="w-96">
                                 <TabsHeader className="bg-[#cae7df]">
                                     {TABS.map(({ label, value }) => (
+                                        <Tab key={value} value={value} onClick={() => handleTabChange(value)}>
+                                            &nbsp;&nbsp;{label}&nbsp;&nbsp;
+                                        </Tab>
+                                    ))}
+                                </TabsHeader>
+                            </Tabs>
+                        }
+                        {(addButtonText === 'discount' || addButtonText === 'voucher') &&
+                            <Tabs value={0} className="w-96">
+                                <TabsHeader className="bg-[#cae7df]">
+                                    {TABS_DISCOUNT_VOUCHER.map(({ label, value }) => (
                                         <Tab key={value} value={value} onClick={() => handleTabChange(value)}>
                                             &nbsp;&nbsp;{label}&nbsp;&nbsp;
                                         </Tab>

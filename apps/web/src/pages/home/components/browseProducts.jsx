@@ -1,8 +1,10 @@
 import { convertToIDR } from "../../../functions/functions";
 import stockAvail from '../../../assets/home/stock_avail.svg'
 import { toast } from "react-toastify";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion"
+import { useNavigate } from 'react-router-dom'
+import axios from "../../../api/axios";
 
 // const categoryList = [
 //     {
@@ -97,8 +99,13 @@ const filterItems = [
     { title: "Name: Z - A" },
 ]
 
-export const BrowseProducts = ({categoryList}) => {
+export const BrowseProducts = ({ categoryList, product, setCategoryId, branchId }) => {
     const [isFilterOpen, setIsFilterOpen] = useState(false)
+    const [productImage, setProductImage] = useState();
+    const [contoh, setContoh] = useState([])
+    console.log(contoh);
+
+    const navigate = useNavigate();
 
     const addToCart = () => {
         toast.error(
@@ -112,6 +119,24 @@ export const BrowseProducts = ({categoryList}) => {
         );
     };
 
+    const getProductImages = async () => {
+        try {
+            const imagePromises = product.map(async (prod) => {
+                const response = await axios.get(`products/images/${prod?.Product?.id}`);
+                return response.data.imageProduct;
+            });
+            const images = await Promise.all(imagePromises);
+            setProductImage(images);
+        } catch (err) {
+            console.error(err)
+        }
+    }
+
+    useEffect(() => {
+        getProductImages();
+        setContoh(product)
+    }, [product])
+
     return (
         <>
             <div className="my-[16px] mx-[16px] md:mx-[32px] lg:mx-[160px] my-[2rem]">
@@ -123,13 +148,16 @@ export const BrowseProducts = ({categoryList}) => {
                         <div>{/* view all */}</div>
                     </div>
                     {/* Category */}
-                    <section className="relative group">
-                        <div className="no-scrollbar flex overflow-auto mt-4 mb-3 gap-2.5">
+                    <div className="relative group">
+                        <div
+                            className="no-scrollbar flex overflow-auto mt-4 mb-3 gap-2"
+                        >
                             {categoryList?.map((item, index) => (
                                 <>
                                     <div
                                         key={index}
                                         className="text-gray-700 rounded-full py-[0.4rem] hover:text-white px-4 bg-[#F6F7F8] border border-gray-150 cursor-pointer hover:bg-[#28302A] hover:border-[#28302A] transition ease-in-out delay-100"
+                                        onClick={() => setCategoryId(item.id)}
                                     >
                                         <span className="whitespace-pre  text-[15px] font-medium ">
                                             {item.name}
@@ -138,8 +166,11 @@ export const BrowseProducts = ({categoryList}) => {
                                 </>
                             ))}
                         </div>
+                        {/* Button slider */}
                         <div className="absolute -left-7 top-0 hidden group-hover:block ">
-                            <div className="bg-white rounded-full p-2 border border-gray-300 shadow-md">
+                            <div
+                                className="bg-white rounded-full p-2 border border-gray-300 shadow-md"
+                            >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     fill="none"
@@ -157,7 +188,8 @@ export const BrowseProducts = ({categoryList}) => {
                             </div>
                         </div>
                         <div className="absolute -right-7 top-0 hidden group-hover:block ">
-                            <div className="bg-white rounded-full p-2 border border-gray-300 shadow-md">
+                            <div
+                                className="bg-white rounded-full p-2 border border-gray-300 shadow-md">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     fill="none"
@@ -174,7 +206,7 @@ export const BrowseProducts = ({categoryList}) => {
                                 </svg>
                             </div>
                         </div>
-                    </section>
+                    </div>
                     {/* Filter & Sort */}
                     <section className="w-full flex justify-between mb-4">
                         <div className="relative ml-auto">
@@ -240,12 +272,12 @@ export const BrowseProducts = ({categoryList}) => {
                     </section>
                     {/* Card Grid */}
                     <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 md:gap-3">
-                        {cardsData.map((item, index) => (
-                            <div className="cursor-pointer col-span-1" key={index}>
+                        {product.map((item, index) => (
+                            <div onClick={() => navigate(`/product-detail/${item.Product?.id}/${branchId}`)} className="cursor-pointer col-span-1" key={index}>
                                 <div className="flex h-full flex-col justify-between bg-white p-2 border border-[#D1D5D8] rounded-xl gap-3 hover:border-[#00A67C] transition delay-75 ease-in-out">
                                     <div>
                                         <img
-                                            src={item.img}
+                                            src={productImage[index]?.image ? productImage[index]?.image : 'https://www.pngkey.com/png/detail/233-2332677_ega-png.png'}
                                             alt=""
                                             className="rounded-lg h-[140px] md:h-[145px] xl:h-[180px] w-full object-cover"
                                         />
@@ -253,12 +285,23 @@ export const BrowseProducts = ({categoryList}) => {
                                     <div className="px-1.5 flex flex-col gap-2">
                                         <div className="flex gap-1">
                                             <span className="font-bold text-[13px]">Rp</span>
-                                            <p className="text-[16px] md:text-[18px] font-bold text-rose-600 tracking-tight">
-                                                {convertToIDR(item.price)}
-                                            </p>
+                                            {item?.hasDiscount ?
+                                                <p className="text-[16px] md:text-[18px] font-bold text-rose-600 tracking-tight">
+                                                    {convertToIDR(item?.discounted_price)}
+                                                </p>
+                                                :
+                                                <p className="text-[16px] md:text-[18px] font-bold text-rose-600 tracking-tight">
+                                                    {convertToIDR(item.original_price)}
+                                                </p>
+                                            }
+                                            {item?.hasDiscount &&
+                                                <div className="font-semibold text-[#757575] text-[15px] line-through">
+                                                    Rp {item?.original_price}
+                                                </div>
+                                            }
                                         </div>
                                         <p className="leading-relaxed text-gray-700 text-[14px] md:text-[15px] line-clamp-2">
-                                            {item.desc}
+                                            {item.Product?.description}
                                         </p>
 
                                         <div className="flex gap-1.5 items-center">

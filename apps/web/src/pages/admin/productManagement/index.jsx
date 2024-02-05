@@ -71,7 +71,7 @@ export default function ProductManagement() {
     }, [currentPage, debouncedSearchValue, sortOrder, sortBy, filterByCategory, refreshTable])
 
     return (
-        <div className="flex flex-row">
+        <div className="flex flex-col lg:flex-row">
             <AdminSidebar subMenuStatus={true} />
             <div className="flex flex-col p-5 gap-3 bg-[#edf7f4] w-full items-center">
                 <TableHeader
@@ -85,7 +85,7 @@ export default function ProductManagement() {
                     searchValue={searchValue}
                     setSearchValue={setSearchValue}
                     handleFilterByCategory={handleFilterByCategory} />
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 p-9 items-center">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 p-2 md:p-9 items-center">
                     {productData?.map((item, index) => (
                         !item.isDeleted && (
                             <ProductCard

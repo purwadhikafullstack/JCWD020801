@@ -47,7 +47,7 @@ export default function ModalAddProduct({ openModalAdd, handleOpenAdd, handleRef
                 })
                 setSubCategoryData(response2.data.result)
             }
-            const response_branch = await axios.get(`/branches/`, {
+            const response_branch = await axios.get(`/branches/all`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },

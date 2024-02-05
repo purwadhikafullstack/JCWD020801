@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import { SyncLoader } from 'react-spinners';
 import { useState } from 'react';
 
-export const ModalAddressDelete = ({ modalDeleteOpen, setModalDeleteOpen, item, fetchUserAddressData }) => {
+export const ModalAddressDelete = ({ modalDeleteOpen, setModalDeleteOpen, item, fetchUserAddressData, currentPage }) => {
     const token = localStorage.getItem('token');
     const [isLoading, setIsLoading] = useState(false);
 
@@ -21,7 +21,7 @@ export const ModalAddressDelete = ({ modalDeleteOpen, setModalDeleteOpen, item, 
                 },
             );
 
-            fetchUserAddressData()
+            fetchUserAddressData(currentPage)
 
             toast.success('Success deleting address from your addresss list', {
                 position: 'top-center',
@@ -99,6 +99,7 @@ ModalAddressDelete.propTypes = {
     modalDeleteOpen: PropTypes.bool.isRequired,
     setModalDeleteOpen: PropTypes.func.isRequired,
     fetchUserAddressData: PropTypes.func.isRequired,
+    currentPage: PropTypes.number.isRequired,
     item: PropTypes.shape({
         title: PropTypes.string.isRequired,
         address: PropTypes.string.isRequired,

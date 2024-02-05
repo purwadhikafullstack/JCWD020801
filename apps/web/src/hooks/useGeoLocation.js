@@ -1,43 +1,38 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { updateGeolocation } from '../redux/geolocationSlice';
+// import { updateGeolocation } from '../redux/geoLocationSlice';
+
 
 export const useGeoLocation = () => {
-    const [location, setLocation] = useState({
-        loaded: false,
-        coordinates: { lat: '', lng: '' },
-    });
+    const dispatch = useDispatch()
 
     const onSuccess = (location) => {
-        setLocation({
-            loaded: true,
-            coordinates: {
-                lat: location.coords.latitude,
-                lng: location.coords.longitude,
-            },
-        });
-        console.log(location);
+        dispatch(updateGeolocation({
+            lat: location.coords.latitude,
+            lng: location.coords.longitude,
+        }));
     };
 
-    const onError = (error) => {
-        setLocation({
-            loaded: true,
-            coordinates: { lat: null, lng: null },
-            error: {
-                code: error.code,
-                message: error.message,
-            },
-        });
+
+    const onError = () => {
+        // setLocation({
+        //     loaded: true,
+        //     coordinates: { lat: null, lng: null },
+        //     error: {
+        //         code: error.code,
+        //         message: error.message,
+        //     },
+        // });
     };
 
     useEffect(() => {
-        if (!('geolocation' in navigator)) {
-            onError({
-                code: 0,
-                message: 'Geolocation not supported',
-            });
+        if ('geolocation' in navigator) {
+            navigator.geolocation.getCurrentPosition(onSuccess, onError);
+        } else {
+            // Handle the case where geolocation is not supported
         }
+    }, [dispatch]);
 
-        navigator.geolocation.getCurrentPosition(onSuccess, onError);
-    }, []);
-
-    return location;
+    return null;
 };

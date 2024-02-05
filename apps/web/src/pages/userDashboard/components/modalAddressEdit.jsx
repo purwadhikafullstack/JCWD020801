@@ -17,7 +17,7 @@ import Select from 'react-select'
 import axios from '../../../api/axios'
 
 
-export const ModalAddressEdit = ({ modalEditOpen, setModalEditOpen, item, fetchUserAddressData }) => {
+export const ModalAddressEdit = ({ modalEditOpen, setModalEditOpen, item, fetchUserAddressData, currentPage }) => {
     const token = localStorage.getItem('token');
     const customer = useSelector((state) => state.customer.value);
 
@@ -112,12 +112,12 @@ export const ModalAddressEdit = ({ modalEditOpen, setModalEditOpen, item, fetchU
                 }
             );
 
+            fetchUserAddressData(currentPage)
             setIsLoading(false);
             toast.success(response.data.message, {
                 position: 'top-center',
             });
             setModalEditOpen(false)
-            fetchUserAddressData()
             formik.resetForm();
         } catch (error) {
             console.log(error);
@@ -251,7 +251,7 @@ export const ModalAddressEdit = ({ modalEditOpen, setModalEditOpen, item, fetchU
             <DialogBody className="flex flex-col gap-4 items-center w-full px-4 md:px-10">
                 <form onSubmit={formik.handleSubmit} className="w-full">
                     {/* 1 */}
-                    <section className={`${activeStep == 0 ? "block" : "hidden"} w-full`}>
+                    <section id="modal-scroll" className={`${activeStep == 0 ? "block" : "hidden"} w-full h-[52vh] lg:h-full overflow-auto pb-2 pr-3 lg:pr-0 lg:pb-0`}>
                         <div className="flex flex-col md:flex-row gap-3.5 md:gap-[2rem] w-full">
                             {/* Label & Customer Name */}
                             <div className="flex flex-col w-full gap-3.5">
@@ -534,12 +534,12 @@ export const ModalAddressEdit = ({ modalEditOpen, setModalEditOpen, item, fetchU
                             <GrPrevious size={20} className={`${activeStep == 0 ? 'hidden' : 'block'} text-[#657385]`} />
                         </div>
                         <div className={`${activeStep == 0 ? 'hidden' : 'block'} flex gap-3`}>
-                            <button
+                            {/* <button
                                 onClick={() => setModalEditOpen(!modalEditOpen)}
                                 className="shadow-sm rounded-xl px-5 py-2 border border-[#E5E7EB] text-[15px] font-medium text-gray-600 transition delay-100 ease-in-out hover:bg-gray-100"
                             >
                                 Cancel
-                            </button>
+                            </button> */}
                             <button
                                 type="submit"
                                 className="rounded-xl bg-[#00a67c] h-[44px] w-[138px] text-[15px] font-semibold text-white transition delay-100 ease-in-out hover:bg-[#00916D] "
@@ -570,6 +570,7 @@ ModalAddressEdit.propTypes = {
     modalEditOpen: PropTypes.bool.isRequired,
     setModalEditOpen: PropTypes.func.isRequired,
     fetchUserAddressData: PropTypes.func.isRequired,
+    currentPage: PropTypes.number.isRequired,
     item: PropTypes.shape({
         title: PropTypes.string.isRequired,
         address: PropTypes.string.isRequired,

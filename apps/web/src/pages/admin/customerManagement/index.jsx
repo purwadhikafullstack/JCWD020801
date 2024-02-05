@@ -53,7 +53,7 @@ export default function CustomerManagement() {
     }, [currentPage, sortBy, sortOrder, debouncedSearchValue, refreshTable])
 
     return (
-        <div className="flex flex-row">
+        <div className="flex flex-col lg:flex-row">
             <AdminSidebar />
             <div className="flex flex-col  h-screen p-5 gap-3 items-center bg-[#edf7f4] w-full">
                 <TableHeader

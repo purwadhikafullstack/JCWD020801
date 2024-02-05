@@ -5,6 +5,11 @@ import pos from '../../assets/home/pos.png';
 import { Link } from 'react-router-dom';
 
 export const Footer = () => {
+
+    const handleLinkClick = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
     return (
         <>
             <div className="px-[16px] md:px-[32px] lg:px-[160px] bg-[#121314]">
@@ -36,7 +41,7 @@ export const Footer = () => {
                                 <span className="cursor-pointer  hover:underline hover:underline-offset-2 whitespace-nowrap">
                                     About Us
                                 </span>
-                                <Link to={'/store-locator'} className="cursor-pointer  hover:underline hover:underline-offset-2">
+                                <Link to={'/store-locator'} onClick={handleLinkClick} className="cursor-pointer  hover:underline hover:underline-offset-2">
                                     Store Locator
                                 </Link>
                                 <span className="cursor-pointer  hover:underline hover:underline-offset-2">
@@ -48,7 +53,7 @@ export const Footer = () => {
                             <h4 className="mb-6 font-bold text-[15.5px]">Support</h4>
                             <div className="flex flex-col gap-1.5">
                                 <span className="cursor-pointer  hover:underline hover:underline-offset-2">
-                                    Delivery information
+                                    Delivery Info
                                 </span>
                                 <span className="cursor-pointer  hover:underline hover:underline-offset-2">
                                     Contact
@@ -67,6 +72,17 @@ export const Footer = () => {
                                 <span className="cursor-pointer  hover:underline hover:underline-offset-2">
                                     Terms of Use
                                 </span>
+                            </div>
+                        </div>
+                        <div className="flex flex-col text-[#FAFAFA] text-[15px]">
+                            <h4 className="mb-6 font-bold text-[15.5px]">Links</h4>
+                            <div className="flex flex-col gap-1.5">
+                                <Link to={'/home'} onClick={handleLinkClick} className="cursor-pointer  hover:underline hover:underline-offset-2">
+                                    Home
+                                </Link>
+                                <Link to={'/catalogue'} onClick={() => window.scrollTo(0, 0)} className="cursor-pointer  hover:underline hover:underline-offset-2">
+                                    Product Catalogue
+                                </Link>
                             </div>
                         </div>
                         <div className="flex flex-col text-[#FAFAFA] text-[15px] lg:ml-auto">

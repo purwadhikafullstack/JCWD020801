@@ -2,17 +2,15 @@ import 'keen-slider/keen-slider.min.css';
 import KeenSlider from 'keen-slider';
 import { useEffect, useRef, useState } from 'react';
 import stockAvail from '../../../assets/home/stock_avail.svg';
-import { formatDistance } from '../../../functions/functions';
-import { useGeoLocation } from '../../../hooks/useGeoLocation';
+import { convertToIDR, formatDistance } from '../../../functions/functions';
 import axios from '../../../api/axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../../../redux/cartSlice';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useNavigate } from 'react-router-dom';
 
 export const ProductCards = ({ branchData, coordinates }) => {
-    const navigate = useNavigate();
+
     const customer = useSelector((state) => state.customer.value);
 
     const products = useSelector((state) => state.product.data);
@@ -93,7 +91,16 @@ export const ProductCards = ({ branchData, coordinates }) => {
                 theme: 'light',
             });
         } else {
-            navigate('/signin');
+            toast.error(
+                <>
+                    <div className="font-semibold text-[#E74C3C]">Oops!</div>
+                    <div className="text-[15px]">Please Sign in to access this feature</div>
+                </>,
+                {
+                    position: 'top-center',
+                },
+            );
+            // navigate('/signin');
         }
     };
 
@@ -101,40 +108,42 @@ export const ProductCards = ({ branchData, coordinates }) => {
         <>
             <div className="my-[16px] mx-[16px] md:mx-[32px] lg:mx-[160px]">
                 {/* Shopping From */}
-                <section className="flex gap-[0.7rem] mb-5 items-center w-max p-1 bg-[#00A67C] rounded-full">
-                    <div
-                        className={`${!coordinates?.lat && 'pulse-effect'
-                            } rounded-full p-2 bg-[#E1F5EF]`}
-                    >
-                        <svg
-                            width="32"
-                            height="32"
-                            viewBox="0 0 20 21"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
+                <div className="flex w-full justify-start">
+                    <section className="flex gap-[0.7rem] mb-5 items-center w-max p-1 bg-[#00A67C] rounded-full">
+                        <div
+                            className={`${!coordinates?.lat && 'pulse-effect'
+                                } rounded-full p-2 bg-[#E1F5EF]`}
                         >
-                            <path
-                                d="M16.6667 5.49992H3.33333V3.83325H16.6667V5.49992ZM10.8333 13.4166C10.8333 14.3666 11.1917 15.3833 11.6667 16.3333V17.1666H3.33333V12.1666H2.5V10.4999L3.33333 6.33325H16.6667L17.25 9.24992C16.6667 8.98325 16.0667 8.83325 15.4167 8.83325C12.9167 8.83325 10.8333 10.9166 10.8333 13.4166ZM10 12.1666H5V15.4999H10V12.1666ZM18.3333 13.4166C18.3333 15.5833 15.4167 18.8333 15.4167 18.8333C15.4167 18.8333 12.5 15.5833 12.5 13.4166C12.5 11.8333 13.8333 10.4999 15.4167 10.4999C17 10.4999 18.3333 11.8333 18.3333 13.4166ZM16.4167 13.4999C16.4167 12.9999 15.9167 12.4999 15.4167 12.4999C14.9167 12.4999 14.4167 12.9166 14.4167 13.4999C14.4167 13.9999 14.8333 14.4999 15.4167 14.4999C16 14.4999 16.5 13.9999 16.4167 13.4999Z"
-                                fill="#00A67C"
-                            />
-                        </svg>
-                    </div>
-                    <div
-                        className={`${!coordinates?.lat && 'mr-[1.2rem]'
-                            } flex flex-col text-white`}
-                    >
-                        <span className="text-[14px] font-normal">Shopping from:</span>
-                        <span className="text-[16px] font-medium">{branchData?.name}</span>
-                    </div>
-                    {coordinates?.lat && (
-                        <div className="pulse-effect rounded-full bg-[#E1F5EF] px-4 py-[0.7rem] ml-[0.5rem]">
-                            <span className="text-[15px] font-semibold text-[#00A67C]">
-                                {formatDistance(branchData?.distance)}
-                                <span className="font-medium"> away</span>
-                            </span>
+                            <svg
+                                width="32"
+                                height="32"
+                                viewBox="0 0 20 21"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    d="M16.6667 5.49992H3.33333V3.83325H16.6667V5.49992ZM10.8333 13.4166C10.8333 14.3666 11.1917 15.3833 11.6667 16.3333V17.1666H3.33333V12.1666H2.5V10.4999L3.33333 6.33325H16.6667L17.25 9.24992C16.6667 8.98325 16.0667 8.83325 15.4167 8.83325C12.9167 8.83325 10.8333 10.9166 10.8333 13.4166ZM10 12.1666H5V15.4999H10V12.1666ZM18.3333 13.4166C18.3333 15.5833 15.4167 18.8333 15.4167 18.8333C15.4167 18.8333 12.5 15.5833 12.5 13.4166C12.5 11.8333 13.8333 10.4999 15.4167 10.4999C17 10.4999 18.3333 11.8333 18.3333 13.4166ZM16.4167 13.4999C16.4167 12.9999 15.9167 12.4999 15.4167 12.4999C14.9167 12.4999 14.4167 12.9166 14.4167 13.4999C14.4167 13.9999 14.8333 14.4999 15.4167 14.4999C16 14.4999 16.5 13.9999 16.4167 13.4999Z"
+                                    fill="#00A67C"
+                                />
+                            </svg>
                         </div>
-                    )}
-                </section>
+                        <div
+                            className={`${!coordinates?.lat && 'mr-[1.2rem]'
+                                } flex flex-col text-white`}
+                        >
+                            <span className="text-[14px] font-normal">Shopping from:</span>
+                            <span className="text-[16px] font-medium">{branchData?.name}</span>
+                        </div>
+                        {coordinates?.lat && (
+                            <div className="pulse-effect rounded-full bg-[#E1F5EF] px-4 py-[0.7rem] ml-[0.5rem]">
+                                <span className="text-[15px] font-semibold text-[#00A67C]">
+                                    {formatDistance(branchData?.distance)}
+                                    <span className="font-medium"> away</span>
+                                </span>
+                            </div>
+                        )}
+                    </section>
+                </div>
                 {/* Cards */}
                 <>
                     <section className="border-y border-[#D1D5D8]">
@@ -215,7 +224,7 @@ export const ProductCards = ({ branchData, coordinates }) => {
                                                     <div className="flex gap-1">
                                                         <span className="font-bold text-[13px]">Rp</span>
                                                         <p className="text-[16px] md:text-[18px] font-bold text-rose-600 tracking-tight">
-                                                            {item.price}
+                                                            {convertToIDR(item.price)}
                                                         </p>
                                                     </div>
                                                     <p className="leading-relaxed text-gray-700 text-[14px] md:text-[15px] line-clamp-2">

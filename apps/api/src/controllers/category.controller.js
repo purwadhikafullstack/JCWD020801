@@ -70,7 +70,9 @@ export const getAllCategory = async (req, res) => {
             const totalPages = Math.ceil(allCategory.count / limit);
             return res.status(200).send({ result: allCategory, page, totalPages })
         }
-        const allCategory = await Category.findAndCountAll()
+        const allCategory = await Category.findAndCountAll({
+            include: [{ model: SubCategory }]
+        })
         return res.status(200).send({ result: allCategory})
     } catch (error) {
         console.error(error)

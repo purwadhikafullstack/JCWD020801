@@ -111,7 +111,7 @@ export default function CategoryManagement() {
     }, [currentPage, debouncedSearchValue, sortOrder, sortBy, refreshTable, tabValueFromChild])
 
     return (
-        <div className="flex flex-row">
+        <div className="flex flex-col lg:flex-row">
             <AdminSidebar subMenuStatus={true} />
             <div className="flex flex-col h-screen p-5 gap-3 bg-[#edf7f4] w-full items-center">
                 <TableHeader

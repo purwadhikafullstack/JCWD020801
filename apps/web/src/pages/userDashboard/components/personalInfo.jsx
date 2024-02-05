@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 import avaDummy from '../../../assets/userDashboard/ava-dummy.png';
 import { toast } from 'react-toastify';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Option, Select } from '@material-tailwind/react';
 import { useFormik } from 'formik';
@@ -70,6 +70,10 @@ export const PersonalInformation = () => {
             formik.resetForm();
         },
     });
+
+    useEffect(() => {
+        customer
+    }, [customer.profile_picture])
 
     return (
         <>

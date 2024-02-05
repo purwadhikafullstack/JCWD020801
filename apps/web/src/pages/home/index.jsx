@@ -11,67 +11,77 @@ import homeLogin from '../../assets/home/home-login.jpg'
 import { Link } from "react-router-dom"
 import { DiscountedProducts } from "./components/discountedProducts"
 import { useSelector } from "react-redux"
+import slide1 from "../../assets/home/img-slides-1.png"
+import slide2 from "../../assets/home/img-slides-2.png"
+// import slide3 from "../../assets/home/img-slides-3.jpg"
+import slide4 from "../../assets/home/img-slides-4.png"
+import slide7 from "../../assets/home/img-slides-7.png"
 import axios from "../../api/axios"
 import { useGeoLocation } from "../../hooks/useGeoLocation"
 
 const imgSlides = [
-  {
-    url: "https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-  },
-  {
-    url: "https://images.unsplash.com/photo-1506617420156-8e4536971650?q=80&w=2023&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-  },
-  {
-    url: "https://images.unsplash.com/photo-1605447813584-26aeb3f8e6ae?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-  },
-  {
-    url: "https://images.unsplash.com/photo-1622371684824-dc014541a4f5?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-  }
+  { url: slide7 },
+  { url: slide1 },
+  { url: slide2 },
+  // { url: slide3 },
+  { url: slide4 },
 ]
 
 export const HomePage = () => {
   const customer = useSelector((state) => state.customer.value);
   const [currentIndex, setCurrentIndex] = useState(0)
 
-  const { coordinates, loaded } = useGeoLocation();
-    const [branchData, setBranchData] = useState(null);
-  console.log(branchData);
+  const { coordinates, loaded } = useSelector((state) => state.geolocation);
+  const [branchData, setBranchData] = useState(null);
 
-    const fetchNearestBranch = async () => {
-      if (loaded) {
-          try {
-              const response = await axios.post(
-                  `branches/get-nearest?latitude=${coordinates.lat}&longitude=${coordinates.lng}`,
-              );
-              console.log("WWW", response)
-              console.log(response.data.result[0]);
-              setBranchData(response.data.result[0]);
-          } catch (error) {
-              console.log(error);
-          }
+  const [nearestBranchProduct, setNearestBranchProduct] = useState([])
+  const [categoryId, setCategoryId] = useState(0)
+  const [branchId, setBranchId] = useState()
+
+  const fetchNearestBranch = async () => {
+    if (loaded) {
+      try {
+        const response = await axios.post(
+          `branches/get-nearest?latitude=${coordinates.lat}&longitude=${coordinates.lng}`,
+        );
+        setBranchData(response.data.result[0]);
+        fetchNearestBranchProduct(response.data.result[0].id)
+        setBranchId(response.data.result[0].id)
+      } catch (error) {
+        console.log(error);
       }
+    }
   };
 
   const fetchMainBranch = async () => {
-      try {
-          const response = await axios.get('branches/super-store');
-          setBranchData(response.data.result);
-      } catch (error) {
-          console.error(error);
-      }
+    try {
+      const response = await axios.get('branches/super-store');
+      setBranchData(response.data.result);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
+  const fetchNearestBranchProduct = async (branch_id) => {
+    try {
+        const response = await axios.get(`products/all?page=1&sortBy=createdAt&sortOrder=desc&branch_id=${branch_id}&category_id=${categoryId}`)
+        setNearestBranchProduct(response.data.result.rows)
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
   useEffect(() => {
-      if (coordinates === null) {
-          console.log('Location permission denied. Fetching data from main store.');
-          fetchMainBranch();
-      } else if (coordinates && loaded) {
-          console.log(
-              'Location permission granted. Fetching data from nearest store.',
-          );
-          fetchNearestBranch();
-      }
-  }, [loaded, coordinates?.lat, coordinates?.lng]);
+    if (coordinates === null) {
+      console.log('Location permission denied. Fetching data from main store.');
+      fetchMainBranch();
+    } else if (coordinates && loaded) {
+      console.log(
+        'Location permission granted. Fetching data from nearest store.',
+      );
+      fetchNearestBranch();
+    }
+  }, [loaded, coordinates?.lat, coordinates?.lng, categoryId]);
 
   const prevSlide = () => {
     const isFirstSlide = currentIndex === 0;
@@ -91,38 +101,39 @@ export const HomePage = () => {
 
   const [categoryList, setCategoryList] = useState([])
 
-    const getCategory = async () => {
-        try {
-            const response = await axios.get(`/categories/all?all=true}`)
-            setCategoryList(response.data.result.rows)
-        } catch (err) {
-            console.error(err)
-        }
+  const getCategory = async () => {
+    try {
+      const response = await axios.get(`/categories/all?all=true}`)
+      setCategoryList(response.data.result.rows)
+    } catch (err) {
+      console.error(err)
     }
+  }
 
-    useEffect(() => {
-        getCategory();
-    }, [])
+  useEffect(() => {
+    getCategory();
+  }, [])
 
   return (
     <>
       <Navbar />
       {/* ----- Hero Section ----- */}
-      <div className="mx-[16px] md:mx-[32px] lg:mx-[160px] h-[80vh] md:h-[35vh] lg:h-[40vh] xl:h-[50vh] mt-4 mb-3 flex flex-col">
+      {/* <div className="mx-[16px] md:mx-[32px] lg:mx-[160px] h-[80vh] md:h-[35vh] lg:h-[40vh] xl:h-[50vh] mt-4 mb-3 flex flex-col"> */}
+      <div className="mx-[16px] md:mx-[32px] lg:mx-[160px] mt-4 mb-3 flex flex-col h-[80vh] md:h-[45vh] lg:40-[vh] xl:h-[42vh]">
         {/* Hero: Img & Text */}
         <div className="flex flex-col md:flex-row w-full h-full rounded-2xl border border-[#D1D5D8] hover:shadow-md">
           <div className="flex flex-col py-6 px-7 gap-3 justify-between">
             <div className="flex flex-col gap-3">
-              <div className="flex flex-col text-[28px] md:text-[30px] font-semibold md:max-w-[380px] lg:max-w-[350px]">
+              <div className="flex flex-col text-[28px] md:text-[28px] font-semibold md:max-w-[380px] lg:max-w-[350px]">
                 <h1 className="tracking-tight"> <span className="bg-gradient-to-r from-[#86CBB8] to-[#067627] text-transparent bg-clip-text">Fresh Groceries</span> at Your Doorstep!</h1>
               </div>
-              <span className="text-gray-600 max-w-[240px] text-[16px]">
+              <span className="text-gray-600 max-w-[240px] text-[15px]">
                 get the best fresh foods, drinks, household goods, health care, and many more
               </span>
             </div>
             <button
               type="submit"
-              className="gap-2.5 flex items-center mt-4 md:mt-3 rounded-full bg-[#28302A] px-4 py-2.5 w-max text-[15px] font-medium text-white transition delay-100 ease-in-out hover:bg-[#151a17] "
+              className="gap-2.5 flex items-center mt-4 md:mt-3 rounded-full bg-[#28302A] px-4 py-2.5 w-max text-[14px] font-medium text-white transition delay-100 ease-in-out hover:bg-[#151a17] "
             >
               <span>Shop Now</span>
               <img src={arrowLong} alt="" className="pt-[0.1rem]" />
@@ -161,9 +172,9 @@ export const HomePage = () => {
           <IoIosArrowForward onClick={nextSlide} size={22} />
         </div>
       </div>
-      <ProductCards branchData={branchData} coordinates={coordinates}/>
+      <ProductCards branchData={branchData} coordinates={coordinates} />
       <DiscountedProducts />
-      <BrowseProducts branch categoryList={categoryList} />
+      <BrowseProducts product={nearestBranchProduct} categoryList={categoryList} setCategoryId={setCategoryId} branchId={branchId} />
       {/*  */}
       {/* bg-[#f9f9f9]  */}
       {!customer && (

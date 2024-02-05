@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import { SyncLoader } from 'react-spinners';
 import { useState } from 'react';
 
-export const ModalAddressSetDefault = ({ modalDefaultOpen, setModalDefaultOpen, item, fetchUserAddressData }) => {
+export const ModalAddressSetDefault = ({ modalDefaultOpen, setModalDefaultOpen, item, fetchUserAddressData, currentPage }) => {
     const token = localStorage.getItem('token');
     const [isLoading, setIsLoading] = useState(false);
 
@@ -22,7 +22,7 @@ export const ModalAddressSetDefault = ({ modalDefaultOpen, setModalDefaultOpen, 
                 },
             );
 
-            fetchUserAddressData();
+            fetchUserAddressData(currentPage);
 
             setIsLoading(false);
             toast.success(response.data.message, {
@@ -103,6 +103,7 @@ ModalAddressSetDefault.propTypes = {
     modalDefaultOpen: PropTypes.bool.isRequired,
     setModalDefaultOpen: PropTypes.func.isRequired,
     fetchUserAddressData: PropTypes.func.isRequired,
+    currentPage: PropTypes.number.isRequired,
     item: PropTypes.shape({
         title: PropTypes.string.isRequired,
         address: PropTypes.string.isRequired,
