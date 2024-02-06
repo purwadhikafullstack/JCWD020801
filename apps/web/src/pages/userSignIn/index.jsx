@@ -181,7 +181,7 @@ export const UserSignIn = () => {
                                 <div className="flex gap-1 justify-end items-center">
                                     <div className="flex justify-end" onClick={handleModalOpen}>
                                         <span className="w-full cursor-pointer text-end text-[14px] text-gray-600 hover:text-gray-700 hover:underline hover:decoration-1">
-                                            forgot password
+                                            Forgot password
                                         </span>
                                     </div>
                                     <span className="text-gray-500 text-[14px]"> or</span>

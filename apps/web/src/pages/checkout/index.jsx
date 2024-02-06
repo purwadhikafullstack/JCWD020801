@@ -1,16 +1,74 @@
+/* eslint-disable no-unused-vars */
 import { FaArrowRight } from 'react-icons/fa6';
 import { AddressDelivery } from './component/addressDelivery';
 import { OrderSummary } from './component/orderSummary';
-import appLogo from '../../assets/logo-app-1.png'
+import appLogo from '../../assets/logo-app-1.png';
 import { IoMdArrowBack } from 'react-icons/io';
-import { useSelector } from 'react-redux';
+
 import { useState } from 'react';
-import { AnimatePresence, motion } from "framer-motion"
+import { AnimatePresence, motion } from 'framer-motion';
+
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import axios from '../../api/axios';
+import { button } from '@material-tailwind/react';
+import { useEffect } from 'react';
+
+const convertToIDR = (price) => {
+  let newPrice = price.toLocaleString('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    minimumFractionDigits: 0,
+  });
+
+  return newPrice;
+};
 
 export const CheckoutPage = () => {
+  const navigate = useNavigate();
+  const carts = useSelector((state) => state.cart.data);
+  const token = localStorage.getItem('token');
+  const [isPaymentOpen, setIsPaymentOpen] = useState(false);
   const customer = useSelector((state) => state.customer.value);
-  const [isPaymentOpen, setIsPaymentOpen] = useState(false)
+  const total = carts.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0,
+  );
 
+  useEffect(() => {
+    const snapScript = 'https://app.sandbox.midtrans.com/snap/snap.js';
+
+    const clientKey = import.meta.env.VITE_MIDTRANS_CLIENT_KEY;
+
+    const script = document.createElement('script');
+    script.src = snapScript;
+    script.setAttribute('data-client-key', clientKey);
+    script.async = true;
+
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
+  const handleCheckout = async () => {
+    try {
+      const data = {
+        id: ~~(Math.random() * 100) + 1,
+        total,
+      };
+
+      const response = await axios.post('order', data);
+      // console.log(response);
+      window.snap.pay(response.data.token);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const discount = 30000;
+  const delivery = 24000;
 
   return (
     <div>
@@ -55,7 +113,7 @@ export const CheckoutPage = () => {
         <section className="mx-[16px] md:mx-[32px] lg:mx-[160px] py-2 lg:py-3.5">
           <div className="flex flex-col pb-2 lg:pb-3 gap-[0.2rem] lg:gap-1">
             <div
-              // onClick={() => navigate('/store-management')}
+              onClick={() => navigate('/home')}
               id="underline-wrapper"
               className="text-gray-600 flex items-center gap-2 w-max cursor-pointer hover:text-gray-700 relative"
             >
@@ -86,9 +144,7 @@ export const CheckoutPage = () => {
                   <path d="M9 11V6a3 3 0 0 1 6 0v5m0 8l2 2l4-4" />
                 </g>
               </svg>
-              <h2 className="text-[25px] font-bold text-[#00A67C]">
-                Checkout
-              </h2>
+              <h2 className="text-[25px] font-bold text-[#00A67C]">Checkout</h2>
             </div>
           </div>
           {/* Grid */}
@@ -96,7 +152,11 @@ export const CheckoutPage = () => {
             {/* -- Left -- */}
             <section className="flex flex-col gap-3 w-full lg:w-[47vw]">
               {/* Order Summary */}
-              <OrderSummary />
+              <OrderSummary
+                carts={carts}
+                total={total}
+                convertToIDR={convertToIDR}
+              />
               {/* Address & Delivery */}
               <AddressDelivery />
               {/* Payment Method */}
@@ -135,9 +195,7 @@ export const CheckoutPage = () => {
                             />
                           </svg>
 
-                          <p className="text-gray-700 text-[14px]">
-                            Midtrans
-                          </p>
+                          <p className="text-gray-700 text-[14px]">Midtrans</p>
                         </div>
                       </label>
                     </div>
@@ -191,27 +249,32 @@ export const CheckoutPage = () => {
                     <div className="flex items-center justify-between">
                       <h4 className="font-medium text-gray-600">Subtotal</h4>
                       <h4 className="font-semibold tracking-tight text-gray-900">
-                        Rp 230.000
+                        {convertToIDR(total)}
                       </h4>
                     </div>
                     <div className="flex items-center justify-between">
                       <h4 className="font-medium text-gray-600">Discount</h4>
                       <h4 className="font-semibold tracking-tight text-gray-900">
-                        Rp 30.000
+                        {convertToIDR(discount)}
                       </h4>
                     </div>
                     <div className="flex items-center justify-between">
                       <h4 className="font-medium text-gray-600">Delivery</h4>
                       <h4 className="font-semibold tracking-tight text-gray-900">
-                        Rp 24.000
+                        {convertToIDR(delivery)}
                       </h4>
                     </div>
                   </div>
                   <div className="border-t border-[#dcdcdc] flex items-center justify-between pt-[1rem]">
                     <h4 className="font-semibold text-[18px]">Total</h4>
-                    <h4 className="font-bold text-[18px]">Rp 224.000</h4>
+                    <h4 className="font-bold text-[18px]">
+                      {convertToIDR(total + delivery - discount)}
+                    </h4>
                   </div>
-                  <button className="flex items-center justify-center gap-2 mt-[1.2rem] px-4 rounded-lg w-full bg-[#00A67C] font-semibold text-white py-[0.6rem] text-[15px] hover:bg-[#00916D] transition ease-in-out delay-100">
+                  <button
+                    onClick={() => handleCheckout()}
+                    className="flex items-center justify-center gap-2 mt-[1.2rem] px-4 rounded-lg w-full bg-[#00A67C] font-semibold text-white py-[0.6rem] text-[15px] hover:bg-[#00916D] transition ease-in-out delay-100"
+                  >
                     <span>Pay Now</span>
                     {/* <img src={arrowLong} alt="" className="mt-[0.1rem]" /> */}
                     <FaArrowRight className="mt-[0.1rem]" />
@@ -245,7 +308,7 @@ export const CheckoutPage = () => {
                   </svg>
                   <div className="flex gap-[0.5rem]">
                     <span className="text-[17px] font-medium">Total:</span>
-                    <span className="text-[16.5px] font-normal">Rp 220.000</span>
+                    <span className="text-[16.5px] font-normal">{convertToIDR(total + delivery - discount)}</span>
 
                   </div>
                 </div>
@@ -315,27 +378,29 @@ export const CheckoutPage = () => {
                     <div className="flex items-center justify-between">
                       <h4 className="font-medium text-gray-600">Subtotal</h4>
                       <h4 className="font-semibold tracking-tight text-gray-900">
-                        Rp 230.000
+                        {convertToIDR(total)}
                       </h4>
                     </div>
                     <div className="flex items-center justify-between">
                       <h4 className="font-medium text-gray-600">Discount</h4>
                       <h4 className="font-semibold tracking-tight text-gray-900">
-                        Rp 30.000
+                        {convertToIDR(discount)}
                       </h4>
                     </div>
                     <div className="flex items-center justify-between">
                       <h4 className="font-medium text-gray-600">Delivery</h4>
                       <h4 className="font-semibold tracking-tight text-gray-900">
-                        Rp 24.000
+                        {convertToIDR(delivery)}0
                       </h4>
                     </div>
                   </div>
                   <div className="border-t border-[#dcdcdc] flex items-center justify-between pt-[1rem]">
                     <h4 className="font-semibold text-[18px]">Total</h4>
-                    <h4 className="font-bold text-[18px]">Rp 224.000</h4>
+                    <h4 className="font-bold text-[18px]">{convertToIDR(total + delivery - discount)}</h4>
                   </div>
-                  <button className="flex items-center justify-center gap-2 mt-[1.2rem] px-4 rounded-lg w-full bg-[#00A67C] font-semibold text-white py-[0.6rem] text-[15px] hover:bg-[#00916D] transition ease-in-out delay-100">
+                  <button
+                    onClick={() => handleCheckout()}
+                    className="flex items-center justify-center gap-2 mt-[1.2rem] px-4 rounded-lg w-full bg-[#00A67C] font-semibold text-white py-[0.6rem] text-[15px] hover:bg-[#00916D] transition ease-in-out delay-100">
                     <span>Pay Now</span>
                     {/* <img src={arrowLong} alt="" className="mt-[0.1rem]" /> */}
                     <FaArrowRight className="mt-[0.1rem]" />
