@@ -35,7 +35,15 @@ export const StoreBranchDetail = () => {
                     Authorization: `Bearer ${token}`,
                 },
             })
-            setBranchDetaildata(response.data.result)
+
+            const branchData = response.data.result
+
+            if (!branchData) {
+                navigate('/404-admin')
+                return;
+            }
+
+            setBranchDetaildata(branchData)
         } catch (error) {
             console.log(error);
         }
@@ -70,9 +78,9 @@ export const StoreBranchDetail = () => {
                                 ></span>
                             </span>
                         </div>
-                        <div className="bg-white rounded-lg py-5 px-7 flex flex-col gap-2">
+                        <div className="bg-white rounded-lg py-4 md:py-5 px-4 md:px-7 flex flex-col gap-2">
                             {/* BreadCrumb */}
-                            <div className="flex w-max items-center justify-center gap-1.5 rounded-lg bg-none text-[14px] font-medium text-[#8f8f8f]">
+                            <div className="px-1.5 md:px-0 flex w-max items-center justify-center gap-1.5 rounded-lg bg-none text-[14px] font-medium text-[#8f8f8f]">
                                 <span className="">Admin</span>
                                 <div className="flex items-center pt-[0.1rem]">
                                     <svg
@@ -111,7 +119,7 @@ export const StoreBranchDetail = () => {
                                 </div>
                                 <span>{branchDetailData?.name}</span>
                             </div>
-                            <div className="flex items-center gap-3">
+                            <div className="px-1 md:px-0 flex items-center gap-3">
                                 <LuStore size={24} className="text-gray-900" />
                                 <h1 className="text-[#28302A] text-[22px] lg:text-[26px] font-bold pt-2 pb-2">
                                     {branchDetailData?.name}

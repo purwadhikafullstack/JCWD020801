@@ -24,16 +24,20 @@ import { AccountVerification } from './pages/accountVerification';
 import { UserResetPassword } from './pages/userResetPassword';
 import { UserUpdateEmail } from './pages/userUpdateEmail';
 // import { setData } from './redux/customercustomerSliceSlice';
-import { setData } from './redux/customerSlice'
+import { setData } from './redux/customerSlice';
 import AdminRequired from './components/adminRequired';
 import { StoreManagement } from './pages/admin/storeManagement';
 import { StoreBranchDetail } from './pages/admin/storeManagement/storeBranchDetail';
 import { StoreLocator } from './pages/storeLocator';
 import { CheckoutPage } from './pages/checkout';
 import { ProductCatalogue } from './pages/productCatalogue';
-import { useGeoLocation } from './hooks/useGeoLocation';
 import AdminErrorPage from './pages/admin/components/adminErrorPage';
+import StockManagement from './pages/admin/stockManagement';
+import { useGeoLocation } from './hooks/useGeoLocation';
 import { ProductDetail } from './pages/productDetail';
+import DiscountManagement from './pages/admin/discountManagement';
+import { Admin404 } from './pages/404admin';
+import { About } from './pages/about';
 
 const router = createBrowserRouter([
   //Untuk yang tidak butuh token
@@ -48,45 +52,49 @@ const router = createBrowserRouter([
   { path: "/user-reset-password/:token", element: <UserResetPassword /> },
   { path: "/user-update-email/:token", element: <UserUpdateEmail /> },
   { path: "/store-locator", element: <StoreLocator /> },
-  { path: "/catalogue", element: <ProductCatalogue /> },
-  { path: "/product-detail", element: <ProductDetail /> },
+  { path: "/catalogue/:category_id?/:search?", element: <ProductCatalogue /> },
+  { path: "/product-detail/:id?/:branch_id?", element: <ProductDetail /> },
+  { path: "/about", element: <About /> },
+  { path: "/404-admin", element: <Admin404 /> },
   {
     element: <Required />,
     children: [
       //untuk yang butuh customer
-      { path: "/user-dashboard", element: <UserDashboard /> },
-      { path: "/user-verification", element: <UserVerification /> },
-      { path: "/checkout", element: <CheckoutPage /> },
+      { path: '/user-dashboard', element: <UserDashboard /> },
+      { path: '/user-verification', element: <UserVerification /> },
+      { path: '/checkout', element: <CheckoutPage /> },
     ],
   },
   {
     element: <AdminRequired />,
     children: [
-      { path: "/admin-management", element: <AdminManagement /> },
-      { path: "/admin-overview", element: <Overview /> },
-      { path: "/customer-management", element: <CustomerManagement /> },
-      { path: "/product-management", element: <ProductManagement /> },
-      { path: "/admin-profile", element: <AdminProfile /> },
-      { path: "/category-management", element: <CategoryManagement /> },
-      { path: "/error", element: <AdminErrorPage /> },
-      { path: "/store-management", element: <StoreManagement /> },
-      { path: "/store-management/:id", element: <StoreBranchDetail /> }
-    ]
-  }
+      { path: '/admin-management', element: <AdminManagement /> },
+      { path: '/admin-overview', element: <Overview /> },
+      { path: '/customer-management', element: <CustomerManagement /> },
+      { path: '/product-management', element: <ProductManagement /> },
+      { path: '/admin-profile', element: <AdminProfile /> },
+      { path: '/category-management', element: <CategoryManagement /> },
+      { path: '/error', element: <AdminErrorPage /> },
+      { path: '/store-management', element: <StoreManagement /> },
+      { path: '/store-management/:id', element: <StoreBranchDetail /> },
+      { path: '/stock-management', element: <StockManagement /> },
+      { path: '/discount-management', element: <DiscountManagement /> },
+    ],
+  },
 ]);
 
 function App() {
-  const token = localStorage.getItem("token");
-  const admtoken = localStorage.getItem('admtoken')
+  const token = localStorage.getItem('token');
+  const admtoken = localStorage.getItem('admtoken');
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(!open);
+  const handleOpen = () => setOpen(true);
 
   useGeoLocation();
 
   const keepLoginAdmin = async () => {
     try {
-      const response = await axios.get("admins/keep-login", {
+      const response = await axios.get('admins/keep-login', {
         headers: {
           Authorization: `Bearer ${admtoken}`,
         },
@@ -94,7 +102,7 @@ function App() {
       dispatch(setDataAdmin(response.data.result));
     } catch (err) {
       if (err.response.status === 401) {
-        localStorage.removeItem('admtoken')
+        localStorage.removeItem('admtoken');
         handleOpen();
       }
     }
@@ -108,14 +116,13 @@ function App() {
         },
       });
       dispatch(setData(response.data.result));
-
     } catch (error) {
       console.log(error);
 
       localStorage.removeItem('token');
       history.push('/signin');
     }
-  }
+  };
 
   useEffect(() => {
     if (token) {
@@ -132,7 +139,8 @@ function App() {
         <ExpiredToken
           content={'Please login again'}
           open={open}
-          handleOpen={handleOpen} />
+          handleOpen={handleOpen}
+        />
       </RouterProvider>
     </>
   );

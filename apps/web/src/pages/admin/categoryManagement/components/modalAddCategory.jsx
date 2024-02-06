@@ -32,7 +32,6 @@ export default function ModalAddCategory({ openModalAdd, handleOpenAdd, handleRe
                     Authorization: `Bearer ${token}`,
                 },
             });
-            console.log(data);
             setIsLoading(false)
             toast.success(response.data.message, {
                 position: "top-center",

@@ -1,28 +1,116 @@
 import { Button, Card, Chip, Input, Typography } from "@material-tailwind/react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import axios from "../../../../api/axios";
+import { useState } from "react";
+import { toast } from 'react-toastify';
 
 export default function AdminProfileForm({ adminData }) {
+    const [selectedFile, setSelectedFile] = useState(null);
+    const token = localStorage.getItem("admtoken")
+
+    const handleFileChange = (event) => {
+        setSelectedFile(event.target.files[0]);
+    };
+
+    const handleSubmit = async (data) => {
+        try {
+            for (var pair of data.entries()) {
+                console.log(pair[0]+ ', ' + pair[1]); 
+            }
+            const response = await axios.patch('admins/', data, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+            window.location.reload();
+            toast.success(response.data.message, {
+                position: "top-center",
+                hideProgressBar: true,
+                theme: "colored"
+            });
+        } catch (err) {
+            console.error(err);
+            // toast.error(err.response.data.message, { position: "top-center" });
+        }
+    }
+
+    const PasswordSchema = Yup.object().shape({
+        password: Yup.string().min(3, "Must be at least 3 characters long"),
+        confirmPassword: Yup.string()
+            .oneOf([Yup.ref("password"), null], "Password must match the confirmation password") // Validasi konfirmasi password
+    });
+
+    const formik = useFormik({
+        initialValues: {
+            name: "",
+            username: "",
+            password: "",
+            confirmPassword: ""
+        },
+        validationSchema: PasswordSchema,
+        onSubmit: (values, action) => {
+            const formData = new FormData();
+            formData.append("name", values.name)
+            formData.append("username", values.username);
+            if(values.password){
+                formData.append("password", values.password);
+            }
+            formData.append("image", selectedFile)
+            formData.append("id", adminData.id)
+            handleSubmit(formData);
+            action.resetForm();
+        },
+    });
     return (
         <div className="flex flex-col p-8 bg-white shadow-md rounded-3xl w-96 h-auto items-center">
-            <div className="flex flex-col gap-3 w-full">
-                <Typography variant="h3">Edit profile</Typography>
-                <Typography className="-mb-2" variant="h6">Name</Typography>
-                <Input label="name" />
-                <Typography className="-mb-2" variant="h6">Username</Typography>
-                <Input label="username" />
-                <Typography className="-mb-2" variant="h6">Email</Typography>
-                <Input label="email" />
-                <Typography className="-mb-2" variant="h6">Password</Typography>
-                <Input
-                    name="password"
-                    label="New Password"
-                    type="password"
-                />
-                <Input
-                    name="confirmPassword"
-                    label="Confirm password"
-                    type="password" />
-                <Button fullWidth className="bg-[#41907a] text-white">Save</Button>
-            </div>
+            <form onSubmit={formik.handleSubmit}>
+                <div className="flex flex-col gap-3 w-full">
+                    <Typography variant="h3">Edit profile</Typography>
+                    <Typography className="-mb-2" variant="h6">Name</Typography>
+                    <Input name="name" autoComplete="new" label="name"
+                        onChange={formik.handleChange}
+                        value={formik.values.name} />
+                    <Typography className="-mb-2" variant="h6">Username</Typography>
+                    <Input name="username" autoComplete="new" label="Username"
+                        onChange={formik.handleChange}
+                        value={formik.values.username} />
+                    <Typography className="-mb-2" variant="h6">
+                        Profile Picture
+                    </Typography>
+                    {selectedFile && <img src={selectedFile ? URL.createObjectURL(selectedFile) : ''} className="w-32 h-32 rounded-lg object-cover"></img>}
+                    <input type="file" name="image" autoComplete="new" size="sm"
+                        onChange={handleFileChange} />
+                    <Typography className="-mb-2" variant="h6">Password</Typography>
+                    <Input
+                        name="password"
+                        label="New Password"
+                        type="password"
+                        onChange={formik.handleChange}
+                        value={formik.values.password}
+                        error={formik.touched.password && Boolean(formik.errors.password)}
+                    />
+                    {formik.touched.password && formik.errors.password ? (
+                        <div className=" text-red-900 text-xs">
+                            {formik.errors.password}
+                        </div>
+                    ) : null}
+                    <Input
+                        name="confirmPassword"
+                        label="Confirm password"
+                        onChange={formik.handleChange}
+                        type="password"
+                        value={formik.values.confirmPassword}
+                        error={formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)} />
+                    {formik.touched.confirmPassword && formik.errors.confirmPassword ? (
+                        <div className=" text-red-900 text-xs">
+                            {formik.errors.confirmPassword}
+                        </div>
+                    ) : null}
+                    <Button type="submit" fullWidth className="bg-[#41907a] text-white">Save</Button>
+                </div>
+            </form>
         </div>
     )
 }

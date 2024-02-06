@@ -22,7 +22,8 @@ export const sidebarData = [
     {
         title: "Customer Management",
         path: "/customer-management",
-        icon: <GoPeople className="h-5 w-5" />
+        icon: <GoPeople className="h-5 w-5"/>,
+        admin: true
     },
     {
         title: "Product Management",
@@ -41,7 +42,7 @@ export const sidebarData = [
             },
             {
                 title: "Stock",
-                path: "/",
+                path: "/stock-management",
                 icon: <FaPlateWheat className="h-5 w-5" />,
             }
         ]
@@ -50,12 +51,10 @@ export const sidebarData = [
         title: "Store Management",
         path: "/store-management",
         icon: <LuStore className="h-5 w-5" />,
-        admin: true
-
     },
     {
         title: "Discount Management",
-        path: "/",
+        path: "/discount-management",
         icon: <MdOutlineDiscount className="h-5 w-5" />,
         admin: true
     },
