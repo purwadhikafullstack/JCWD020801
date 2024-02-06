@@ -1,5 +1,5 @@
 import appLogo from '../../assets/yellow_white_logo.svg';
-import tiki from '../../assets/home/Tiki.png';
+import tiki from '../../assets/home/tiki.png';
 import jne from '../../assets/home/jne.png';
 import pos from '../../assets/home/pos.png';
 import { Link } from 'react-router-dom';
@@ -81,7 +81,7 @@ export const Footer = () => {
                                     Home
                                 </Link>
                                 <Link to={'/catalogue'} onClick={() => window.scrollTo(0, 0)} className="cursor-pointer  hover:underline hover:underline-offset-2">
-                                    Product Catalogue
+                                    Catalogue
                                 </Link>
                             </div>
                         </div>

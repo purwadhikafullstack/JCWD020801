@@ -16,6 +16,10 @@ export const NavbarMobile = ({ isOpen, toggleMenu, isOpenCategory, toggleMenuCat
         navigate('/signin')
     }
 
+    const handleLinkClick = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
     return (
         <AnimatePresence>
             {isOpen && (
@@ -24,7 +28,7 @@ export const NavbarMobile = ({ isOpen, toggleMenu, isOpenCategory, toggleMenuCat
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -50 }}
                     transition={{ duration: 0.3 }}
-                    className="z-50 absolute top-0 w-[100vw] items-start bg-[#347563] px-[18px] py-5"
+                    className="z-50 fixed top-0 w-[100vw] items-start bg-[#347563] px-[18px] py-5"
                 >
                     <div className="flex w-full items-center justify-between">
                         <div className="flex items-center gap-4">
@@ -92,24 +96,20 @@ export const NavbarMobile = ({ isOpen, toggleMenu, isOpenCategory, toggleMenuCat
                                 )}
                             </AnimatePresence>
                         </div>
-                        <div>
-                            <div className="flex items-center gap-3">
-                                {/* <img src={discountIcon} alt="" className="h-7"></img> */}
-                                <div className="flex items-center gap-2.5">
-                                    <h3 className="text-[17px] font-medium text-white">
-                                        Promo
-                                    </h3>
-                                </div>
-                            </div>
-                        </div>
+                        <Link to={'/catalogue'} onClick={handleLinkClick}>
+                            <h3 className="text-[17px] font-medium text-white">Catalogue</h3>
+                        </Link>
+                        <Link to={'/home'} onClick={handleLinkClick}>
+                            <h3 className="text-[17px] font-medium text-white">Home</h3>
+                        </Link>
                         <div>
                             <h3 className="text-[17px] font-medium text-white">About Us</h3>
                         </div>
-                        <div>
+                        <Link to={'/store-locator'} onClick={handleLinkClick}>
                             <h3 className="text-[17px] font-medium text-white">
                                 Find a Store
                             </h3>
-                        </div>
+                        </Link>
                     </div>
                     {/* account */}
                     <div className="mt-3 flex w-full gap-4 border-t pt-4">
@@ -160,7 +160,7 @@ export const NavbarMobile = ({ isOpen, toggleMenu, isOpenCategory, toggleMenuCat
                                         {customer.firstname}
                                     </span>
                                 </div>
-                                <Link to={'/user-dashboard'} className="flex">
+                                <Link to={'/user-dashboard'} onClick={handleLinkClick} className="flex">
                                     <span className="text-white text-[16px] cursor-pointer underline underline-offset-2">
                                         My Account
                                     </span>

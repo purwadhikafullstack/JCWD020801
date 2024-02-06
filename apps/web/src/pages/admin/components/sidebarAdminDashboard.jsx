@@ -9,7 +9,7 @@ import axios from "../../../api/axios";
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion"
 
-export default function AdminSidebar({subMenuStatus = false}) {
+export default function AdminSidebar({ subMenuStatus = false }) {
     const adminData = useSelector((state) => state.admin.value);
     const token = localStorage.getItem('admtoken');
     const [subMenuOpen, setSubMenuOpen] = useState(subMenuStatus);
