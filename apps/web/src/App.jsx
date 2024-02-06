@@ -24,7 +24,7 @@ import { AccountVerification } from './pages/accountVerification';
 import { UserResetPassword } from './pages/userResetPassword';
 import { UserUpdateEmail } from './pages/userUpdateEmail';
 // import { setData } from './redux/customercustomerSliceSlice';
-import { setData } from './redux/customerSlice'
+import { setData } from './redux/customerSlice';
 import AdminRequired from './components/adminRequired';
 import { StoreManagement } from './pages/admin/storeManagement';
 import { StoreBranchDetail } from './pages/admin/storeManagement/storeBranchDetail';
@@ -38,61 +38,61 @@ import { ProductDetail } from './pages/productDetail';
 import DiscountManagement from './pages/admin/discountManagement';
 
 const router = createBrowserRouter([
-  { path: "/", element: <Home /> },
-  { path: "/login-admin", element: <LoginAdmin></LoginAdmin> },
-  { path: "/admin-verification/:token", element: <AdminVerification /> },
-  { path: "/admin-reset-password/:token", element: <AdminResetPassword /> },
-  { path: "/login-admin", element: <LoginAdmin></LoginAdmin> },
-  { path: "/admin-verification/:token", element: <AdminVerification /> },
-  { path: "/admin-reset-password/:token", element: <AdminResetPassword /> },
-  { path: "/home", element: <HomePage /> },
-  { path: "/signin", element: <UserSignIn /> },
-  { path: "/register", element: <UserRegister /> },
-  { path: "/verify/:token", element: <AccountVerification /> },
-  { path: "/user-reset-password/:token", element: <UserResetPassword /> },
-  { path: "/user-update-email/:token", element: <UserUpdateEmail /> },
-  { path: "/store-locator", element: <StoreLocator /> },
-  { path: "/catalogue/:category_id?/:search?", element: <ProductCatalogue /> },
-  { path: "/product-detail/:id?/:branch_id?", element: <ProductDetail /> },
+  { path: '/', element: <Home /> },
+  { path: '/login-admin', element: <LoginAdmin></LoginAdmin> },
+  { path: '/admin-verification/:token', element: <AdminVerification /> },
+  { path: '/admin-reset-password/:token', element: <AdminResetPassword /> },
+  { path: '/login-admin', element: <LoginAdmin></LoginAdmin> },
+  { path: '/admin-verification/:token', element: <AdminVerification /> },
+  { path: '/admin-reset-password/:token', element: <AdminResetPassword /> },
+  { path: '/home', element: <HomePage /> },
+  { path: '/signin', element: <UserSignIn /> },
+  { path: '/register', element: <UserRegister /> },
+  { path: '/verify/:token', element: <AccountVerification /> },
+  { path: '/user-reset-password/:token', element: <UserResetPassword /> },
+  { path: '/user-update-email/:token', element: <UserUpdateEmail /> },
+  { path: '/store-locator', element: <StoreLocator /> },
+  { path: '/catalogue/:category_id?/:search?', element: <ProductCatalogue /> },
+  { path: '/product-detail/:id?/:branch_id?', element: <ProductDetail /> },
   {
     element: <Required />,
     children: [
       //untuk yang butuh customer
-      { path: "/user-dashboard", element: <UserDashboard /> },
-      { path: "/user-verification", element: <UserVerification /> },
-      { path: "/checkout", element: <CheckoutPage /> },
+      { path: '/user-dashboard', element: <UserDashboard /> },
+      { path: '/user-verification', element: <UserVerification /> },
+      { path: '/checkout', element: <CheckoutPage /> },
     ],
   },
   {
     element: <AdminRequired />,
     children: [
-      { path: "/admin-management", element: <AdminManagement /> },
-      { path: "/admin-overview", element: <Overview /> },
-      { path: "/customer-management", element: <CustomerManagement /> },
-      { path: "/product-management", element: <ProductManagement /> },
-      { path: "/admin-profile", element: <AdminProfile /> },
-      { path: "/category-management", element: <CategoryManagement />},
-      { path: "/error", element: <AdminErrorPage/> },
-      { path: "/store-management", element: <StoreManagement /> },
-      { path: "/store-management/:id", element: <StoreBranchDetail /> },
-      { path: "/stock-management", element: <StockManagement/> },
-      { path: "/discount-management", element: <DiscountManagement/> },
-    ]
-  }
+      { path: '/admin-management', element: <AdminManagement /> },
+      { path: '/admin-overview', element: <Overview /> },
+      { path: '/customer-management', element: <CustomerManagement /> },
+      { path: '/product-management', element: <ProductManagement /> },
+      { path: '/admin-profile', element: <AdminProfile /> },
+      { path: '/category-management', element: <CategoryManagement /> },
+      { path: '/error', element: <AdminErrorPage /> },
+      { path: '/store-management', element: <StoreManagement /> },
+      { path: '/store-management/:id', element: <StoreBranchDetail /> },
+      { path: '/stock-management', element: <StockManagement /> },
+      { path: '/discount-management', element: <DiscountManagement /> },
+    ],
+  },
 ]);
 
 function App() {
-  const token = localStorage.getItem("token");
-  const admtoken = localStorage.getItem('admtoken')
+  const token = localStorage.getItem('token');
+  const admtoken = localStorage.getItem('admtoken');
   const dispatch = useDispatch();
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
 
   useGeoLocation();
 
   const keepLoginAdmin = async () => {
     try {
-      const response = await axios.get("admins/keep-login", {
+      const response = await axios.get('admins/keep-login', {
         headers: {
           Authorization: `Bearer ${admtoken}`,
         },
@@ -100,7 +100,7 @@ function App() {
       dispatch(setDataAdmin(response.data.result));
     } catch (err) {
       if (err.response.status === 401) {
-        localStorage.removeItem('admtoken')
+        localStorage.removeItem('admtoken');
         handleOpen();
       }
     }
@@ -114,14 +114,13 @@ function App() {
         },
       });
       dispatch(setData(response.data.result));
-
     } catch (error) {
       console.log(error);
 
       localStorage.removeItem('token');
       history.push('/signin');
     }
-  }
+  };
 
   useEffect(() => {
     if (token) {
@@ -138,7 +137,8 @@ function App() {
         <ExpiredToken
           content={'Please login again'}
           open={open}
-          handleOpen={handleOpen} />
+          handleOpen={handleOpen}
+        />
       </RouterProvider>
     </>
   );
