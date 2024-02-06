@@ -9,6 +9,10 @@ import * as Yup from 'yup';
 import { SyncLoader } from 'react-spinners';
 import googleIcon from '../../../assets/userDashboard/google.svg';
 import { ModalUpdateImage } from './modalUpdateImg';
+import phoneIcon from '../../../assets/storeManagement/phone.svg'
+import { CgGenderFemale } from "react-icons/cg";
+import { CgGenderMale } from "react-icons/cg";
+import { MdEmail } from "react-icons/md";
 
 export const PersonalInformation = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -16,6 +20,7 @@ export const PersonalInformation = () => {
 
     const customer = useSelector((state) => state.customer.value);
     const token = localStorage.getItem('token');
+    console.log(customer);
 
     const copyToClipboard = (text) => {
         navigator.clipboard.writeText(text);
@@ -36,11 +41,11 @@ export const PersonalInformation = () => {
                     },
                 },
             );
-            console.log(response);
             setIsLoading(false);
             toast.success(response.data.message, {
                 position: 'top-center',
             });
+            location.reload();
         } catch (error) {
             console.log(error);
             setIsLoading(false);
@@ -85,7 +90,8 @@ export const PersonalInformation = () => {
                             <span className="text-[#00A67C]"> {customer.firstname}!</span>
                         </h3>
                         <p className="text-[15px] text-gray-600">
-                            {customer.socialRegister ? 'See' : 'Update'} your personal details
+                            {customer.socialRegister ? 'See' : 'Update'} your personal
+                            details
                         </p>
                     </div>
                     {/* Edit Image */}
@@ -101,10 +107,12 @@ export const PersonalInformation = () => {
                         >
                             <img
                                 src={
-                                    customer.profile_picture ? customer.profile_picture : avaDummy
+                                    customer.profile_picture
+                                        ? new URL(customer.profile_picture).toString()
+                                        : avaDummy
                                 }
                                 alt=""
-                                className="h-[5rem] w-[5rem] lg:h-[5.5rem] lg:w-[5.5rem] rounded-full object-cover"
+                                className="h-[6.2rem] w-[6.2rem] lg:h-[7rem] lg:w-[7rem] rounded-full object-cover"
                             ></img>
                             {customer.socialRegister ? (
                                 <div className="flex flex-col gap-[0.4rem]">
@@ -127,12 +135,43 @@ export const PersonalInformation = () => {
                             ) : (
                                 <div className="flex flex-col gap-[0.4rem]">
                                     <div className="flex flex-col">
-                                        <span className="font-semibold">
-                                            {customer.firstname} {customer?.lastname}
-                                        </span>
-                                        <span className="text-[15px] text-gray-600">
-                                            {customer.email}
-                                        </span>
+                                        <div className="flex items-center gap-[0.6rem]">
+                                            <span className="font-semibold">
+                                                {customer.firstname} {customer?.lastname}
+                                            </span>
+                                            {customer.gender == 'male' && (
+                                                <>
+                                                    <div className="bg-[#E7F0FF] rounded-xl py-[0.1rem] px-[0.5rem]">
+                                                        <CgGenderMale className="h-[1.2rem] w-[1.2rem] text-[#3A89FF]" />
+                                                    </div>
+                                                </>
+                                            )}
+                                            {customer.gender == 'female' && (
+                                                <>
+                                                    <div className="bg-[#fdedf2] rounded-xl py-[0.1rem] px-[0.5rem]">
+                                                        <CgGenderFemale className="h-[1.15rem] w-[1.2rem] text-[#f16997]" />
+                                                    </div>
+                                                </>
+                                            )}
+                                        </div>
+                                        <div className="flex items-center gap-[0.6rem] mt-[0.3rem]">
+                                            <MdEmail className="h-[0.9rem] w-[0.9rem] text-[#7D8A9C]" />
+                                            <span className="text-[15px] text-[#7D8A9C]">
+                                                {customer.email}
+                                            </span>
+                                        </div>
+                                        {customer.phoneNumber && (
+                                            <div className="flex items-center gap-[0.6rem]">
+                                                <img
+                                                    src={phoneIcon}
+                                                    alt=""
+                                                    className="h-[0.9rem] w-[0.9rem]"
+                                                />
+                                                <span className="text-[14px] text-[#7D8A9C]">
+                                                    {customer.phoneNumber}
+                                                </span>
+                                            </div>
+                                        )}
                                     </div>
                                     <button
                                         onClick={() => setModalImgOpen(!modalImgOpen)}

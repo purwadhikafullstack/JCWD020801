@@ -85,7 +85,7 @@ export const Navbar = () => {
     <div className="relative z-[200]">
       {/* Top Navbar */}
       {/* {isNavbarVisible && ()} */}
-      <div className="w-full fixed flex items-center justify-between bg-[#090b0a] px-[16px] h-[34px] lg:px-[160px] z-50">
+      <div className="w-full fixed flex items-center justify-between bg-[#72C1AC] px-[16px] h-[34px] lg:px-[160px] z-50">
         <div className="flex items-center gap-2.5 w-max">
           <div className="flex items-center gap-1.5 w-max">
             <LiaShippingFastSolid size={21} className="text-white " />
@@ -149,8 +149,6 @@ export const Navbar = () => {
               <ModalCategory
                 isOpenCategory={isOpenCategory}
                 categoryList={categoryList}
-                onHoverStart={() => setIsOpenCategory(true)}
-                onHoverEnd={() => setIsOpenCategory(false)}
               />
               <img src={categoryIcon}></img>
               <div
@@ -201,11 +199,10 @@ export const Navbar = () => {
           {/* Sign in & cart */}
           <div className="flex items-center gap-[0.7rem]">
             <div
-              className={`${
-                customer.profile_picture
+              className={`${customer.profile_picture
                   ? 'pl-[0.125rem] pr-4 border border-transparent hover:border-[#94d1c0]'
                   : 'px-4'
-              } hidden cursor-pointer h-[41px] items-center gap-2 md:flex hover:bg-[#f6f7f8] rounded-full transition ease-in-out delay-150`}
+                } hidden cursor-pointer h-[41px] items-center gap-2 md:flex hover:bg-[#f6f7f8] rounded-full transition ease-in-out delay-150`}
               onClick={toggleMenuAccount}
             >
               {' '}

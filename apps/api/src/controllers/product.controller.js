@@ -537,7 +537,7 @@ export const getProductBranchById = async (req, res) => {
           discounted_price =
             findBranchProduct.Product.price -
             findBranchProduct.Product.price *
-              findBranchProduct.Discounts[0].amount;
+            findBranchProduct.Discounts[0].amount;
           percentage =
             (findBranchProduct.Discounts[0].amount * 100).toString() + '%';
         } else {
@@ -548,7 +548,7 @@ export const getProductBranchById = async (req, res) => {
             Math.round(
               (findBranchProduct.Discounts[0].amount /
                 findBranchProduct.Product.price) *
-                100,
+              100,
             ).toString() + '%';
         }
         findBranchProduct.dataValues.percentage = percentage;

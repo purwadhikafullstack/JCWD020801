@@ -75,6 +75,7 @@ export const ModalUpdateImage = ({ modalImgOpen, setModalImgOpen }) => {
                 });
                 setIsLoading(false)
                 setModalImgOpen(false)
+                location.reload();
             } catch (error) {
                 setIsLoading(false)
                 console.log('Error uploading file', error);

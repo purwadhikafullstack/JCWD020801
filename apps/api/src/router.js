@@ -12,6 +12,7 @@ import { shippingCostRouter } from './routers/shippingcost.router';
 // import { paymentRouter } from './routers/payment.router';
 import { orderRouter } from './routers/order.router';
 import { orderDetailsRouter } from './routers/orderdetails.router';
+import { voucherRouter } from './routers/voucher.router';
 
 const router = Router();
 
@@ -29,6 +30,7 @@ router.use('/branches', branchRouter);
 router.use('/provinces', provinceRouter);
 router.use('/cities', cityRouter);
 router.use('/shipping', shippingCostRouter);
+router.use('/vouchers', voucherRouter)
 // router.use('/payment', paymentRouter);
 router.use('/order', orderRouter);
 router.use('/order-details', orderDetailsRouter);

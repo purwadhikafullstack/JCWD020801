@@ -286,6 +286,129 @@ export const CheckoutPage = () => {
                 </p>
               </div>
             </section>
+            {/* --------------- Checkout Mobile ---------------- */}
+            {/* bg-[#00765f] */}
+            <section
+              onClick={() => setIsPaymentOpen(!isPaymentOpen)}
+              className="fixed bottom-0 left-0 right-0 bottom lg:hidden rounded-t-2xl bg-[#00765f] cursor-pointer z-30 shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px]"
+            >
+              <div className="flex justify-between px-[20px] md:px-[40px] text-white py-3">
+                <div className="flex gap-2.5 items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    // width="16"
+                    // height="16"
+                    viewBox="0 0 16 16"
+                    className="h-[1.3rem]"
+                  >
+                    <path
+                      fill="white"
+                      d="M3.5 3A2.5 2.5 0 0 0 1 5.5V6h14v-.5A2.5 2.5 0 0 0 12.5 3zM15 7H1v3.5A2.5 2.5 0 0 0 3.5 13h9a2.5 2.5 0 0 0 2.5-2.5zm-4.5 3h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1"
+                    />
+                  </svg>
+                  <div className="flex gap-[0.5rem]">
+                    <span className="text-[17px] font-medium">Total:</span>
+                    <span className="text-[16.5px] font-normal">{convertToIDR(total + delivery - discount)}</span>
+
+                  </div>
+                </div>
+                <div
+                  className="flex justify-center items-center text-white"
+                >
+                  <motion.svg
+                    width="38"
+                    height="10"
+                    viewBox="0 0 40 11"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    animate={{ rotate: isPaymentOpen ? 180 : 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="h-[0.48rem]"
+                  >
+                    <path
+                      d="M2 9L20 2"
+                      stroke="#F6F7F8"
+                      strokeWidth="3"
+                      strokeLinecap="round"
+                    />
+                    <path
+                      d="M20 2L38 9"
+                      stroke="#F6F7F8"
+                      strokeWidth="3"
+                      strokeLinecap="round"
+                    />
+                  </motion.svg>
+                </div>
+              </div>
+            </section>
+            <AnimatePresence>
+              {isPaymentOpen && (
+                <motion.section
+                  initial={{ opacity: 0, y: 0 }}
+                  animate={{ opacity: 1, y: -160 }}
+                  exit={{ opacity: 0, y: 160 }}
+                  transition={{ duration: 0.3 }}
+                  className="fixed z-30 w-[95vw] md:w-[80vw] right-[2.5vw] md:right-[10vw] bg-white shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px] rounded-2xl py-5 px-5 -translate-y-1/2 top-1/2"
+                >
+                  <div className="flex justify-between items-center h-max border-b border-gray-300  pb-[0.6rem]">
+                    <h3 className="text-[20px] font-semibold text-[#28302A]">
+                      Payment Details
+                    </h3>
+                    <div
+                      onClick={() => setIsPaymentOpen(false)}
+                      className="cursor-pointer rounded-md hover:bg-gray-100 p-1 h-max"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="#657385"
+                        className="w-6 h-6"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M6 18 18 6M6 6l12 12"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-2 mb-[1rem] mt-[1.4rem]">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-medium text-gray-600">Subtotal</h4>
+                      <h4 className="font-semibold tracking-tight text-gray-900">
+                        {convertToIDR(total)}
+                      </h4>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-medium text-gray-600">Discount</h4>
+                      <h4 className="font-semibold tracking-tight text-gray-900">
+                        {convertToIDR(discount)}
+                      </h4>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-medium text-gray-600">Delivery</h4>
+                      <h4 className="font-semibold tracking-tight text-gray-900">
+                        {convertToIDR(delivery)}0
+                      </h4>
+                    </div>
+                  </div>
+                  <div className="border-t border-[#dcdcdc] flex items-center justify-between pt-[1rem]">
+                    <h4 className="font-semibold text-[18px]">Total</h4>
+                    <h4 className="font-bold text-[18px]">{convertToIDR(total + delivery - discount)}</h4>
+                  </div>
+                  <button
+                    onClick={() => handleCheckout()}
+                    className="flex items-center justify-center gap-2 mt-[1.2rem] px-4 rounded-lg w-full bg-[#00A67C] font-semibold text-white py-[0.6rem] text-[15px] hover:bg-[#00916D] transition ease-in-out delay-100">
+                    <span>Pay Now</span>
+                    {/* <img src={arrowLong} alt="" className="mt-[0.1rem]" /> */}
+                    <FaArrowRight className="mt-[0.1rem]" />
+                  </button>
+                </motion.section>
+              )}
+            </AnimatePresence>
+            {isPaymentOpen && (<div className="fixed top-0 left-0 w-full h-full bg-black opacity-40 z-20"></div>)}
           </div>
         </section>
       </div>

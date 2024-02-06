@@ -159,7 +159,7 @@ export const ProductCatalogue = () => {
     return (
         <>
             <Navbar />
-            <section className="mx-[16px] md:mx-[32px] lg:mx-[100px]">
+            <section className="mx-[16px] md:mx-[32px] lg:mx-[80px] xl:mx-[100px]">
                 <section className="flex flex-col lg:flex-row lg:gap-[1rem] mb-10">
                     {/* Left Side */}
                     <div className="">
@@ -427,7 +427,7 @@ export const ProductCatalogue = () => {
                             </div>
                         </section>
                         {/* Product Cards  */}
-                        <ProductCatalogueData product={nearestBranchProduct} branchId={branchId}/>
+                        <ProductCatalogueData product={nearestBranchProduct} branchId={branchId} />
                     </section>
                 </section>
             </section>

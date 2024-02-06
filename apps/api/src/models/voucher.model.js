@@ -15,11 +15,11 @@ export const init = (sequelize) => {
       },
       start_date: {
         type: DataTypes.DATE,
-        allowNull: false,
+        allowNull: true,
       },
       end_date: {
         type: DataTypes.DATE,
-        allowNull: false,
+        allowNull: true,
       },
       type: {
         type: DataTypes.ENUM,
@@ -32,16 +32,16 @@ export const init = (sequelize) => {
         values: ['percentage', 'nominal'],
       },
       amount: {
-        type: DataTypes.DECIMAL,
+        type: DataTypes.FLOAT,
         allowNull: false,
       },
       min_purchase_amount: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
       },
       max_discount: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
       },
     },
     {

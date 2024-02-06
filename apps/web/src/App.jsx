@@ -36,24 +36,26 @@ import StockManagement from './pages/admin/stockManagement';
 import { useGeoLocation } from './hooks/useGeoLocation';
 import { ProductDetail } from './pages/productDetail';
 import DiscountManagement from './pages/admin/discountManagement';
+import { Admin404 } from './pages/404admin';
+import { About } from './pages/about';
 
 const router = createBrowserRouter([
-  { path: '/', element: <Home /> },
-  { path: '/login-admin', element: <LoginAdmin></LoginAdmin> },
-  { path: '/admin-verification/:token', element: <AdminVerification /> },
-  { path: '/admin-reset-password/:token', element: <AdminResetPassword /> },
-  { path: '/login-admin', element: <LoginAdmin></LoginAdmin> },
-  { path: '/admin-verification/:token', element: <AdminVerification /> },
-  { path: '/admin-reset-password/:token', element: <AdminResetPassword /> },
-  { path: '/home', element: <HomePage /> },
-  { path: '/signin', element: <UserSignIn /> },
-  { path: '/register', element: <UserRegister /> },
-  { path: '/verify/:token', element: <AccountVerification /> },
-  { path: '/user-reset-password/:token', element: <UserResetPassword /> },
-  { path: '/user-update-email/:token', element: <UserUpdateEmail /> },
-  { path: '/store-locator', element: <StoreLocator /> },
-  { path: '/catalogue/:category_id?/:search?', element: <ProductCatalogue /> },
-  { path: '/product-detail/:id?/:branch_id?', element: <ProductDetail /> },
+  //Untuk yang tidak butuh token
+  { path: "/", element: <Home /> },
+  { path: "/login-admin", element: <LoginAdmin></LoginAdmin> },
+  { path: "/admin-verification/:token", element: <AdminVerification /> },
+  { path: "/admin-reset-password/:token", element: <AdminResetPassword /> },
+  { path: "/home", element: <HomePage /> },
+  { path: "/signin", element: <UserSignIn /> },
+  { path: "/register", element: <UserRegister /> },
+  { path: "/verify/:token", element: <AccountVerification /> },
+  { path: "/user-reset-password/:token", element: <UserResetPassword /> },
+  { path: "/user-update-email/:token", element: <UserUpdateEmail /> },
+  { path: "/store-locator", element: <StoreLocator /> },
+  { path: "/catalogue/:category_id?/:search?", element: <ProductCatalogue /> },
+  { path: "/product-detail/:id?/:branch_id?", element: <ProductDetail /> },
+  { path: "/about", element: <About /> },
+  { path: "/404-admin", element: <Admin404 /> },
   {
     element: <Required />,
     children: [
@@ -129,7 +131,7 @@ function App() {
     if (admtoken) {
       keepLoginAdmin();
     }
-  }, []);
+  }, [token]);
 
   return (
     <>

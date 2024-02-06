@@ -29,27 +29,27 @@ export default function Overview() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 p-9 items-center text-center text-white">
           {cards.map((item, index) => (
             <>
-            {adminDataRedux.isSuperAdmin === true ?
-             <CardOverview
-             key={index}
-             title={item.title}
-             desc={item.desc}
-             path={item.path}
-             icon={item.icon}
-             data={item.data}
-           />
-             : 
-             <>
-             {item.admin == true && <CardOverview
-             key={index}
-             title={item.title}
-             desc={item.desc}
-             path={item.path}
-             icon={item.icon}
-             data={item.data}
-           />}
-             </>
-             }
+              {adminDataRedux.isSuperAdmin === true ?
+                <CardOverview
+                  key={index}
+                  title={item.title}
+                  desc={item.desc}
+                  path={item.path}
+                  icon={item.icon}
+                  data={item.data}
+                />
+                :
+                <>
+                  {item.admin == true && <CardOverview
+                    key={index}
+                    title={item.title}
+                    desc={item.desc}
+                    path={item.path}
+                    icon={item.icon}
+                    data={item.data}
+                  />}
+                </>
+              }
             </>
           ))}
         </div>
