@@ -19,6 +19,7 @@
     "turbo": "latest"
   },
   "name": "final-project-template-turbo-vite",
+  "type": "module",
   "packageManager": "npm@8.15.0",
   "workspaces": [
     "apps/*",
