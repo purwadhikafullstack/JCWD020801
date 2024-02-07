@@ -173,7 +173,7 @@ export const ProductDetail = () => {
                         </div>
                     </section>
                     {/* Right: Pricing */}
-                    <section className="flex flex-col flex-1 lg:max-w-[32rem] rounded-3xl py-6 px-[1.6rem] md:px-[2rem] lg:py-8 lg:px-9 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]">
+                    <section className="flex flex-col flex-1 lg:w-[32vw] rounded-3xl py-6 px-[1.6rem] md:px-[2rem] lg:py-8 lg:px-8 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]">
                         {/* Breadcrumb */}
                         <div className="flex gap-[0.2rem] font-medium text-[#067627]">
                             <span>{productData?.Product?.Category?.name}</span>
