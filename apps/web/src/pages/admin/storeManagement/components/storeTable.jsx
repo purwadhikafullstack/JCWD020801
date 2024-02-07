@@ -179,5 +179,8 @@ StoreTable.propTypes = {
         address: PropTypes.string.isRequired,
         id: PropTypes.number.isRequired,
         AdminId: PropTypes.number.isRequired,
-    })
+    }),
+    handlePageChange: PropTypes.func.isRequired,
+    currentPage: PropTypes.number.isRequired,
+    totalPages: PropTypes.number.isRequired,
 }

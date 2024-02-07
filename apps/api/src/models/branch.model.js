@@ -39,7 +39,6 @@ export const init = (sequelize) => {
         type: DataTypes.BOOLEAN,
         defaultValue: true
       },
-
       isSuperStore: {
         type: DataTypes.BOOLEAN,
         defaultValue: false

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { AnimatePresence, motion } from 'framer-motion';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,6 +10,8 @@ import {
   removeFromCart,
   subtractQuantity,
 } from '../../../redux/cartSlice';
+import { useNavigate } from 'react-router-dom';
+import axios from '../../../api/axios';
 
 const convertToIDR = (price) => {
   let newPrice = price.toLocaleString('id-ID', {
@@ -21,24 +24,33 @@ const convertToIDR = (price) => {
 };
 
 export const ShoppingCart = ({ isOpenCart, toggleOpenCart }) => {
+  const navigate = useNavigate();
   const data = useSelector((state) => state.product.data);
+  // console.log(data);
   const carts = useSelector((state) => state.cart.data);
-  console.log(carts);
+  // console.log(carts);
   const total = carts.reduce(
-    (total, item) => total + item.amount * item.quantity,
+    (total, item) => total + item.price * item.quantity,
     0,
   );
   const totalProduct = useSelector((state) => state.cart.totalProduct);
   const dispatch = useDispatch();
   dispatch(addTotal(carts.reduce((total, item) => total + item.quantity, 0)));
-  const addQty = (itemId) => {
-    dispatch(addToCart({ id: itemId, quantity: 1 }));
+  const addQty = (item) => {
+    dispatch(
+      addToCart({
+        id: item.id,
+        quantity: 1,
+        price: item.price,
+        name: item.name,
+      }),
+    );
   };
 
   const handleSubtractQuantity = (product, item) => {
     if (item.quantity === 1) {
       dispatch(subtractQuantity({ id: product.id, quantity: 1 }));
-      toast.success(`${product.title} has been removed from cart`, {
+      toast.success(`${product.name} has been removed from cart`, {
         position: 'top-center',
         hideProgressBar: true,
         theme: 'light',
@@ -51,12 +63,36 @@ export const ShoppingCart = ({ isOpenCart, toggleOpenCart }) => {
 
   const handleRemoveProduct = (product) => {
     dispatch(removeFromCart({ id: product.id }));
-    toast.success(`${product.title} has been removed from cart`, {
+    toast.success(`${product.name} has been removed from cart`, {
       position: 'top-center',
       hideProgressBar: true,
       theme: 'light',
       autoClose: 3000,
     });
+  };
+
+  const handleCheckout = async (data) => {
+    try {
+      // const params = {
+      //   product: data,
+      //   quantity:tota,
+      //   total: total
+      // }
+      const response = await axios.post('/order-details', data);
+      // console.log(response);
+      navigate('/checkout');
+    } catch (error) {
+      console.log(error);
+    }
+    // const productId = data.map((item) => item.id);
+    // console.log(productId);
+    // const params = {
+    //   products: data,
+
+    // }
+    // localStorage.setItem('carts', carts);
+    // const cart = localStorage.getItem('carts');
+    // console.log(cart);
   };
 
   return (
@@ -68,7 +104,7 @@ export const ShoppingCart = ({ isOpenCart, toggleOpenCart }) => {
             onClick={toggleOpenCart}
             className="fixed top-0 left-0 w-full h-full bg-black opacity-40 z-40"
           ></div>
-
+          ~~``
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
@@ -77,7 +113,9 @@ export const ShoppingCart = ({ isOpenCart, toggleOpenCart }) => {
             className="z-50 absolute right-0 top-0 h-screen shadow-md w-[95vw] md:w-[52vw] lg:w-[26rem]"
           >
             <div className="relative flex flex-col bg-white w-full">
-              <div className={`w-[95vw] md:w-[52vw] lg:w-[26rem] fixed bg-white`}>
+              <div
+                className={`w-[95vw] md:w-[52vw] lg:w-[26rem] fixed bg-white`}
+              >
                 <div className="flex  justify-between items-center border-b border-[#D9D9D9] px-[1.4rem] py-[0.7rem]">
                   <div className="flex gap-2.5 items-center">
                     <span className="text-[18px] font-semibold text-[#343538] whitespace-pre">
@@ -135,7 +173,7 @@ export const ShoppingCart = ({ isOpenCart, toggleOpenCart }) => {
                             {convertToIDR(product.price)}
                           </span>
                           <span className="text-[14px] font-medium text-gray-700 cursor-pointer hover:underline hover:text-black transition delay-50 ease-in-out line-clamp-2">
-                            {product.desc}
+                            {product.name}
                           </span>
                           <div className="mt-1 flex items-center">
                             <div
@@ -148,7 +186,7 @@ export const ShoppingCart = ({ isOpenCart, toggleOpenCart }) => {
                             </div>
                             <p className="text-[16px]">{item.quantity}</p>
                             <div
-                              onClick={() => addQty(product.id)}
+                              onClick={() => addQty(product)}
                               className="mx-3 rounded-full border border-[#B2B2B2] h-[1.8rem] w-[1.8rem] flex items-center justify-center hover:bg-[#00A67C] group cursor-pointer transition delay-50 ease-in-out hover:border-[#00A67C]"
                             >
                               <PlusIcon className="text-gray-900 group-hover:text-white w-4 h-4" />
@@ -176,7 +214,10 @@ export const ShoppingCart = ({ isOpenCart, toggleOpenCart }) => {
                     </span>
                   </div>
                   <div className="">
-                    <button className="cssbuttons-io-button w-full font-semibold">
+                    <button
+                      onClick={() => handleCheckout(carts)}
+                      className="cssbuttons-io-button w-full font-semibold"
+                    >
                       Go to Checkout
                       <div className="icon">
                         <svg

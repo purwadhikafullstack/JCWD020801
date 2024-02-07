@@ -115,36 +115,6 @@ export const getAllByCustomerId = async (req, res) => {
     }
 }
 
-// export const getAllByCustomerId = async (req, res) => {
-//     try {
-//         const result = await CustomerAddress.findAll({
-//             where: {
-//                 CustomerId: req.user.id
-//             },
-//             order: [
-//                 ['isDefault', 'DESC'],
-//                 ['createdAt', 'DESC']
-//             ],
-//             include: [
-//                 {
-//                     model: City,
-//                     attributes: ['city'],
-//                     include: [
-//                         {
-//                             model: Province,
-//                             attributes: ['province']
-//                         }
-//                     ]
-//                 }
-//             ]
-//         })
-//         res.status(200).send({ result: result })
-//     } catch (error) {
-//         console.log(error);
-//         res.status(400).send({ message: error.message })
-//     }
-// }
-
 export const getAllForCheckout = async (req, res) => {
     try {
         const { page } = req.query;
@@ -183,37 +153,6 @@ export const getAllForCheckout = async (req, res) => {
         res.status(400).send({ message: error.message })
     }
 }
-
-// export const getAllForCheckout = async (req, res) => {
-//     try {
-//         const result = await CustomerAddress.findAll({
-//             where: {
-//                 CustomerId: req.user.id
-//             },
-//             order: [
-//                 ['isDeliveryAddress', 'DESC'],
-//                 ['isDefault', 'DESC'],
-//                 ['createdAt', 'DESC']
-//             ],
-//             include: [
-//                 {
-//                     model: City,
-//                     attributes: ['city'],
-//                     include: [
-//                         {
-//                             model: Province,
-//                             attributes: ['province']
-//                         }
-//                     ]
-//                 }
-//             ]
-//         })
-//         res.status(200).send({ result: result })
-//     } catch (error) {
-//         console.log(error);
-//         res.status(400).send({ message: error.message })
-//     }
-// }
 
 export const deleteById = async (req, res) => {
     try {

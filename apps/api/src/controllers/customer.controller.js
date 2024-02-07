@@ -8,22 +8,53 @@ const fs = require("fs");
 const handlebars = require("handlebars");
 const transporter = require('../middleware/transporter');
 import path from 'path';
+import CustomerVoucher from '../models/customervoucher.model';
+import Voucher from '../models/voucher.model';
 require("dotenv").config()
 
 export const userRegister = async (req, res) => {
     try {
-        const { firstname, lastname, email } = req.body
+        const { firstname, lastname, email, referral_code } = req.body
 
-        // check if user is already exist
         const findUser = await Customer.findOne({
             where: {
                 email
             }
         });
 
-        if (findUser == null) {
+        if (findUser != null) {
+            return res.status(400).send({ message: "Email is already registered" })
+        }
 
-            // Generate Referral code
+        let referral = null
+
+        if (referral_code) {
+            const findReferralCode = await Customer.findOne({
+                where: {
+                    referral_code: referral_code.toUpperCase()
+                }
+            });
+
+            if (!findReferralCode) {
+                return res.status(400).send({ message: "Referral code doesn't match" });
+            }
+
+            const isReferralCodeExist = await Voucher.findOne({
+                where: {
+                    type: "referral_code"
+                }
+            });
+
+            await CustomerVoucher.create({
+                CustomerId: findReferralCode.id,
+                VoucherId: isReferralCodeExist.id,
+                quantity: 1,
+            });
+
+            referral = referral_code;
+        }
+
+        if (findUser == null) {
             const generateReferralCode = (firstname) => {
                 const words = firstname.split(' ')
                 const userChars = words
@@ -69,9 +100,6 @@ export const userRegister = async (req, res) => {
                 }
             })
 
-        } else {
-            console.log("Email is already registered");
-            return res.status(400).send({ message: "User is already exist" })
         }
         return res.status(200).send({ message: "Successfully register new User, please check your email for verification" })
 

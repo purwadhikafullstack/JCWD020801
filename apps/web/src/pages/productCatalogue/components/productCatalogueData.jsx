@@ -4,52 +4,6 @@ import { useNavigate } from "react-router-dom";
 import axios from "../../../api/axios";
 import { useEffect, useState } from "react";
 
-const cardsData = [
-    {
-        title: 'card 2',
-        img: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        price: '25000',
-        stock: 54,
-        desc: 'Just FreshDirect 100% Grass-Fed Local 80% Lean Ground Beef, Fresh, Premium Packaging',
-    },
-    {
-        title: 'card 1',
-        img: 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?q=80&w=1965&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        price: '25000',
-        stock: 54,
-        desc: "FreshDirect Rotisserie Chicken, Raised w/o Antibiotics",
-    },
-    {
-        title: 'card 3',
-        img: 'https://images.unsplash.com/photo-1519996529931-28324d5a630e?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        price: '2500000',
-        stock: 54,
-        desc: 'Siggis Skyr Icelandic-Style Strained Non-Fat Yogurt, Mixed Berry and Acai',
-    },
-    {
-        title: 'card 4',
-        img: 'https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?q=80&w=1915&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        price: '25000',
-        stock: 54,
-        desc: 'Just FreshDirect Local Angus RWA 90% Lean Ground Beef, Premium Packaging',
-    },
-    {
-        title: 'card 5',
-        img: 'https://images.unsplash.com/photo-1557800636-894a64c1696f?q=80&w=1965&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        price: '25000000',
-        stock: 54,
-        desc: 'Sprouts Organic Chicken Thin Sliced Boneless Breast',
-    },
-    {
-        title: 'card 6',
-        img: 'https://plus.unsplash.com/premium_photo-1671379041175-782d15092945?q=80&w=1920&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        price: '250000',
-        stock: 54,
-        desc: 'this is desc this is desc this is desc',
-    },
-];
-
-
 export const ProductCatalogueData = ({ product, branchId }) => {
     const [productImage, setProductImage] = useState();
     const navigate = useNavigate();
@@ -82,26 +36,26 @@ export const ProductCatalogueData = ({ product, branchId }) => {
                                 <img
                                     src={productImage[index]?.image ? productImage[index]?.image : 'https://www.pngkey.com/png/detail/233-2332677_ega-png.png'}
                                     alt=""
-                                    className="rounded-lg h-[140px] md:h-[145px] xl:h-[180px] w-full object-cover"
+                                    className="rounded-lg h-[8.75rem] md:h-[11.5rem] lg:h-[9rem] xl:h-[10rem] w-full object-cover"
                                 />
                             </div>
                             <div className="px-1.5 flex flex-col gap-1">
                                 <div className="flex gap-1">
                                     <span className="font-bold text-[13px]">Rp</span>
                                     {item?.hasDiscount ?
-                                                <p className="text-[16px] md:text-[18px] font-bold text-rose-600 tracking-tight">
-                                                    {convertToIDR(item?.discounted_price)}
-                                                </p>
-                                                :
-                                                <p className="text-[16px] md:text-[18px] font-bold text-rose-600 tracking-tight">
-                                                    {convertToIDR(item.original_price)}
-                                                </p>
-                                            }
-                                            {item?.hasDiscount &&
-                                                <div className="font-semibold text-[#757575] text-[15px] line-through">
-                                                    Rp {item?.original_price}
-                                                </div>
-                                            }
+                                        <p className="text-[16px] md:text-[18px] font-bold text-rose-600 tracking-tight">
+                                            {convertToIDR(item?.discounted_price)}
+                                        </p>
+                                        :
+                                        <p className="text-[16px] md:text-[18px] font-bold text-rose-600 tracking-tight">
+                                            {convertToIDR(item.original_price)}
+                                        </p>
+                                    }
+                                    {item?.hasDiscount &&
+                                        <div className="font-semibold text-[#757575] text-[15px] line-through">
+                                            Rp {item?.original_price}
+                                        </div>
+                                    }
                                 </div>
                                 <p className="leading-relaxed text-gray-700 text-[14px] line-clamp-2">
                                     {item.Product?.description}
