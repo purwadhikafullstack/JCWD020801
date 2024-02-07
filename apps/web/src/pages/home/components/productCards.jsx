@@ -208,7 +208,7 @@ export const ProductCards = ({ branchData, coordinates, products }) => {
                 !coordinates?.lat && 'mr-[1.2rem]'
               } flex flex-col text-white`}
             >
-              <span className="text-[14px] font-normal">Shopping from:</span>
+              <span className="text-[14px] font-normal">om:</span>
               <Tooltip
                 content={branchData?.address}
                 placement="bottom"
