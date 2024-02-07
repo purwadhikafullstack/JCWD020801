@@ -41,7 +41,7 @@ export const UserRegister = () => {
                     position: 'top-center',
                 },
             );
-            navigate('/home')
+            navigate('/')
         } catch (error) {
             console.log("Error from handle Google Register Front-end", error);
             toast.error(error.response.data.message, {

@@ -99,7 +99,7 @@ export const NavbarMobile = ({ isOpen, toggleMenu, isOpenCategory, toggleMenuCat
                         <Link to={'/catalogue'} onClick={handleLinkClick}>
                             <h3 className="text-[17px] font-medium text-white">Catalogue</h3>
                         </Link>
-                        <Link to={'/home'} onClick={handleLinkClick}>
+                        <Link to={'/'} onClick={handleLinkClick}>
                             <h3 className="text-[17px] font-medium text-white">Home</h3>
                         </Link>
                         <div>

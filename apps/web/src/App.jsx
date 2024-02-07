@@ -41,11 +41,11 @@ import { About } from './pages/about';
 
 const router = createBrowserRouter([
   //Untuk yang tidak butuh token
-  { path: "/", element: <Home /> },
+  { path: "/", element: <HomePage /> },
   { path: "/login-admin", element: <LoginAdmin></LoginAdmin> },
   { path: "/admin-verification/:token", element: <AdminVerification /> },
   { path: "/admin-reset-password/:token", element: <AdminResetPassword /> },
-  { path: "/home", element: <HomePage /> },
+  // { path: "/home", element: <HomePage /> },
   { path: "/signin", element: <UserSignIn /> },
   { path: "/register", element: <UserRegister /> },
   { path: "/verify/:token", element: <AccountVerification /> },

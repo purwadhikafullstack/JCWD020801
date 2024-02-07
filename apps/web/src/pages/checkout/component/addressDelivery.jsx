@@ -4,7 +4,7 @@ import axios from '../../../api/axios';
 import { DeliveryCost } from './deliveryCost';
 import { calculateDistance } from '../../../functions/functions';
 
-export const AddressDelivery = () => {
+export const AddressDelivery = ({ handleDeliveryCostChange }) => {
     // ----- DUMMY ----
     const [branchLatLng, setBranchLatLng] = useState()
     const [customerLatLng, setCustomerLatLng] = useState()
@@ -20,13 +20,6 @@ export const AddressDelivery = () => {
             console.error(error);
         }
     }
-
-    console.log(branchLatLng);
-    console.log(customerLatLng);
-
-
-    // ------
-
 
     const token = localStorage.getItem('token');
     const [modalChangeAddressOpen, setModalChangeAddressOpen] = useState(false);
@@ -143,7 +136,11 @@ export const AddressDelivery = () => {
                 </button>
             </section>
             {/* Delivery Cost */}
-            <DeliveryCost deliveryAddress={deliveryAddress} finalDistance={finalDistance} />
+            <DeliveryCost
+                deliveryAddress={deliveryAddress}
+                finalDistance={finalDistance}
+                handleDeliveryCostChange={handleDeliveryCostChange}
+            />
             {/* ----- Modal ----- */}
             <ModalChangeAddress
                 modalChangeAddressOpen={modalChangeAddressOpen}

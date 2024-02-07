@@ -170,8 +170,8 @@ export const HomePage = () => {
               key={slideIndex}
               onClick={() => goToSlide(slideIndex)}
               className={`${currentIndex === slideIndex
-                  ? 'text-gray-800 text-4xl'
-                  : 'text-[#BFBFBF] hover:text-gray-800 text-2xl'
+                ? 'text-gray-800 text-4xl'
+                : 'text-[#BFBFBF] hover:text-gray-800 text-2xl'
                 }  cursor-pointer `}
             >
               {currentIndex === slideIndex ? <CgLoadbar /> : <RxDotFilled />}

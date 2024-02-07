@@ -10,7 +10,7 @@ import deliverySvg from '../../../assets/transport.svg';
 const dummyWeight = 1700;
 const dummyDestinationCity = 34;
 
-export const DeliveryCost = ({ deliveryAddress, finalDistance }) => {
+export const DeliveryCost = ({ deliveryAddress, finalDistance, handleDeliveryCostChange }) => {
   const token = localStorage.getItem('token');
   const [shippingCost, setShippingCost] = useState(null);
   const [selectedCourier, setSelectedCourier] = useState('');
@@ -22,7 +22,6 @@ export const DeliveryCost = ({ deliveryAddress, finalDistance }) => {
     setSelectedCourier(value);
   };
 
-  // console.log(deliveryAddress?.maxDeliveryDistance);
 
   const calculateShippingCost = async () => {
     try {
@@ -43,7 +42,7 @@ export const DeliveryCost = ({ deliveryAddress, finalDistance }) => {
       );
       setShippingCost(response.data.shippingcost[0].costs);
       setLoading(false);
-      // console.log(shippingCost);
+      console.log(shippingCost);
     } catch (error) {
       console.error(error);
       setLoading(false);
@@ -107,6 +106,7 @@ export const DeliveryCost = ({ deliveryAddress, finalDistance }) => {
                     type="radio"
                     name="serviceOptions"
                     className="peer hidden [&:checked_+_label_svg]:block"
+                    onClick={() => handleDeliveryCostChange(item.cost[0].value)}
                   />
                   <label
                     htmlFor={item.service}

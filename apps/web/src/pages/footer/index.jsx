@@ -77,7 +77,7 @@ export const Footer = () => {
                         <div className="flex flex-col text-[#FAFAFA] text-[15px]">
                             <h4 className="mb-6 font-bold text-[15.5px]">Links</h4>
                             <div className="flex flex-col gap-1.5">
-                                <Link to={'/home'} onClick={handleLinkClick} className="cursor-pointer  hover:underline hover:underline-offset-2">
+                                <Link to={'/'} onClick={handleLinkClick} className="cursor-pointer  hover:underline hover:underline-offset-2">
                                     Home
                                 </Link>
                                 <Link to={'/catalogue'} onClick={() => window.scrollTo(0, 0)} className="cursor-pointer  hover:underline hover:underline-offset-2">

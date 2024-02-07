@@ -3,7 +3,6 @@ import { useDispatch } from 'react-redux';
 import { updateGeolocation } from '../redux/geolocationSlice';
 // import { updateGeolocation } from '../redux/geoLocationSlice';
 
-
 export const useGeoLocation = () => {
     const dispatch = useDispatch()
 
@@ -13,7 +12,6 @@ export const useGeoLocation = () => {
             lng: location.coords.longitude,
         }));
     };
-
 
     const onError = () => {
         // setLocation({
@@ -30,7 +28,7 @@ export const useGeoLocation = () => {
         if ('geolocation' in navigator) {
             navigator.geolocation.getCurrentPosition(onSuccess, onError);
         } else {
-            // Handle the case where geolocation is not supported
+            // 
         }
     }, [dispatch]);
 

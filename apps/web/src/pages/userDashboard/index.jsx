@@ -81,7 +81,7 @@ export const UserDashboard = () => {
                     {/* Breadcrumb */}
                     <div className="flex w-max items-center justify-center gap-1.5 rounded-lg bg-none pl-1.5 text-[14px] font-medium text-gray-500">
                         <Link
-                            to={'/home'}
+                            to={'/'}
                             className="cursor-pointer hover:underline hover:text-[#858585] underline-offset-2"
                         >
                             Home
@@ -216,7 +216,7 @@ export const UserDashboard = () => {
                                         ))}
                                         <div className="flex flex-col border-t border-[#E6E6E5] pt-2">
                                             <div
-                                                onClick={() => navigate('/home')}
+                                                onClick={() => navigate('/')}
                                                 className="cursor-pointer flex gap-4 py-3  px-7 group hover:bg-[#F0FAF7]"
                                             >
                                                 <img src={toHomeIcon} alt=""></img>

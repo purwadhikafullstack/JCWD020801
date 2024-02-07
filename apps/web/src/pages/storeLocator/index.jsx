@@ -58,7 +58,7 @@ export const StoreLocator = () => {
                 {/* Breadcrumb */}
                 <div className="flex w-max items-center justify-center gap-1.5 rounded-lg bg-none pl-1.5 text-[14px] font-medium text-gray-500 my-2 lg:my-3">
                     <Link
-                        to={'/home'}
+                        to={'/'}
                         className="cursor-pointer hover:underline hover:text-[#858585] underline-offset-2"
                     >
                         Home

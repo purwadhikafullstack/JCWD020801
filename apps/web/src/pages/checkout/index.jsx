@@ -15,7 +15,7 @@ import { button } from '@material-tailwind/react';
 import { useEffect } from 'react';
 
 const convertToIDR = (price) => {
-  let newPrice = price.toLocaleString('id-ID', {
+  let newPrice = price?.toLocaleString('id-ID', {
     style: 'currency',
     currency: 'IDR',
     minimumFractionDigits: 0,
@@ -34,6 +34,13 @@ export const CheckoutPage = () => {
     (total, item) => total + item.price * item.quantity,
     0,
   );
+
+  const [selectedDeliveryCost, setSelectedDeliveryCost] = useState(null)
+
+  const handleDeliveryCostChange = (cost) => {
+    setSelectedDeliveryCost(cost)
+  }
+  // console.log(selectedDeliveryCost);
 
   useEffect(() => {
     const snapScript = 'https://app.sandbox.midtrans.com/snap/snap.js';
@@ -68,7 +75,7 @@ export const CheckoutPage = () => {
   };
 
   const discount = 30000;
-  const delivery = 24000;
+  // const delivery = 24000;
 
   return (
     <div>
@@ -113,7 +120,7 @@ export const CheckoutPage = () => {
         <section className="mx-[16px] md:mx-[32px] lg:mx-[160px] py-2 lg:py-3.5">
           <div className="flex flex-col pb-2 lg:pb-3 gap-[0.2rem] lg:gap-1">
             <div
-              onClick={() => navigate('/home')}
+              onClick={() => navigate('/')}
               id="underline-wrapper"
               className="text-gray-600 flex items-center gap-2 w-max cursor-pointer hover:text-gray-700 relative"
             >
@@ -158,7 +165,7 @@ export const CheckoutPage = () => {
                 convertToIDR={convertToIDR}
               />
               {/* Address & Delivery */}
-              <AddressDelivery />
+              <AddressDelivery handleDeliveryCostChange={handleDeliveryCostChange} />
               {/* Payment Method */}
               <section className="rounded-xl bg-[#FFFFFF] py-5 px-4 md:px-7 shadow-sm mb-[4rem] lg:mb-0">
                 <h3 className="text-[20px] font-bold border-b border-[#dcdcdc] text-[#28302A] pb-[0.6rem]">
@@ -253,22 +260,22 @@ export const CheckoutPage = () => {
                       </h4>
                     </div>
                     <div className="flex items-center justify-between">
-                      <h4 className="font-medium text-gray-600">Discount</h4>
+                      <h4 className="font-medium text-gray-600">Delivery</h4>
                       <h4 className="font-semibold tracking-tight text-gray-900">
-                        {convertToIDR(discount)}
+                        {convertToIDR(selectedDeliveryCost)}
                       </h4>
                     </div>
                     <div className="flex items-center justify-between">
-                      <h4 className="font-medium text-gray-600">Delivery</h4>
-                      <h4 className="font-semibold tracking-tight text-gray-900">
-                        {convertToIDR(delivery)}
+                      <h4 className="font-medium text-[#4eb197]">Discount</h4>
+                      <h4 className="font-semibold tracking-tight text-[#4eb197]">
+                        - {convertToIDR(discount)}
                       </h4>
                     </div>
                   </div>
                   <div className="border-t border-[#dcdcdc] flex items-center justify-between pt-[1rem]">
                     <h4 className="font-semibold text-[18px]">Total</h4>
                     <h4 className="font-bold text-[18px]">
-                      {convertToIDR(total + delivery - discount)}
+                      {convertToIDR(total + selectedDeliveryCost - discount)}
                     </h4>
                   </div>
                   <button
@@ -308,7 +315,7 @@ export const CheckoutPage = () => {
                   </svg>
                   <div className="flex gap-[0.5rem]">
                     <span className="text-[17px] font-medium">Total:</span>
-                    <span className="text-[16.5px] font-normal">{convertToIDR(total + delivery - discount)}</span>
+                    <span className="text-[16.5px] font-normal">{convertToIDR(total + selectedDeliveryCost - discount)}</span>
 
                   </div>
                 </div>
@@ -382,21 +389,21 @@ export const CheckoutPage = () => {
                       </h4>
                     </div>
                     <div className="flex items-center justify-between">
-                      <h4 className="font-medium text-gray-600">Discount</h4>
+                      <h4 className="font-medium text-gray-600">Delivery</h4>
                       <h4 className="font-semibold tracking-tight text-gray-900">
-                        {convertToIDR(discount)}
+                        {convertToIDR(selectedDeliveryCost)}
                       </h4>
                     </div>
                     <div className="flex items-center justify-between">
-                      <h4 className="font-medium text-gray-600">Delivery</h4>
-                      <h4 className="font-semibold tracking-tight text-gray-900">
-                        {convertToIDR(delivery)}0
+                      <h4 className="font-medium text-[#4eb197]">Discount</h4>
+                      <h4 className="font-semibold tracking-tight text-[#4eb197]">
+                        - {convertToIDR(discount)}
                       </h4>
                     </div>
                   </div>
                   <div className="border-t border-[#dcdcdc] flex items-center justify-between pt-[1rem]">
                     <h4 className="font-semibold text-[18px]">Total</h4>
-                    <h4 className="font-bold text-[18px]">{convertToIDR(total + delivery - discount)}</h4>
+                    <h4 className="font-bold text-[18px]">{convertToIDR(total + selectedDeliveryCost - discount)}</h4>
                   </div>
                   <button
                     onClick={() => handleCheckout()}
