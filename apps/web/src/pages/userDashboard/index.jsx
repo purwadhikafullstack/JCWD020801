@@ -19,7 +19,6 @@ import { AnimationWrapper } from './components/animationWrapper';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { ModalSignOut } from '../navbar/components/modalSignOut';
-import { ChangeEmail } from './components/changeEmail';
 import { Footer } from '../footer';
 import { MyVoucher } from './components/myVoucher';
 import { ChangeEmailPermission } from './components/changeEmailPermission';

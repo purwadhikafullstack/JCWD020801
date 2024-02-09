@@ -83,7 +83,7 @@ export const userRegister = async (req, res) => {
             const filePath = path.join(__dirname, '../../src/templates/template_verify.html');
             const data = fs.readFileSync(filePath, 'utf-8');
             const tempCompile = await handlebars.compile(data)
-            const tempResult = tempCompile({ firstname: firstname, link: `${process.env.BASE_URL}/verify/${token}` })
+            const tempResult = tempCompile({ firstname: firstname, link: `${process.env.BASE_URL}verify/${token}` })
 
             await transporter.sendMail({
                 from: 'thoby.athayaa@gmail.com',
@@ -108,7 +108,6 @@ export const userRegister = async (req, res) => {
         return res.status(400).send({ message: error.message })
     }
 }
-
 
 export const userRegisterWithGoogle = async (req, res) => {
     try {
@@ -272,7 +271,7 @@ export const userReverification = async (req, res) => {
             const filePath = path.join(__dirname, '../../src/templates/template_verify.html');
             const data = fs.readFileSync(filePath, 'utf-8');
             const tempCompile = await handlebars.compile(data)
-            const tempResult = tempCompile({ firstname: findUser.firstname, link: `${process.env.BASE_URL}/verify/${token}` })
+            const tempResult = tempCompile({ firstname: findUser.firstname, link: `${process.env.BASE_URL}verify/${token}` })
 
             await findUser.update({ verificationSentAt: new Date() })
 
@@ -334,7 +333,7 @@ export const resetPassword = async (req, res) => {
         const filePath = path.join(__dirname, '../../src/templates/template_reset_password_user.html');
         const data = fs.readFileSync(filePath, 'utf-8');
         const tempCompile = await handlebars.compile(data)
-        const tempResult = tempCompile({ email: email, link: `${process.env.BASE_URL}/user-reset-password/${token}` })
+        const tempResult = tempCompile({ email: email, link: `${process.env.BASE_URL}user-reset-password/${token}` })
 
         await transporter.sendMail({
             from: 'thoby.athayaa@gmail.com',
@@ -483,10 +482,10 @@ export const userDataUpdate = async (req, res) => {
 
 export const userImgUpdate = async (req, res) => {
     try {
-        console.log(req.file);
+        // console.log(req.file);
         const result = await Customer.update(
             {
-                profile_picture: `${process.env.BASE_URL_API}/public/${req.file?.filename}`
+                profile_picture: `${process.env.BASE_URL_API}public/${req.file?.filename}`
             },
             {
                 where: {
@@ -526,7 +525,7 @@ export const findEmailForgotPassword = async (req, res) => {
         const filePath = path.join(__dirname, '../../src/templates/template_reset_password_user.html');
         const data = fs.readFileSync(filePath, 'utf-8');
         const tempCompile = await handlebars.compile(data)
-        const tempResult = tempCompile({ email: email, link: `${process.env.BASE_URL}/user-reset-password/${token}` })
+        const tempResult = tempCompile({ email: email, link: `${process.env.BASE_URL}user-reset-password/${token}` })
 
         await transporter.sendMail({
             from: 'thoby.athayaa@gmail.com',
@@ -570,7 +569,7 @@ export const userEmailUpdate = async (req, res) => {
             const filePath = path.join(__dirname, '../../src/templates/template_update_email_user.html');
             const data = fs.readFileSync(filePath, 'utf-8');
             const tempCompile = await handlebars.compile(data)
-            const tempResult = tempCompile({ email: email, link: `${process.env.BASE_URL}/user-update-email/${token}` })
+            const tempResult = tempCompile({ email: email, link: `${process.env.BASE_URL}user-update-email/${token}` })
 
             await transporter.sendMail({
                 from: 'thoby.athayaa@gmail.com',
