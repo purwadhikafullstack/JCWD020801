@@ -90,15 +90,15 @@ export const Footer = () => {
                                 Delivery Partner
                             </h4>
                             <div className="flex flex-wrap justify-center gap-2">
-                                <card className="flex items-center justify-center rounded-lg bg-white border border-[#D1D5D8] h-[40px] w-[70px] pt-2 pb-1 px-2">
+                                <div className="flex items-center justify-center rounded-lg bg-white border border-[#D1D5D8] h-[40px] w-[70px] pt-2 pb-1 px-2">
                                     <img src={tiki} alt="" className="h-full w-full object-fit" />
-                                </card>
-                                <card className="flex items-center justify-center rounded-lg bg-white border border-[#D1D5D8] h-[40px] w-[70px] p-2">
+                                </div>
+                                <div className="flex items-center justify-center rounded-lg bg-white border border-[#D1D5D8] h-[40px] w-[70px] p-2">
                                     <img src={jne} alt="" className="h-full w-full object-fit" />
-                                </card>
-                                <card className="flex flex-wrap items-center justify-center rounded-lg bg-white border border-[#D1D5D8] h-[40px] w-[70px] py-1">
+                                </div>
+                                <div className="flex flex-wrap items-center justify-center rounded-lg bg-white border border-[#D1D5D8] h-[40px] w-[70px] py-1">
                                     <img src={pos} alt="" className="h-full w-full object-fit" />
-                                </card>
+                                </div>
                             </div>
                         </div>
                     </section>

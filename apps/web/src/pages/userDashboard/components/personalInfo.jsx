@@ -20,7 +20,6 @@ export const PersonalInformation = () => {
 
     const customer = useSelector((state) => state.customer.value);
     const token = localStorage.getItem('token');
-    console.log(customer);
 
     const copyToClipboard = (text) => {
         navigator.clipboard.writeText(text);

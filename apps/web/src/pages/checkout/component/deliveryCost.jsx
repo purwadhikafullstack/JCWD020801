@@ -164,7 +164,7 @@ DeliveryCost.propTypes = {
     title: PropTypes.string.isRequired,
     address: PropTypes.string.isRequired,
     CityId: PropTypes.number.isRequired,
-    maxDeliveryDistance: PropTypes.string.isRequired,
+    maxDeliveryDistance: PropTypes.string,
   }),
-  finalDistance: PropTypes.number.isRequired,
+  finalDistance: PropTypes.number,
 };

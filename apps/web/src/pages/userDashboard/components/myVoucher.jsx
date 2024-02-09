@@ -9,7 +9,6 @@ export const MyVoucher = () => {
     const [userVoucherData, setUserVoucherData] = useState(null)
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-    console.log(userVoucherData);
 
     const fetchUserVoucherData = async (page) => {
         try {
@@ -53,7 +52,7 @@ export const MyVoucher = () => {
                                 {userVoucherData?.map((item) => (
                                     <>
                                         <div
-                                            key={item.id}
+                                            key={item?.id}
                                             className="col-span-1 flex flex-col rounded-lg bg-gradient-to-r odd:from-[#049F75] odd:to-[#43E5B4] even:from-[#D87428] even:to-[#FBB770] shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]"
                                         >
                                             <div className="relative flex justify-between py-4 px-[1.6rem] items-center rounded-t-lg">

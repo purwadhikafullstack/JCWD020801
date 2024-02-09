@@ -16,12 +16,9 @@ import { useNavigate } from 'react-router-dom';
 export const ProductCards = ({ branchData, coordinates }) => {
   const customer = useSelector((state) => state.customer.value);
   const navigate = useNavigate()
-  // console.log(branchData);
 
   const products = useSelector((state) => state.product.data);
   const dispatch = useDispatch();
-
-  console.log(products);
 
   const [keenSlider, setKeenSlider] = useState(null);
   const sliderRef = useRef(null);
@@ -319,11 +316,11 @@ export const ProductCards = ({ branchData, coordinates }) => {
 };
 
 ProductCards.propTypes = {
-  coordinates: PropTypes.number.isRequired,
+  coordinates: PropTypes.object.isRequired,
   branchData: PropTypes.shape({
     address: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     id: PropTypes.number.isRequired,
-    distance: PropTypes.number.isRequired,
+    distance: PropTypes.number,
   })
 }

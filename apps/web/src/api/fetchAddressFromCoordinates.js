@@ -8,7 +8,7 @@ export const fetchAddressFromCoordinates = async (lat, lng) => {
         if (response.ok) {
             const data = await response.json();
             const formattedAddress = data.results[0].formatted_address;
-            console.log(formattedAddress);
+            // console.log(formattedAddress);
             return formattedAddress;
         } else {
             console.error('Failed to fetch address:', response.statusText);

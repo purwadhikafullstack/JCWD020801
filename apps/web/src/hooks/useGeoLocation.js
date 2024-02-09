@@ -18,8 +18,6 @@ export const useGeoLocation = () => {
         console.error('Geolocation error:', error);
     };
 
-    console.log(coordinates);
-
     useEffect(() => {
         if (!loaded && 'geolocation' in navigator) {
             navigator.geolocation.getCurrentPosition(onSuccess, onError);
