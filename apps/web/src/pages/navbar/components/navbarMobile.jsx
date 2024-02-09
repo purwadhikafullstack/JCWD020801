@@ -1,11 +1,11 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import PropTypes from 'prop-types';
-
 import appLogoSm from "../../../assets/lemon-logo.svg";
 import crossIcon from "../../../assets/navbar/cross.svg";
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { storeLastVisitedPage } from '../../../functions/storeLastVisitedPage';
+import personIcon from "../../../assets/userDashboard/person.svg"
 
 export const NavbarMobile = ({ isOpen, toggleMenu, isOpenCategory, toggleMenuCategory, categoryList }) => {
     const customer = useSelector((state) => state.customer.value);
@@ -151,11 +151,17 @@ export const NavbarMobile = ({ isOpen, toggleMenu, isOpenCategory, toggleMenuCat
                         {customer.id && (
                             <div className="w-full flex justify-between items-center">
                                 <div className="flex gap-4 items-center">
-                                    <img
-                                        src={customer.profile_picture}
-                                        alt=""
-                                        className="h-9 w-9 object-cover rounded-full"
-                                    />
+                                    {customer.profile_picture ? (
+                                        <img
+                                            src={customer.profile_picture}
+                                            alt=""
+                                            className="h-9 w-9 object-cover rounded-full"
+                                        />
+                                    ) : (
+                                        <div className="flex items-center justify-center rounded-full bg-[#E4E6E7] h-9 w-9">
+                                            <img src={personIcon} alt="" className="ml-[1px]" />
+                                        </div>
+                                    )}
                                     <span className="text-white text-[17px] font-medium">
                                         {customer.firstname}
                                     </span>
