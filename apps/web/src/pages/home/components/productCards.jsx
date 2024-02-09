@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-
 import 'keen-slider/keen-slider.min.css';
 import KeenSlider from 'keen-slider';
 import { useEffect, useRef, useState } from 'react';
@@ -12,14 +10,15 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Tooltip } from '@material-tailwind/react';
 import PropTypes from 'prop-types';
+import axios from '../../../api/axios';
+import { useNavigate } from 'react-router-dom';
 
 export const ProductCards = ({ branchData, coordinates }) => {
   const customer = useSelector((state) => state.customer.value);
+  const navigate = useNavigate()
 
   const products = useSelector((state) => state.product.data);
   const dispatch = useDispatch();
-
-  console.log(products);
 
   const [keenSlider, setKeenSlider] = useState(null);
   const sliderRef = useRef(null);
@@ -133,7 +132,7 @@ export const ProductCards = ({ branchData, coordinates }) => {
       <div className="my-[16px] mx-[16px] md:mx-[32px] lg:mx-[160px]">
         {/* Shopping From */}
         <div className="flex w-full justify-start">
-          <section className="flex gap-[0.7rem] mb-5 items-center w-max p-1 bg-[#00A67C] rounded-full">
+          <section className="flex gap-[0.7rem] mb-3 items-center w-max p-1 bg-[#00A67C] rounded-full">
             <div
               className={`${!coordinates?.lat && 'pulse-effect'
                 } rounded-full p-2 bg-[#E1F5EF]`}
@@ -196,7 +195,7 @@ export const ProductCards = ({ branchData, coordinates }) => {
         </div>
         {/* Cards */}
         <>
-          <section className="border-y border-[#D1D5D8]">
+          {/* <section className="border-y border-[#D1D5D8]">
             <div className="pb-[2rem] pt-[1.4rem]">
               <div className="items-center justify-between sm:flex">
                 <h2 className="text-[25px] md:text-[28px] font-semibold text-gray-900 tracking-tight">
@@ -254,7 +253,6 @@ export const ProductCards = ({ branchData, coordinates }) => {
                   </div>
                 </div>
               </div>
-              {/* ---- */}
               <div className="mt-6" ref={sliderRef}>
                 <div id="keen-slider" className="keen-slider">
                   {products.map((item, index) => (
@@ -310,7 +308,7 @@ export const ProductCards = ({ branchData, coordinates }) => {
                 </div>
               </div>
             </div>
-          </section>
+          </section> */}
         </>
       </div>
     </>
@@ -318,11 +316,11 @@ export const ProductCards = ({ branchData, coordinates }) => {
 };
 
 ProductCards.propTypes = {
-  coordinates: PropTypes.number.isRequired,
+  coordinates: PropTypes.object.isRequired,
   branchData: PropTypes.shape({
     address: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     id: PropTypes.number.isRequired,
-    distance: PropTypes.number.isRequired,
+    distance: PropTypes.number,
   })
 }

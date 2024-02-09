@@ -2,7 +2,6 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     loaded: false,
-    // coordinates: { lat: '', lng: '' },
     coordinates: { lat: null, lng: null },
 };
 

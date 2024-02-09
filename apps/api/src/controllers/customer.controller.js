@@ -83,7 +83,7 @@ export const userRegister = async (req, res) => {
             const filePath = path.join(__dirname, '../../src/templates/template_verify.html');
             const data = fs.readFileSync(filePath, 'utf-8');
             const tempCompile = await handlebars.compile(data)
-            const tempResult = tempCompile({ firstname: firstname, link: `http://localhost:5173/verify/${token}` })
+            const tempResult = tempCompile({ firstname: firstname, link: `${process.env.BASE_URL}/verify/${token}` })
 
             await transporter.sendMail({
                 from: 'thoby.athayaa@gmail.com',
@@ -272,7 +272,7 @@ export const userReverification = async (req, res) => {
             const filePath = path.join(__dirname, '../../src/templates/template_verify.html');
             const data = fs.readFileSync(filePath, 'utf-8');
             const tempCompile = await handlebars.compile(data)
-            const tempResult = tempCompile({ firstname: findUser.firstname, link: `http://localhost:5173/verify/${token}` })
+            const tempResult = tempCompile({ firstname: findUser.firstname, link: `${process.env.BASE_URL}/verify/${token}` })
 
             await findUser.update({ verificationSentAt: new Date() })
 
@@ -334,7 +334,7 @@ export const resetPassword = async (req, res) => {
         const filePath = path.join(__dirname, '../../src/templates/template_reset_password_user.html');
         const data = fs.readFileSync(filePath, 'utf-8');
         const tempCompile = await handlebars.compile(data)
-        const tempResult = tempCompile({ email: email, link: `http://localhost:5173/user-reset-password/${token}` })
+        const tempResult = tempCompile({ email: email, link: `${process.env.BASE_URL}/user-reset-password/${token}` })
 
         await transporter.sendMail({
             from: 'thoby.athayaa@gmail.com',
@@ -376,16 +376,14 @@ export const userLogin = async (req, res) => {
     try {
         let dataLoginUser;
         const { email, password } = req.query
-        console.log(req.query);
-        console.log(dataLoginUser);
+        // console.log(req.query);
+        // console.log(dataLoginUser);
 
         dataLoginUser = await Customer.findOne({
             where: {
                 email,
             }
         })
-
-        console.log(dataLoginUser);
 
         if (dataLoginUser == null) {
             return res.status(401).send({
@@ -488,7 +486,7 @@ export const userImgUpdate = async (req, res) => {
         console.log(req.file);
         const result = await Customer.update(
             {
-                profile_picture: `http://localhost:8000/public/${req.file?.filename}`
+                profile_picture: `${process.env.BASE_URL_API}/public/${req.file?.filename}`
             },
             {
                 where: {
@@ -528,7 +526,7 @@ export const findEmailForgotPassword = async (req, res) => {
         const filePath = path.join(__dirname, '../../src/templates/template_reset_password_user.html');
         const data = fs.readFileSync(filePath, 'utf-8');
         const tempCompile = await handlebars.compile(data)
-        const tempResult = tempCompile({ email: email, link: `http://localhost:5173/user-reset-password/${token}` })
+        const tempResult = tempCompile({ email: email, link: `${process.env.BASE_URL}/user-reset-password/${token}` })
 
         await transporter.sendMail({
             from: 'thoby.athayaa@gmail.com',
@@ -572,7 +570,7 @@ export const userEmailUpdate = async (req, res) => {
             const filePath = path.join(__dirname, '../../src/templates/template_update_email_user.html');
             const data = fs.readFileSync(filePath, 'utf-8');
             const tempCompile = await handlebars.compile(data)
-            const tempResult = tempCompile({ email: email, link: `http://localhost:5173/user-update-email/${token}` })
+            const tempResult = tempCompile({ email: email, link: `${process.env.BASE_URL}/user-update-email/${token}` })
 
             await transporter.sendMail({
                 from: 'thoby.athayaa@gmail.com',
@@ -644,5 +642,37 @@ export const getAllCustomer = async (req, res) => {
     } catch (error) {
         console.error(error)
         return res.status(500).send({ message: error.message })
+    }
+}
+
+export const userDataCheck = async (req, res) => {
+    try {
+        const { email, password } = req.query;
+
+        const loggedInUser = await Customer.findOne({
+            where: {
+                id: req.user.id
+            }
+        })
+
+        if (email !== loggedInUser.email) {
+            return res.status(401).send({
+                message: "Incorrect email address"
+            })
+        }
+
+        const isPasswordValid = await bcrypt.compare(password, loggedInUser.password)
+
+        if (!isPasswordValid) {
+            return res.status(400).send({
+                message: "Incorrect password"
+            })
+        }
+
+        return res.status(200).send({ message: "User authorized" })
+
+    } catch (error) {
+        console.error(error);
+        res.status(400).send({ message: error.message })
     }
 }

@@ -1,11 +1,11 @@
 import { Dialog, DialogBody, DialogHeader } from "@material-tailwind/react"
 import PropTypes from 'prop-types';
-import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
 import { SyncLoader } from 'react-spinners'
 import { useState } from "react";
+import axios from "../../../api/axios";
 
 export const ModalUserForgotPassword = ({ modalOpen, handleModalOpen, }) => {
     const [isLoading, setIsLoading] = useState(false)
@@ -13,13 +13,12 @@ export const ModalUserForgotPassword = ({ modalOpen, handleModalOpen, }) => {
     const handleSubmit = async (values) => {
         try {
             setIsLoading(true);
-            const response = await axios.get(`http://localhost:8000/api/customer/forgot-password?email=${values.email}`)
-            console.log(response);
+            const response = await axios.get(`customer/forgot-password?email=${values.email}`)
             setIsLoading(false);
             toast.success('Forgot password link has been sent to your email!', {
                 position: 'top-center',
             });
-
+            handleModalOpen()
         } catch (error) {
             console.log(error);
             setIsLoading(false)

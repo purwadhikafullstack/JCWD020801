@@ -1,14 +1,16 @@
 import { Dialog, DialogBody } from "@material-tailwind/react"
-import axios from "axios";
 import PropTypes from 'prop-types';
 import { toast } from "react-toastify";
+import axios from "../../../api/axios";
+import { useNavigate } from "react-router-dom";
 
 export const ModalSignOut = ({ isModalOpen, setIsModalOpen }) => {
     const token = localStorage.getItem('token');
+    const navigate = useNavigate()
 
     const handleLogout = async () => {
         try {
-            await axios.post('http://localhost:8000/api/customer/user-logout', null, {
+            await axios.post('customer/user-logout', null, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 },
@@ -18,6 +20,7 @@ export const ModalSignOut = ({ isModalOpen, setIsModalOpen }) => {
             toast.success('Sign out Success!', {
                 position: "top-center",
             })
+            navigate('/')
         } catch (error) {
             console.log(error);
         }

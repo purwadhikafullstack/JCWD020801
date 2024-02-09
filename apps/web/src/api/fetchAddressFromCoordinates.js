@@ -1,5 +1,5 @@
 export const fetchAddressFromCoordinates = async (lat, lng) => {
-    const apiKey = 'AIzaSyCClwQuelemPWnx5zJNjfbARhwvjg0XsxA'; // Replace with your Google Maps API key
+    const apiKey = 'AIzaSyCClwQuelemPWnx5zJNjfbARhwvjg0XsxA';
     const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}&callback=Function.prototype`;
 
     try {
@@ -8,7 +8,7 @@ export const fetchAddressFromCoordinates = async (lat, lng) => {
         if (response.ok) {
             const data = await response.json();
             const formattedAddress = data.results[0].formatted_address;
-            console.log(formattedAddress);
+            // console.log(formattedAddress);
             return formattedAddress;
         } else {
             console.error('Failed to fetch address:', response.statusText);

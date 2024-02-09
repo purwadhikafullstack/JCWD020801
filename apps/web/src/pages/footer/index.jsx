@@ -1,5 +1,5 @@
 import appLogo from '../../assets/yellow_white_logo.svg';
-import tiki from '../../assets/home/Tiki.png';
+import tiki from '../../assets/home/tiki.png';
 import jne from '../../assets/home/jne.png';
 import pos from '../../assets/home/pos.png';
 import { Link } from 'react-router-dom';
@@ -77,7 +77,7 @@ export const Footer = () => {
                         <div className="flex flex-col text-[#FAFAFA] text-[15px]">
                             <h4 className="mb-6 font-bold text-[15.5px]">Links</h4>
                             <div className="flex flex-col gap-1.5">
-                                <Link to={'/home'} onClick={handleLinkClick} className="cursor-pointer  hover:underline hover:underline-offset-2">
+                                <Link to={'/'} onClick={handleLinkClick} className="cursor-pointer  hover:underline hover:underline-offset-2">
                                     Home
                                 </Link>
                                 <Link to={'/catalogue'} onClick={() => window.scrollTo(0, 0)} className="cursor-pointer  hover:underline hover:underline-offset-2">
@@ -90,15 +90,15 @@ export const Footer = () => {
                                 Delivery Partner
                             </h4>
                             <div className="flex flex-wrap justify-center gap-2">
-                                <card className="flex items-center justify-center rounded-lg bg-white border border-[#D1D5D8] h-[40px] w-[70px] pt-2 pb-1 px-2">
+                                <div className="flex items-center justify-center rounded-lg bg-white border border-[#D1D5D8] h-[40px] w-[70px] pt-2 pb-1 px-2">
                                     <img src={tiki} alt="" className="h-full w-full object-fit" />
-                                </card>
-                                <card className="flex items-center justify-center rounded-lg bg-white border border-[#D1D5D8] h-[40px] w-[70px] p-2">
+                                </div>
+                                <div className="flex items-center justify-center rounded-lg bg-white border border-[#D1D5D8] h-[40px] w-[70px] p-2">
                                     <img src={jne} alt="" className="h-full w-full object-fit" />
-                                </card>
-                                <card className="flex flex-wrap items-center justify-center rounded-lg bg-white border border-[#D1D5D8] h-[40px] w-[70px] py-1">
+                                </div>
+                                <div className="flex flex-wrap items-center justify-center rounded-lg bg-white border border-[#D1D5D8] h-[40px] w-[70px] py-1">
                                     <img src={pos} alt="" className="h-full w-full object-fit" />
-                                </card>
+                                </div>
                             </div>
                         </div>
                     </section>

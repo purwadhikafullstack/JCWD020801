@@ -46,7 +46,7 @@ export const UserSignIn = () => {
                     position: 'top-center',
                 },
             );
-            navigate(lastVisitedPage || '/home')
+            navigate(lastVisitedPage || '/')
             localStorage.removeItem('lastVisitedPage');
         } catch (error) {
             console.log("Error from handle Google Register Front-end", error);
@@ -60,10 +60,10 @@ export const UserSignIn = () => {
     const handleSubmit = async (values) => {
         try {
             setIsLoading(true)
-            const response = await axios.get(`http://localhost:8000/api/customer/user-signin?email=${values.email}&password=${values.password}`, values)
+            const response = await axios.get(`customer/user-signin?email=${values.email}&password=${values.password}`, values)
             console.log(response);
             setIsLoading(false)
-            navigate('/home')
+            navigate('/')
             localStorage.setItem('token', response.data.token)
             dispatch(setData(response.data.result))
 
@@ -79,7 +79,7 @@ export const UserSignIn = () => {
                 },
             );
 
-            navigate(lastVisitedPage || '/home')
+            navigate(lastVisitedPage || '/')
             localStorage.removeItem('lastVisitedPage');
 
         } catch (error) {
@@ -104,7 +104,7 @@ export const UserSignIn = () => {
         validationSchema: userSignInSchema,
         onSubmit: (values) => {
             handleSubmit(values);
-            formik.resetForm();
+            // formik.resetForm();
         }
     })
 

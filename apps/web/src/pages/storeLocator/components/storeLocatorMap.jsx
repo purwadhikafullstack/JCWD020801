@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import lemonLogo from '../../../assets/lemon-logo.svg'
 
 export const StoreLocatorMap = ({ selectedStore }) => {
-    console.log(selectedStore.latitude, selectedStore.longitude);
+    // console.log(selectedStore.latitude, selectedStore.longitude);
 
     useEffect(() => {
     }, [selectedStore]);
