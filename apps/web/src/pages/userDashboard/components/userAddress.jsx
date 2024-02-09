@@ -123,7 +123,7 @@ export const UserAddress = () => {
                         </div>
                     </>
                 ) : (
-                    <div className="flex flex-col items-center gap-1 mt-4">
+                    <div className="flex flex-col items-center gap-1 mt-8 mb-4">
                         <div>
                             <img
                                 src={notFoundImg}
@@ -131,10 +131,10 @@ export const UserAddress = () => {
                                 className="h-[12rem] w-[12rem] opacity-60"
                             />
                         </div>
-                        <h3 className="text-[22px] text-[#666666] font-semibold opacity-80 mt-[1rem]">
+                        <h3 className="text-[20px] md:text-[23px] text-[#666666] font-semibold opacity-80 mt-[1rem]">
                             Your Address List is empty!
                         </h3>
-                        <p className="text-[14px] font-medium text-gray-500 w-[250px] text-center opacity-90 mt-[0.1rem]">
+                        <p className="text-[14.5px] font-medium text-gray-500 w-[250px] text-center opacity-90 mt-[0.5rem]">
                             Looks like you haven&apos;t added your address, please add a new
                             one.
                         </p>

@@ -2,7 +2,6 @@ import { useSelector } from 'react-redux';
 import avaDummy from '../../../assets/userDashboard/ava-dummy.png';
 import { toast } from 'react-toastify';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { Option, Select } from '@material-tailwind/react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -13,6 +12,7 @@ import phoneIcon from '../../../assets/storeManagement/phone.svg'
 import { CgGenderFemale } from "react-icons/cg";
 import { CgGenderMale } from "react-icons/cg";
 import { MdEmail } from "react-icons/md";
+import axios from '../../../api/axios';
 
 export const PersonalInformation = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -33,7 +33,7 @@ export const PersonalInformation = () => {
         try {
             setIsLoading(true);
             const response = await axios.patch(
-                'http://localhost:8000/api/customer/data-update',
+                'customer/data-update',
                 values,
                 {
                     headers: {

@@ -7,10 +7,12 @@ import { StoreLocatorMap } from "./components/storeLocatorMap";
 import { Footer } from "../footer";
 import { Link } from "react-router-dom";
 import { AnimatePresence, motion } from 'framer-motion';
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
+import { useGeoLocation } from "../../hooks/useGeoLocation";
 
 export const StoreLocator = () => {
-    const { coordinates, loaded } = useSelector((state) => state.geolocation);
+    // const { coordinates, loaded } = useSelector((state) => state.geolocation);
+    const { loaded, coordinates } = useGeoLocation()
 
     const [branchData, setBranchData] = useState([]);
     const [selectedStore, setSelectedStore] = useState(null)

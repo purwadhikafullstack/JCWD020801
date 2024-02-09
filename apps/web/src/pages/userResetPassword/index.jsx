@@ -5,11 +5,11 @@ import eyeOffIcon from "../../assets/userDashboard/eye-off.svg"
 import { useState } from 'react';
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { SyncLoader } from 'react-spinners'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
+import axios from '../../api/axios';
 
 export const UserResetPassword = () => {
     const params = useParams();
@@ -20,7 +20,7 @@ export const UserResetPassword = () => {
     const handleSubmit = async (values) => {
         try {
             setIsLoading(true)
-            await axios.patch('http://localhost:8000/api/customer/reset-password-verification', values, {
+            await axios.patch('customer/reset-password-verification', values, {
                 headers: {
                     Authorization: `Bearer ${params.token}`
                 }

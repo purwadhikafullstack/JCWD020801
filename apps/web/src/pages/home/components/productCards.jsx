@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-
 import 'keen-slider/keen-slider.min.css';
 import KeenSlider from 'keen-slider';
 import { useEffect, useRef, useState } from 'react';
@@ -13,9 +11,12 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Tooltip } from '@material-tailwind/react';
 import PropTypes from 'prop-types';
 import axios from '../../../api/axios';
+import { useNavigate } from 'react-router-dom';
 
 export const ProductCards = ({ branchData, coordinates }) => {
   const customer = useSelector((state) => state.customer.value);
+  const navigate = useNavigate()
+  // console.log(branchData);
 
   const products = useSelector((state) => state.product.data);
   const dispatch = useDispatch();

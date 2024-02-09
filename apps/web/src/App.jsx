@@ -45,7 +45,6 @@ const router = createBrowserRouter([
   { path: "/login-admin", element: <LoginAdmin></LoginAdmin> },
   { path: "/admin-verification/:token", element: <AdminVerification /> },
   { path: "/admin-reset-password/:token", element: <AdminResetPassword /> },
-  // { path: "/home", element: <HomePage /> },
   { path: "/signin", element: <UserSignIn /> },
   { path: "/register", element: <UserRegister /> },
   { path: "/verify/:token", element: <AccountVerification /> },
@@ -90,7 +89,7 @@ function App() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
 
-  useGeoLocation();
+  // useGeoLocation();
 
   const keepLoginAdmin = async () => {
     try {

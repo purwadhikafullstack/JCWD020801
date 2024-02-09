@@ -1,11 +1,11 @@
 import appLogo from '../../assets/logo-app-1.png';
 import bannerPage from '../../assets/email-update.png';
 import { useState } from 'react';
-import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { SyncLoader } from 'react-spinners';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import axios from '../../api/axios';
 
 export const UserUpdateEmail = () => {
     const params = useParams();
@@ -16,7 +16,7 @@ export const UserUpdateEmail = () => {
         try {
             setIsLoading(true);
             await axios.patch(
-                'http://localhost:8000/api/customer/email-update-verification',
+                'customer/email-update-verification',
                 null,
                 {
                     headers: {

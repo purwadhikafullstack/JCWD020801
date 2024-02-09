@@ -5,23 +5,22 @@ import eyeOffIcon from "../../assets/userDashboard/eye-off.svg"
 import { useState } from 'react';
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { SyncLoader } from 'react-spinners'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
+import axios from '../../api/axios';
 
 export const AccountVerification = () => {
     const params = useParams();
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false)
-    // const [showPassword2, setShowPassword2] = useState(false);
 
     const handleSubmit = async (values) => {
         try {
             setIsLoading(true)
-            const response = await axios.patch('http://localhost:8000/api/customer/verification', values, {
+            const response = await axios.patch('customer/verification', values, {
                 headers: {
                     Authorization: `Bearer ${params.token}`
                 }

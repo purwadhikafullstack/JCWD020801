@@ -1,5 +1,5 @@
 export const fetchAddressFromCoordinates = async (lat, lng) => {
-    const apiKey = 'AIzaSyCClwQuelemPWnx5zJNjfbARhwvjg0XsxA'; // Replace with your Google Maps API key
+    const apiKey = 'AIzaSyCClwQuelemPWnx5zJNjfbARhwvjg0XsxA';
     const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}&callback=Function.prototype`;
 
     try {

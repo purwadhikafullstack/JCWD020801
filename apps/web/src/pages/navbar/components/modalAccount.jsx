@@ -6,11 +6,6 @@ import { ModalSignOut } from './modalSignOut';
 import { useState } from 'react';
 import { storeLastVisitedPage } from '../../../functions/storeLastVisitedPage';
 
-// const accountList = [
-//     { title: "Sign in", link: "/signin" },
-//     { title: "Create account", link: "/register" },
-// ]
-
 const accountListLogin = [
   { title: 'My account', link: '/user-dashboard' },
   { title: 'Wishlist', link: '/' },
@@ -69,16 +64,6 @@ export const ModalAccount = ({ isOpenAccount }) => {
 
       return [...loggedInLinks, logOutLink];
     } else {
-      // return accountList.map((item) => (
-      //     <Link key={item.title} to={item.link}>
-      //         <div className="px-4 w-full cursor-pointer group border-l-2 border-white py-1 hover:border-[#3A826E] hover:bg-[#F0FAF7]">
-      //             <span className="whitespace-nowrap text-[15px] font-medium text-gray-600 group-hover:text-[#3A826E]">
-      //                 {item.title}
-      //             </span>
-      //         </div>
-      //     </Link>
-      // ));
-
       return (
         <div className="">
           <div

@@ -22,6 +22,7 @@ import { ModalSignOut } from '../navbar/components/modalSignOut';
 import { ChangeEmail } from './components/changeEmail';
 import { Footer } from '../footer';
 import { MyVoucher } from './components/myVoucher';
+import { ChangeEmailPermission } from './components/changeEmailPermission';
 
 const menuList = [
     { title: 'Personal Information', icon: personIcon },
@@ -256,7 +257,7 @@ export const UserDashboard = () => {
                                         <ResetPassword />
                                     </AnimationWrapper>
                                     <AnimationWrapper selectedOption={selectedOption} index={4}>
-                                        <ChangeEmail />
+                                        <ChangeEmailPermission />
                                     </AnimationWrapper>
                                 </>
                             )}

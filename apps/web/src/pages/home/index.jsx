@@ -13,17 +13,16 @@ import { DiscountedProducts } from './components/discountedProducts';
 import { useSelector } from 'react-redux';
 import slide1 from '../../assets/home/img-slides-1.png';
 import slide2 from '../../assets/home/img-slides-2.png';
-// import slide3 from "../../assets/home/img-slides-3.jpg"
 import slide4 from "../../assets/home/img-slides-4.png"
 import slide7 from "../../assets/home/img-slides-7.png"
 import axios from "../../api/axios"
 import { GrocerySteps } from "./components/grocerySteps"
+import { useGeoLocation } from '../../hooks/useGeoLocation';
 
 const imgSlides = [
   { url: slide7 },
   { url: slide1 },
   { url: slide2 },
-  // { url: slide3 },
   { url: slide4 },
 ];
 
@@ -31,7 +30,7 @@ export const HomePage = () => {
   const customer = useSelector((state) => state.customer.value);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const { coordinates, loaded } = useSelector((state) => state.geolocation);
+  const { loaded, coordinates } = useGeoLocation()
   const [branchData, setBranchData] = useState(null);
 
   const [nearestBranchProduct, setNearestBranchProduct] = useState([]);
@@ -74,7 +73,7 @@ export const HomePage = () => {
   };
 
   useEffect(() => {
-    if (coordinates === null) {
+    if (!loaded) {
       console.log('Location permission denied. Fetching data from main store.');
       fetchMainBranch();
     } else if (coordinates && loaded) {

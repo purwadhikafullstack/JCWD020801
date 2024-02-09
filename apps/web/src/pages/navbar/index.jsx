@@ -12,8 +12,6 @@ import { useSelector } from 'react-redux';
 import { fetchAddressFromCoordinates } from '../../api/fetchAddressFromCoordinates';
 import { truncateString } from '../../functions/functions';
 import { Tooltip } from '@material-tailwind/react';
-import { LiaShippingFastSolid } from 'react-icons/lia';
-import { IoLocationOutline } from "react-icons/io5";
 import { Link, useNavigate } from 'react-router-dom';
 import Headroom from 'react-headroom';
 import axios from '../../api/axios';
@@ -90,8 +88,6 @@ export const Navbar = () => {
       <div className="w-full fixed flex items-center justify-between bg-[#72C1AC] px-[16px] h-[34px] lg:px-[160px] z-50">
         <div className="flex items-center gap-2 w-max">
           <div className="flex items-center gap- w-max">
-            {/* <LiaShippingFastSolid size={21} className="text-white hidden md:block mb-[2.8px]" /> */}
-            {/* <IoLocationOutline size={17} className="text-white" /> */}
             <MdLocationOn size={17} className="text-white" />
             {/* <span className="text-[15px] text-white whitespace-nowrap">
               Delivery to
@@ -107,10 +103,10 @@ export const Navbar = () => {
                   unmount: { scale: 0, y: -15 },
                 }}
               >
-                <>
-                  <p className="hidden md:block">{truncateString(formattedAddress, 70)}</p>
+                <div>
+                  <p className="hidden md:block">{truncateString(formattedAddress, 75)}</p>
                   <p className="md:hidden">{truncateString(formattedAddress, 42)}</p>
-                </>
+                </div>
               </Tooltip>
             ) : (
               <Tooltip

@@ -1,10 +1,11 @@
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { updateGeolocation } from '../redux/geolocationSlice';
 // import { updateGeolocation } from '../redux/geoLocationSlice';
 
 export const useGeoLocation = () => {
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
+    const { loaded, coordinates } = useSelector(state => state.geolocation);
 
     const onSuccess = (location) => {
         dispatch(updateGeolocation({
@@ -13,24 +14,17 @@ export const useGeoLocation = () => {
         }));
     };
 
-    const onError = () => {
-        // setLocation({
-        //     loaded: true,
-        //     coordinates: { lat: null, lng: null },
-        //     error: {
-        //         code: error.code,
-        //         message: error.message,
-        //     },
-        // });
+    const onError = (error) => {
+        console.error('Geolocation error:', error);
     };
 
-    useEffect(() => {
-        if ('geolocation' in navigator) {
-            navigator.geolocation.getCurrentPosition(onSuccess, onError);
-        } else {
-            // 
-        }
-    }, [dispatch]);
+    console.log(coordinates);
 
-    return null;
+    useEffect(() => {
+        if (!loaded && 'geolocation' in navigator) {
+            navigator.geolocation.getCurrentPosition(onSuccess, onError);
+        }
+    }, [dispatch, loaded]);
+
+    return { coordinates, loaded };
 };

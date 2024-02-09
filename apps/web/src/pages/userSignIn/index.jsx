@@ -60,7 +60,7 @@ export const UserSignIn = () => {
     const handleSubmit = async (values) => {
         try {
             setIsLoading(true)
-            const response = await axios.get(`http://localhost:8000/api/customer/user-signin?email=${values.email}&password=${values.password}`, values)
+            const response = await axios.get(`customer/user-signin?email=${values.email}&password=${values.password}`, values)
             console.log(response);
             setIsLoading(false)
             navigate('/')
@@ -104,7 +104,7 @@ export const UserSignIn = () => {
         validationSchema: userSignInSchema,
         onSubmit: (values) => {
             handleSubmit(values);
-            formik.resetForm();
+            // formik.resetForm();
         }
     })
 
