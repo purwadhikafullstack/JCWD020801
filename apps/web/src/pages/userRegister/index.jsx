@@ -41,7 +41,7 @@ export const UserRegister = () => {
                     position: 'top-center',
                 },
             );
-            navigate('/home')
+            navigate('/')
         } catch (error) {
             console.log("Error from handle Google Register Front-end", error);
             toast.error(error.response.data.message, {
@@ -53,7 +53,7 @@ export const UserRegister = () => {
     const handleSubmit = async (values) => {
         try {
             setIsLoading(true);
-            await axios.post('http://localhost:8000/api/customer/register', values);
+            await axios.post('customer/register', values);
             setIsLoading(false)
             console.log(values);
             setModalOpen(true)
@@ -86,7 +86,7 @@ export const UserRegister = () => {
         validationSchema: userRegisterSchema,
         onSubmit: (values) => {
             handleSubmit(values);
-            formik.resetForm();
+            // formik.resetForm();
         }
     });
 

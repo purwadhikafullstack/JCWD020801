@@ -2,17 +2,17 @@ import { useState } from 'react';
 import eyeIcon from '../../../assets/userDashboard/eye.svg';
 import eyeOffIcon from '../../../assets/userDashboard/eye-off.svg';
 import { SyncLoader } from 'react-spinners';
-import axios from 'axios';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { toast } from 'react-toastify';
-// import { useSelector } from "react-redux";
+import axios from '../../../api/axios';
+import { useNavigate } from 'react-router-dom';
 
 export const ResetPassword = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const token = localStorage.getItem('token');
-    // const customer = useSelector((state) => state.customer.value);
+    const navigate = useNavigate()
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
@@ -22,18 +22,21 @@ export const ResetPassword = () => {
         try {
             setIsLoading(true);
             const response = await axios.get(
-                `http://localhost:8000/api/customer/reset-password?email=${values.email}&password=${values.password}`,
+                `customer/reset-password?email=${values.email}&password=${values.password}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 },
             );
-            console.log(response);
-            setIsLoading(false);
+            // console.log(response);
             toast.success(response.data.message, {
                 position: 'top-center',
             });
+            setIsLoading(false);
+            localStorage.removeItem("token")
+            window.location.reload()
+            navigate('/')
         } catch (error) {
             console.log(error.response.data.message, error);
             setIsLoading(false);

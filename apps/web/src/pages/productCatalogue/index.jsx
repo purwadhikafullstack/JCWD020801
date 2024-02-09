@@ -3,52 +3,11 @@ import { Navbar } from "../navbar"
 import { AnimatePresence, motion } from "framer-motion";
 import { ProductCatalogueData } from "./components/productCatalogueData";
 import { Footer } from "../footer";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 import axios from "../../api/axios";
 import { formatDistance } from "../../functions/functions";
 import { Link, useParams } from "react-router-dom";
-
-const categoryList = [
-    {
-        name: 'Meat & Poultry',
-        subcategory: [
-            'Beef',
-            'Lamb',
-            'Chicken',
-            'Duck',
-            'Sausage',
-        ],
-    },
-    {
-        name: 'Seafood',
-        subcategory: [
-            'Fish Fillets',
-            'Fish Whole',
-            'Salmon',
-            'Crab',
-            'Lobster',
-            'Shrimp',
-        ],
-    },
-    {
-        name: 'Fresh',
-        // subcategory: {
-        //     list: ['Fruits', 'Berries', 'Vegetables', 'Dried Fruits & Nuts'],
-        // },
-    },
-    { name: 'Spice & Herbs' },
-    {
-        name: 'Dairy',
-        // subcategory: { list: ['Eggs', 'Milk', 'Yoghurt', 'Sour Cream', 'Pudding'] },
-    },
-    { name: 'Drinks' },
-    { name: 'Frozen' },
-    { name: 'Snacks' },
-    { name: 'Beauty' },
-    { name: 'Healthcare' },
-    { name: 'Household' },
-    { name: 'Pet' },
-];
+import { useGeoLocation } from "../../hooks/useGeoLocation";
 
 const filterItems = [
     { title: "Relevance" },
@@ -63,7 +22,8 @@ export const ProductCatalogue = () => {
     const [isSortOpen, setIsSortOpen] = useState(false)
     const [isCategoryOpen, setIsCategoryOpen] = useState(false)
 
-    const { coordinates, loaded } = useSelector((state) => state.geolocation);
+    // const { coordinates, loaded } = useSelector((state) => state.geolocation);
+    const { loaded, coordinates } = useGeoLocation()
     const [branchData, setBranchData] = useState(null);
     const [count, setCount] = useState(0)
 
@@ -166,7 +126,7 @@ export const ProductCatalogue = () => {
                         {/* Breadcrumb */}
                         <div className="flex w-max items-center justify-center gap-1.5 rounded-lg bg-none pl-1 text-[14px] font-medium text-gray-500 my-2 lg:my-3">
                             <Link
-                                to={'/home'}
+                                to={'/'}
                                 className="cursor-pointer hover:underline hover:text-[#858585] underline-offset-2"
                             >
                                 Home

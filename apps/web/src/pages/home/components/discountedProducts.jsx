@@ -123,7 +123,7 @@ export const DiscountedProducts = () => {
             <section className="relative my-[16px] mx-[10px] md:mx-[32px] lg:mx-[160px] bg-[#EBF6F3] rounded-2xl overflow-hidden z-10">
                 <motion.svg
                     style={{ y }}
-                    className=" absolute h-[17rem] md:h-[18rem] w-max -left-[6rem] -bottom-[3rem] md:-bottom-[8rem] opacity-40"
+                    className=" absolute h-[17rem] md:h-[18rem] w-max -left-[6rem] bottom-[7rem] lg:-bottom-[0rem] md:-bottom-[8rem] opacity-40"
                     width="39"
                     height="40"
                     viewBox="0 0 39 40"
@@ -195,7 +195,7 @@ export const DiscountedProducts = () => {
                 </motion.svg>
                 <motion.svg
                     style={{ y }}
-                    className=" absolute h-[18.5rem] w-max -right-[5rem] -bottom-[28rem] opacity-40"
+                    className=" absolute h-[18.5rem] w-max -right-[5rem] -bottom-[20rem] opacity-40"
                     xmlns="http://www.w3.org/2000/svg"
                     width="120"
                     height="119"

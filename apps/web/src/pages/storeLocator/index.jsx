@@ -7,17 +7,15 @@ import { StoreLocatorMap } from "./components/storeLocatorMap";
 import { Footer } from "../footer";
 import { Link } from "react-router-dom";
 import { AnimatePresence, motion } from 'framer-motion';
-import { useSelector } from "react-redux";
+import { useGeoLocation } from "../../hooks/useGeoLocation";
 
 export const StoreLocator = () => {
-    const { coordinates, loaded } = useSelector((state) => state.geolocation);
+    const { loaded, coordinates } = useGeoLocation()
 
     const [branchData, setBranchData] = useState([]);
     const [selectedStore, setSelectedStore] = useState(null)
     const [searchQuery, setSearchQuery] = useState('')
     const [listExpand, setListExpand] = useState(false)
-
-    console.log(branchData);
 
     const handleStoreClick = (index) => {
         setSelectedStore(filteredBranchData()[index]);
@@ -58,7 +56,7 @@ export const StoreLocator = () => {
                 {/* Breadcrumb */}
                 <div className="flex w-max items-center justify-center gap-1.5 rounded-lg bg-none pl-1.5 text-[14px] font-medium text-gray-500 my-2 lg:my-3">
                     <Link
-                        to={'/home'}
+                        to={'/'}
                         className="cursor-pointer hover:underline hover:text-[#858585] underline-offset-2"
                     >
                         Home

@@ -37,7 +37,7 @@ export const GrocerySteps = () => {
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-[0.8rem] lg:gap-[2rem] py-[1.8rem] lg:py-[2.5rem] overflow-auto">
                         {stepItem.map((item, index) => (
-                            <grid key={index} className="col-span-1 flex gap-[1rem] md:gap-0 md:flex-col justify-center items-center rounded-2xl px-[1rem] lg:px-0 py-[1.2rem] md:py-[2rem] bg-gray-100 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-[0.45] shadow-sm">
+                            <div key={index} className="col-span-1 flex gap-[1rem] md:gap-0 md:flex-col justify-center items-center rounded-2xl px-[1rem] lg:px-0 py-[1.2rem] md:py-[2rem] bg-gray-100 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-[0.45] shadow-sm">
                                 <div className="rounded-full bg-[#00cf9a] p-[1rem] md:p-[1.2rem]">
                                     {item.img}
                                 </div>
@@ -45,7 +45,7 @@ export const GrocerySteps = () => {
                                     <h4 className="font-semibold text-[16px] lg:text-[18px] text-[#343538]">{item.title}</h4>
                                     <p className="md:text-center lg:px-[2rem] text-[13.5px] lg:text-[14px] text-gray-600 mt-[0.2rem] md:mt-[0.4rem]">{item.desc}</p>
                                 </div>
-                            </grid>
+                            </div>
                         ))}
                     </div>
                 </div>

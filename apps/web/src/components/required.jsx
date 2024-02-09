@@ -5,7 +5,7 @@ function Required() {
     return (
         <>
             {
-                token ? <Outlet></Outlet> : <Navigate to='/home' />
+                token ? <Outlet></Outlet> : <Navigate to='/' />
             }
         </>
     )

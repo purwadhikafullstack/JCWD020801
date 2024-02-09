@@ -3,7 +3,7 @@ import LoginAdmin from './pages/admin/loginAdmin';
 import AdminManagement from './pages/admin/adminManagement';
 import CustomerManagement from './pages/admin/customerManagement';
 import Overview from './pages/admin/overview';
-import Home from './pages/home/Home';
+// import Home from './pages/home/Home';
 import Required from './components/required';
 import { useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
@@ -23,7 +23,6 @@ import { UserRegister } from './pages/userRegister';
 import { AccountVerification } from './pages/accountVerification';
 import { UserResetPassword } from './pages/userResetPassword';
 import { UserUpdateEmail } from './pages/userUpdateEmail';
-// import { setData } from './redux/customercustomerSliceSlice';
 import { setData } from './redux/customerSlice';
 import AdminRequired from './components/adminRequired';
 import { StoreManagement } from './pages/admin/storeManagement';
@@ -33,7 +32,6 @@ import { CheckoutPage } from './pages/checkout';
 import { ProductCatalogue } from './pages/productCatalogue';
 import AdminErrorPage from './pages/admin/components/adminErrorPage';
 import StockManagement from './pages/admin/stockManagement';
-import { useGeoLocation } from './hooks/useGeoLocation';
 import { ProductDetail } from './pages/productDetail';
 import DiscountManagement from './pages/admin/discountManagement';
 import { Admin404 } from './pages/404admin';
@@ -41,11 +39,10 @@ import { About } from './pages/about';
 
 const router = createBrowserRouter([
   //Untuk yang tidak butuh token
-  { path: "/", element: <Home /> },
+  { path: "/", element: <HomePage /> },
   { path: "/login-admin", element: <LoginAdmin></LoginAdmin> },
   { path: "/admin-verification/:token", element: <AdminVerification /> },
   { path: "/admin-reset-password/:token", element: <AdminResetPassword /> },
-  { path: "/home", element: <HomePage /> },
   { path: "/signin", element: <UserSignIn /> },
   { path: "/register", element: <UserRegister /> },
   { path: "/verify/:token", element: <AccountVerification /> },
@@ -90,7 +87,7 @@ function App() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
 
-  useGeoLocation();
+  // useGeoLocation();
 
   const keepLoginAdmin = async () => {
     try {

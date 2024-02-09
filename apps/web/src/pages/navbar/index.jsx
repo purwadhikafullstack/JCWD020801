@@ -12,10 +12,10 @@ import { useSelector } from 'react-redux';
 import { fetchAddressFromCoordinates } from '../../api/fetchAddressFromCoordinates';
 import { truncateString } from '../../functions/functions';
 import { Tooltip } from '@material-tailwind/react';
-import { LiaShippingFastSolid } from 'react-icons/lia';
 import { Link, useNavigate } from 'react-router-dom';
 import Headroom from 'react-headroom';
 import axios from '../../api/axios';
+import { MdLocationOn } from "react-icons/md";
 
 export const Navbar = () => {
   const customer = useSelector((state) => state.customer.value);
@@ -86,12 +86,12 @@ export const Navbar = () => {
       {/* Top Navbar */}
       {/* {isNavbarVisible && ()} */}
       <div className="w-full fixed flex items-center justify-between bg-[#72C1AC] px-[16px] h-[34px] lg:px-[160px] z-50">
-        <div className="flex items-center gap-2.5 w-max">
-          <div className="flex items-center gap-1.5 w-max">
-            <LiaShippingFastSolid size={21} className="text-white " />
-            <span className="text-[15px] text-white whitespace-nowrap">
+        <div className="flex items-center gap-2 w-max">
+          <div className="flex items-center gap- w-max">
+            <MdLocationOn size={17} className="text-white" />
+            {/* <span className="text-[15px] text-white whitespace-nowrap">
               Delivery to
-            </span>
+            </span> */}
           </div>
           <span className="text-[15px] font-normal text-white underline underline-offset-2 line-clamp-1 w-max cursor-pointer">
             {loaded && formattedAddress ? (
@@ -103,7 +103,10 @@ export const Navbar = () => {
                   unmount: { scale: 0, y: -15 },
                 }}
               >
-                <p>{truncateString(formattedAddress, 50)}</p>
+                <div>
+                  <p className="hidden md:block">{truncateString(formattedAddress, 75)}</p>
+                  <p className="md:hidden">{truncateString(formattedAddress, 42)}</p>
+                </div>
               </Tooltip>
             ) : (
               <Tooltip
@@ -130,7 +133,7 @@ export const Navbar = () => {
         <div className="pt-[44px] flex items-center justify-between border-b border-[#E4E4E4] px-[16px] py-2.5 lg:px-[160px] bg-white">
           {/* Logo & Category */}
           <div className="flex items-center gap-[1rem]">
-            <Link to={'/home'}>
+            <Link to={'/'}>
               <div className="flex shrink-0">
                 <img
                   src={appLogo}
@@ -200,8 +203,8 @@ export const Navbar = () => {
           <div className="flex items-center gap-[0.7rem]">
             <div
               className={`${customer.profile_picture
-                  ? 'pl-[0.125rem] pr-4 border border-transparent hover:border-[#94d1c0]'
-                  : 'px-4'
+                ? 'pl-[0.125rem] pr-4 border border-transparent hover:border-[#94d1c0]'
+                : 'px-4'
                 } hidden cursor-pointer h-[41px] items-center gap-2 md:flex hover:bg-[#f6f7f8] rounded-full transition ease-in-out delay-150`}
               onClick={toggleMenuAccount}
             >

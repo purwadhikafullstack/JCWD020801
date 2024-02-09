@@ -1,9 +1,9 @@
 import { Dialog, DialogBody } from '@material-tailwind/react';
-import axios from 'axios';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { SyncLoader } from 'react-spinners';
 import { useState } from 'react';
+import axios from '../../../api/axios';
 
 export const ModalAddressSetDefault = ({ modalDefaultOpen, setModalDefaultOpen, item, fetchUserAddressData, currentPage }) => {
     const token = localStorage.getItem('token');
@@ -13,7 +13,7 @@ export const ModalAddressSetDefault = ({ modalDefaultOpen, setModalDefaultOpen, 
         try {
             setIsLoading(true);
             const response = await axios.patch(
-                `http://localhost:8000/api/customer-address/set-default/${item.id}`,
+                `customer-address/set-default/${item.id}`,
                 null,
                 {
                     headers: {

@@ -229,11 +229,10 @@ export const ModalUserCreateAddress = ({
               <BiHome size={18} />
               <div className="absolute -bottom-[2rem] w-max text-centers">
                 <span
-                  className={`${
-                    activeStep == 0
-                      ? 'text-gray-800 font-semibold'
-                      : 'text-gray-500 font-medium'
-                  } text-[13px] md:text-[14px]`}
+                  className={`${activeStep == 0
+                    ? 'text-gray-800 font-semibold'
+                    : 'text-gray-500 font-medium'
+                    } text-[13px] md:text-[14px]`}
                 >
                   Address Details
                 </span>
@@ -248,11 +247,10 @@ export const ModalUserCreateAddress = ({
               <LuMapPin size={18} />
               <div className="absolute -bottom-[2rem] w-max text-centers">
                 <span
-                  className={`${
-                    activeStep == 1
-                      ? 'text-gray-800 font-semibold'
-                      : 'text-gray-500 font-medium'
-                  } text-[13px] md:text-[14px]`}
+                  className={`${activeStep == 1
+                    ? 'text-gray-800 font-semibold'
+                    : 'text-gray-500 font-medium'
+                    } text-[13px] md:text-[14px]`}
                 >
                   Address Pinpoint
                 </span>
@@ -266,9 +264,8 @@ export const ModalUserCreateAddress = ({
           {/* 1 */}
           <section
             id="modal-scroll"
-            className={`${
-              activeStep == 0 ? 'block' : 'hidden'
-            } w-full h-[52vh] lg:h-full overflow-auto pb-2 pr-3 lg:pr-0 lg:pb-0`}
+            className={`${activeStep == 0 ? 'block' : 'hidden'
+              } w-full h-[52vh] lg:h-full overflow-auto pb-2 pr-3 lg:pr-0 lg:pb-0`}
           >
             <div className="flex flex-col md:flex-row gap-3.5 md:gap-[2rem] w-full">
               {/* Label & Customer Name */}
@@ -306,7 +303,7 @@ export const ModalUserCreateAddress = ({
                     autoComplete="off"
                   />
                   {formik.touched.customerAddressName &&
-                  formik.errors.customerAddressName ? (
+                    formik.errors.customerAddressName ? (
                     <span className="pl-[0.1rem] pb-1 text-red-500 text-[14px]">
                       {formik.errors.customerAddressName}
                     </span>
@@ -474,17 +471,17 @@ export const ModalUserCreateAddress = ({
                         : 'suggestion-item';
                       const style = suggestion.active
                         ? {
-                            backgroundColor: '#e6f4f0',
-                            cursor: 'pointer',
-                            padding: '3px 10px',
-                            fontSize: '15px',
-                          }
+                          backgroundColor: '#e6f4f0',
+                          cursor: 'pointer',
+                          padding: '3px 10px',
+                          fontSize: '15px',
+                        }
                         : {
-                            backgroundColor: '#ffffff',
-                            cursor: 'pointer',
-                            padding: '3px 10px',
-                            fontSize: '15px',
-                          };
+                          backgroundColor: '#ffffff',
+                          cursor: 'pointer',
+                          padding: '3px 10px',
+                          fontSize: '15px',
+                        };
                       return (
                         <div
                           key={index}
@@ -567,9 +564,8 @@ export const ModalUserCreateAddress = ({
             >
               <GrPrevious
                 size={20}
-                className={`${
-                  activeStep == 0 ? 'hidden' : 'block'
-                } text-[#657385]`}
+                className={`${activeStep == 0 ? 'hidden' : 'block'
+                  } text-[#657385]`}
               />
             </div>
             <div
@@ -601,9 +597,8 @@ export const ModalUserCreateAddress = ({
             >
               <GrNext
                 size={20}
-                className={`${
-                  activeStep == 1 ? 'hidden' : 'block'
-                } text-[#657385]`}
+                className={`${activeStep == 1 ? 'hidden' : 'block'
+                  } text-[#657385]`}
               />
             </div>
           </div>
@@ -617,6 +612,6 @@ ModalUserCreateAddress.propTypes = {
   currentPage: PropTypes.number.isRequired,
   modalAddOpen: PropTypes.bool.isRequired,
   handleModalAddOpen: PropTypes.func.isRequired,
-  fetchUserAddressData: PropTypes.func.isRequired,
-  fetchAllAddress: PropTypes.func.isRequired,
+  fetchUserAddressData: PropTypes.func,
+  fetchAllAddress: PropTypes.func,
 };
