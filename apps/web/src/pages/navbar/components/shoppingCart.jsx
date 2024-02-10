@@ -67,6 +67,26 @@ export const ShoppingCart = ({ isOpenCart, toggleOpenCart }) => {
     );
   };
 
+  const getProductImages = async () => {
+    try {
+      const imagePromises = products.map(async (prod) => {
+        const response = await axios.get(
+          `products/images/${prod?.Product?.id}`,
+        );
+        return response.data.imageProduct;
+      });
+      const images = await Promise.all(imagePromises);
+      setProductImage(images);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    getProductImages();
+    // setProduct(products);
+  }, [products]);
+
   const handleSubtractQuantity = (product, item) => {
     if (item.quantity === 1) {
       dispatch(subtractQuantity({ id: product.id, quantity: 1 }));

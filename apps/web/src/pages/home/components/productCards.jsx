@@ -156,27 +156,28 @@ export const ProductCards = ({ branchData, coordinates, products }) => {
   //       }),
   //     );
 
-  // toast.success(`${item.name} has been added to cart`, {
-  //   position: 'top-center',
-  //   autoClose: 3000,
-  //   hideProgressBar: true,
-  //   theme: 'light',
-  // });
-  // } else {
-  //   toast.error(
-  //     <>
-  //       <div className="font-semibold text-[#E74C3C]">Oops!</div>
-  //       <div className="text-[15px]">
-  //         Please Sign in to access this feature
-  //       </div>
-  //     </>,
-  //     {
-  //       position: 'top-center',
-  //       autoClose: 2000,
-  //     },
-  //   );
-  //   // setTimeout(() => navigate('/signin'), 3500);
-  // }
+      toast.success(`${item.name} has been added to cart`, {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: true,
+        theme: 'light',
+      });
+    } else {
+      toast.error(
+        <>
+          <div className="font-semibold text-[#E74C3C]">Oops!</div>
+          <div className="text-[15px]">
+            Please Sign in to access this feature
+          </div>
+        </>,
+        {
+          position: 'top-center',
+          autoClose: 2000,
+        },
+      );
+      // setTimeout(() => navigate('/signin'), 3500);
+    }
+  };
 
   return (
     <>
@@ -208,7 +209,7 @@ export const ProductCards = ({ branchData, coordinates, products }) => {
                 !coordinates?.lat && 'mr-[1.2rem]'
               } flex flex-col text-white`}
             >
-              <span className="text-[14px] font-normal">om:</span>
+              <span className="text-[14px] font-normal">Shopping from:</span>
               <Tooltip
                 content={branchData?.address}
                 placement="bottom"
@@ -232,7 +233,7 @@ export const ProductCards = ({ branchData, coordinates, products }) => {
                 </div>
               </Tooltip>
             </div>
-            {!coordinates?.lat && (
+            {coordinates?.lat && (
               <div className="pulse-effect rounded-full bg-[#E1F5EF] px-4 py-[0.7rem] ml-[0.5rem]">
                 <span className="text-[15px] font-semibold text-[#00A67C] truncate">
                   {formatDistance(branchData?.distance)}
