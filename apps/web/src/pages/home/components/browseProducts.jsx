@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { convertToIDR } from '../../../functions/functions';
 import stockAvail from '../../../assets/home/stock_avail.svg';
 import { toast } from 'react-toastify';
@@ -17,14 +18,16 @@ const filterItems = [
 ];
 
 export const BrowseProducts = ({
+  products,
   categoryList,
-  product,
   setCategoryId,
   branchId,
 }) => {
+  // console.log(products);
+
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [productImage, setProductImage] = useState();
-  const [contoh, setContoh] = useState([]);
+  // const [product, setProduct] = useState([]);
   const customer = useSelector((state) => state.customer.value);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -33,14 +36,14 @@ export const BrowseProducts = ({
     if (Object.keys(customer).length > 0 && customer.isVerified === true) {
       dispatch(
         addToCart({
-          id: item.id,
+          id: item.Product?.id,
+          name: item.Product?.name,
+          price: item.Product?.price,
           quantity: 1,
-          amount: item.price,
-          name: item.name,
         }),
       );
 
-      toast.success(`${item.name} has been added to cart`, {
+      toast.success(`${item.Product?.name} has been added to cart`, {
         position: 'top-center',
         autoClose: 3000,
         hideProgressBar: true,
@@ -65,7 +68,7 @@ export const BrowseProducts = ({
 
   const getProductImages = async () => {
     try {
-      const imagePromises = product.map(async (prod) => {
+      const imagePromises = products.map(async (prod) => {
         const response = await axios.get(
           `products/images/${prod?.Product?.id}`,
         );
@@ -85,8 +88,8 @@ export const BrowseProducts = ({
 
   useEffect(() => {
     getProductImages();
-    setContoh(product);
-  }, [product]);
+    // setProduct(products);
+  }, [products]);
 
   return (
     <>
@@ -218,15 +221,18 @@ export const BrowseProducts = ({
           </section>
           {/* Card Grid */}
           <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 md:gap-3">
-            {product.map((item, index) => (
-              <div
-                onClick={() =>
-                  navigate(`/product-detail/${item.Product?.id}/${branchId}`)
-                }
-                className="cursor-pointer col-span-1"
-                key={index}
-              >
-                <div className="flex h-full flex-col justify-between bg-white p-2 border border-[#D1D5D8] rounded-xl gap-3 hover:border-[#00A67C] transition delay-75 ease-in-out">
+            {products.map((item, index) => (
+              <div className="cursor-pointer col-span-1" key={index}>
+                <div
+                  onClick={(event) => {
+                    if (!event.target.closest('button')) {
+                      navigate(
+                        `/product-detail/${item.Product?.id}/${branchId}`,
+                      );
+                    }
+                  }}
+                  className="flex h-full flex-col justify-between bg-white p-2 border border-[#D1D5D8] rounded-xl gap-3 hover:border-[#00A67C] transition delay-75 ease-in-out"
+                >
                   <div>
                     <img
                       src={
@@ -257,7 +263,7 @@ export const BrowseProducts = ({
                       )}
                     </div>
                     <p className="leading-relaxed text-gray-700 text-[14px] md:text-[15px] line-clamp-2">
-                      {item.Product?.description}
+                      {item.Product?.name}
                     </p>
 
                     <div className="flex gap-1.5 items-center">

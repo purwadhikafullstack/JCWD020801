@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ModalChangeAddress } from '../../checkout/component/modalChangeAddress';
 
-export const ProductCards = ({ branchData, coordinates }) => {
+export const ProductCards = ({ branchData, coordinates, products }) => {
   const token = localStorage.getItem('token');
   const [modalChangeAddressOpen, setModalChangeAddressOpen] = useState(false);
   const [deliveryAddress, setDeliveryAddress] = useState(null);
@@ -24,9 +24,11 @@ export const ProductCards = ({ branchData, coordinates }) => {
 
   const navigate = useNavigate();
 
-  const products = useSelector((state) => state.product.data);
+  // const products = useSelector((state) => state.product.data);
   console.log(products);
   const dispatch = useDispatch();
+
+  // console.log(products);
 
   const [keenSlider, setKeenSlider] = useState(null);
   const sliderRef = useRef(null);
@@ -154,28 +156,28 @@ export const ProductCards = ({ branchData, coordinates }) => {
   //       }),
   //     );
 
-  //     toast.success(`${item.name} has been added to cart`, {
-  //       position: 'top-center',
-  //       autoClose: 3000,
-  //       hideProgressBar: true,
-  //       theme: 'light',
-  //     });
-  //   } else {
-  //     toast.error(
-  //       <>
-  //         <div className="font-semibold text-[#E74C3C]">Oops!</div>
-  //         <div className="text-[15px]">
-  //           Please Sign in to access this feature
-  //         </div>
-  //       </>,
-  //       {
-  //         position: 'top-center',
-  //         autoClose: 2000,
-  //       },
-  //     );
-  //     setTimeout(() => navigate('/signin'), 3500);
-  //   }
-  // };
+      toast.success(`${item.name} has been added to cart`, {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: true,
+        theme: 'light',
+      });
+    } else {
+      toast.error(
+        <>
+          <div className="font-semibold text-[#E74C3C]">Oops!</div>
+          <div className="text-[15px]">
+            Please Sign in to access this feature
+          </div>
+        </>,
+        {
+          position: 'top-center',
+          autoClose: 2000,
+        },
+      );
+      // setTimeout(() => navigate('/signin'), 3500);
+    }
+  };
 
   return (
     <>
@@ -207,7 +209,7 @@ export const ProductCards = ({ branchData, coordinates }) => {
                 !coordinates?.lat && 'mr-[1.2rem]'
               } flex flex-col text-white`}
             >
-              <span className="text-[14px] font-normal">om:</span>
+              <span className="text-[14px] font-normal">Shopping from:</span>
               <Tooltip
                 content={branchData?.address}
                 placement="bottom"
@@ -231,7 +233,7 @@ export const ProductCards = ({ branchData, coordinates }) => {
                 </div>
               </Tooltip>
             </div>
-            {!coordinates?.lat && (
+            {coordinates?.lat && (
               <div className="pulse-effect rounded-full bg-[#E1F5EF] px-4 py-[0.7rem] ml-[0.5rem]">
                 <span className="text-[15px] font-semibold text-[#00A67C] truncate">
                   {formatDistance(branchData?.distance)}
@@ -351,11 +353,11 @@ export const ProductCards = ({ branchData, coordinates }) => {
                           <div className="flex gap-1">
                             <span className="font-bold text-[13px]">Rp</span>
                             <p className="text-[16px] md:text-[18px] font-bold text-rose-600 tracking-tight">
-                              {convertToIDR(item.price)}
+                              {convertToIDR(item.original_price)}
                             </p>
                           </div>
                           <p className="leading-relaxed text-gray-700 text-[14px] md:text-[15px] line-clamp-2">
-                            {item.desc}
+                            {item.Product?.name}
                           </p>
 
                           <div className="flex gap-1.5 items-center">

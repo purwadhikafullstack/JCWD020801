@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { AnimatePresence, motion } from 'framer-motion';
+import { convertToIDR } from '../../../functions/functions';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { MinusIcon, PlusIcon } from '@heroicons/react/24/outline';
@@ -12,30 +13,27 @@ import {
 } from '../../../redux/cartSlice';
 import { useNavigate } from 'react-router-dom';
 import axios from '../../../api/axios';
-
-const convertToIDR = (price) => {
-  let newPrice = price.toLocaleString('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    minimumFractionDigits: 0,
-  });
-
-  return newPrice;
-};
+import { useEffect, useState } from 'react';
 
 export const ShoppingCart = ({ isOpenCart, toggleOpenCart }) => {
   const navigate = useNavigate();
-  const data = useSelector((state) => state.product.data);
-  // console.log(data);
+  const products = useSelector((state) => state.product.data);
+
   const carts = useSelector((state) => state.cart.data);
   // console.log(carts);
+  const [productImage, setProductImage] = useState();
+  // console.log(productImage);
+
   const total = carts.reduce(
     (total, item) => total + item.price * item.quantity,
     0,
   );
+
   const totalProduct = useSelector((state) => state.cart.totalProduct);
   const dispatch = useDispatch();
+
   dispatch(addTotal(carts.reduce((total, item) => total + item.quantity, 0)));
+
   const addQty = (item) => {
     dispatch(
       addToCart({
@@ -46,6 +44,26 @@ export const ShoppingCart = ({ isOpenCart, toggleOpenCart }) => {
       }),
     );
   };
+
+  const getProductImages = async () => {
+    try {
+      const imagePromises = products.map(async (prod) => {
+        const response = await axios.get(
+          `products/images/${prod?.Product?.id}`,
+        );
+        return response.data.imageProduct;
+      });
+      const images = await Promise.all(imagePromises);
+      setProductImage(images);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    getProductImages();
+    // setProduct(products);
+  }, [products]);
 
   const handleSubtractQuantity = (product, item) => {
     if (item.quantity === 1) {
@@ -80,7 +98,7 @@ export const ShoppingCart = ({ isOpenCart, toggleOpenCart }) => {
       // }
       const response = await axios.post('/order-details', data);
       // console.log(response);
-      navigate('/checkout');
+      // navigate('/checkout');
     } catch (error) {
       console.log(error);
     }
@@ -153,47 +171,57 @@ export const ShoppingCart = ({ isOpenCart, toggleOpenCart }) => {
                   id="shopping-cart-scroll"
                 >
                   {carts.map((item) => {
-                    const product = data.find(
-                      (product) => product.id === item.id,
+                    const product = products.find(
+                      (product) => product?.ProductId === item.id,
                     );
+                    const prodImage = productImage.find(
+                      (prod) => prod?.ProductId === item.id,
+                    );
+
                     return (
                       <div
                         className="flex justify-start items-center gap-4 py-[0.8rem]"
-                        key={product.id}
+                        key={product?.ProductId}
                       >
                         <div className="flex shrink-0 h-max items-center">
                           <img
-                            src={product.img}
+                            src={
+                              prodImage?.image
+                                ? prodImage.image
+                                : 'https://www.pngkey.com/png/detail/233-2332677_ega-png.png'
+                            }
                             alt=""
                             className="h-[6.5rem] w-[6rem] object-cover rounded-lg"
                           />
                         </div>
                         <div className="flex flex-col gap-1">
                           <span className="text-[14px] font-medium">
-                            {convertToIDR(product.price)}
+                            Rp. {convertToIDR(product.Product?.price)}
                           </span>
                           <span className="text-[14px] font-medium text-gray-700 cursor-pointer hover:underline hover:text-black transition delay-50 ease-in-out line-clamp-2">
-                            {product.name}
+                            {product.Product?.name}
                           </span>
                           <div className="mt-1 flex items-center">
                             <div
                               className="mr-3 rounded-full border border-[#B2B2B2] h-[1.8rem] w-[1.8rem] flex items-center justify-center hover:bg-[#00A67C] group cursor-pointer transition delay-50 ease-in-out hover:border-[#00A67C]"
                               onClick={() =>
-                                handleSubtractQuantity(product, item)
+                                handleSubtractQuantity(product?.Product, item)
                               }
                             >
                               <MinusIcon className=" text-gray-900 group-hover:text-white w-5 h-5" />
                             </div>
                             <p className="text-[16px]">{item.quantity}</p>
                             <div
-                              onClick={() => addQty(product)}
+                              onClick={() => addQty(product?.Product)}
                               className="mx-3 rounded-full border border-[#B2B2B2] h-[1.8rem] w-[1.8rem] flex items-center justify-center hover:bg-[#00A67C] group cursor-pointer transition delay-50 ease-in-out hover:border-[#00A67C]"
                             >
                               <PlusIcon className="text-gray-900 group-hover:text-white w-4 h-4" />
                             </div>
                             <div
                               className="text-[14px]  text-gray-600 cursor-pointer hover:text-[#00A67C]"
-                              onClick={() => handleRemoveProduct(product)}
+                              onClick={() =>
+                                handleRemoveProduct(product?.Product)
+                              }
                             >
                               <p>Remove</p>
                             </div>
@@ -210,7 +238,7 @@ export const ShoppingCart = ({ isOpenCart, toggleOpenCart }) => {
                   <div className="justify-between flex items-center px-1">
                     <span className="font-medium text-gray-800">Total</span>
                     <span className="font-bold text-[#343538] text-[17px]">
-                      {convertToIDR(total)}
+                      Rp. {convertToIDR(total)}
                     </span>
                   </div>
                   <div className="">

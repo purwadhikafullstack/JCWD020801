@@ -22,6 +22,7 @@ export const Navbar = () => {
   const totalProduct = useSelector((state) => state.cart.totalProduct);
 
   const { coordinates, loaded } = useSelector((state) => state.geolocation);
+  // console.log(coordinates);
   const [formattedAddress, setFormattedAddress] = useState('');
 
   const [isOpen, setIsOpen] = useState(false);
