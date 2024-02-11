@@ -15,12 +15,14 @@ import slide1 from '../../assets/home/img-slides-1.png';
 import slide2 from '../../assets/home/img-slides-2.png';
 import slide4 from "../../assets/home/img-slides-4.png"
 import slide7 from "../../assets/home/img-slides-7.png"
+import slide8 from "../../assets/home/banner_product.png"
 import axios from "../../api/axios"
 import { GrocerySteps } from "./components/grocerySteps"
 import { useGeoLocation } from '../../hooks/useGeoLocation';
 
 const imgSlides = [
   { url: slide7 },
+  { url: slide8 },
   { url: slide1 },
   { url: slide2 },
   { url: slide4 },
@@ -134,8 +136,8 @@ export const HomePage = () => {
                   at Your Doorstep!
                 </h1>
               </div>
-              <span className="text-gray-600 max-w-[240px] text-[15px]">
-                get the best fresh foods, drinks, household goods, health care,
+              <span className="text-gray-600 md:max-w-[15rem] text-[15px]">
+                Get the best fresh foods, drinks, household goods, health care,
                 and many more
               </span>
             </div>

@@ -85,7 +85,7 @@ export const ModalChangeAddress = ({ modalChangeAddressOpen, setModalChangeAddre
                 </DialogHeader>
                 <DialogBody className="flex flex-col pt-0">
                     {allAddress?.length > 0 ? (
-                        <div id="modal-scroll" className="flex flex-col gap-2 h-[70vh] overflow-auto">
+                        <div id="modal-scroll" className="flex flex-col gap-2 h-[60vh] md:h-[66vh] overflow-auto">
                             {allAddress?.map((item) => (
                                 <AddressDeliveryMap
                                     key={item.id}

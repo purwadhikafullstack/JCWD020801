@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import 'keen-slider/keen-slider.min.css';
 import KeenSlider from 'keen-slider';
 import { useScroll, useTransform, motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 const cardsData = [
     {
@@ -53,6 +54,11 @@ const cardsData = [
 export const DiscountedProducts = () => {
     const [keenSlider, setKeenSlider] = useState(null);
     const sliderRef = useRef(null);
+
+    const handleLinkClick = () => {
+        // window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo({ top: 0 });
+    }
 
     const { scrollYProgress } = useScroll()
     const y = useTransform(scrollYProgress, [0, 1], [0, -1000])
@@ -279,9 +285,9 @@ export const DiscountedProducts = () => {
                             </p>
                         </div>
                         <div className="flex items-center justify-between gap-5 w-full md:w-max mt-5 px-1.5 md:px-0">
-                            <span className="font-semibold text-[#469A84] hover:underline underline-offset-2 cursor-pointer ">
+                            <Link to={'/catalogue'} onClick={handleLinkClick} className="font-semibold text-[#469A84] hover:underline underline-offset-2 cursor-pointer ">
                                 View all
-                            </span>
+                            </Link>
                             <div className="flex gap-3">
                                 <button
                                     aria-label="Previous slide"
