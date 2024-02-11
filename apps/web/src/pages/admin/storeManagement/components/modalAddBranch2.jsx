@@ -261,11 +261,10 @@ export const ModalAddBranch2 = ({
               <BiHome size={18} />
               <div className="absolute -bottom-[2rem] w-max text-centers">
                 <span
-                  className={`${
-                    activeStep == 0
+                  className={`${activeStep == 0
                       ? 'text-gray-800 font-semibold'
                       : 'text-gray-500 font-medium'
-                  } text-[13px] md:text-[14px]`}
+                    } text-[13px] md:text-[14px]`}
                 >
                   Branch Details
                 </span>
@@ -280,11 +279,10 @@ export const ModalAddBranch2 = ({
               <LuMapPin size={18} />
               <div className="absolute -bottom-[2rem] w-max text-centers">
                 <span
-                  className={`${
-                    activeStep == 1
+                  className={`${activeStep == 1
                       ? 'text-gray-800 font-semibold'
                       : 'text-gray-500 font-medium'
-                  } text-[13px] md:text-[14px]`}
+                    } text-[13px] md:text-[14px]`}
                 >
                   Branch Pinpoint
                 </span>
@@ -298,9 +296,8 @@ export const ModalAddBranch2 = ({
           {/* 1 */}
           <section
             id="modal-scroll"
-            className={`${
-              activeStep == 0 ? 'block' : 'hidden'
-            } w-full h-[52vh] lg:h-full overflow-auto pb-2 pr-2 lg:pr-0 lg:pb-0`}
+            className={`${activeStep == 0 ? 'block' : 'hidden'
+              } w-full h-[52vh] lg:h-full overflow-auto pb-2 pr-2 lg:pr-0 lg:pb-0`}
           >
             <div className="flex flex-col md:flex-row gap-3.5 md:gap-[2rem] w-full">
               {/* Branch name & Admin */}
@@ -384,7 +381,7 @@ export const ModalAddBranch2 = ({
                     />
                   </div>
                   {formik.touched.contactNumber &&
-                  formik.errors.contactNumber ? (
+                    formik.errors.contactNumber ? (
                     <span className="pl-2 pb-2 text-red-500 text-[14px]">
                       {formik.errors.contactNumber}
                     </span>
@@ -410,13 +407,13 @@ export const ModalAddBranch2 = ({
                       onChange={formik.handleChange}
                       type="number"
                       id="maxDeliveryDistance"
-                      placeholder="5"
+                      placeholder="15"
                       className="focus:outline-[#4ECCA3] block w-full pl-[4.5rem] pr-3 py-2.5 text-sm border border-gray-300 bg-[#FCFCFC] rounded-lg text-gray-900"
                       autoComplete="off"
                     />
                   </div>
                   {formik.touched.maxDeliveryDistance &&
-                  formik.errors.maxDeliveryDistance ? (
+                    formik.errors.maxDeliveryDistance ? (
                     <span className="pl-2 pb-2 text-red-500 text-[14px]">
                       {formik.errors.maxDeliveryDistance}
                     </span>
@@ -553,17 +550,17 @@ export const ModalAddBranch2 = ({
                         : 'suggestion-item';
                       const style = suggestion.active
                         ? {
-                            backgroundColor: '#e6f4f0',
-                            cursor: 'pointer',
-                            padding: '3px 10px',
-                            fontSize: '15px',
-                          }
+                          backgroundColor: '#e6f4f0',
+                          cursor: 'pointer',
+                          padding: '3px 10px',
+                          fontSize: '15px',
+                        }
                         : {
-                            backgroundColor: '#ffffff',
-                            cursor: 'pointer',
-                            padding: '3px 10px',
-                            fontSize: '15px',
-                          };
+                          backgroundColor: '#ffffff',
+                          cursor: 'pointer',
+                          padding: '3px 10px',
+                          fontSize: '15px',
+                        };
                       return (
                         <div
                           key={index}
@@ -646,9 +643,8 @@ export const ModalAddBranch2 = ({
             >
               <GrPrevious
                 size={20}
-                className={`${
-                  activeStep == 0 ? 'hidden' : 'block'
-                } text-[#657385]`}
+                className={`${activeStep == 0 ? 'hidden' : 'block'
+                  } text-[#657385]`}
               />
             </div>
             <div
@@ -680,9 +676,8 @@ export const ModalAddBranch2 = ({
             >
               <GrNext
                 size={20}
-                className={`${
-                  activeStep == 1 ? 'hidden' : 'block'
-                } text-[#657385]`}
+                className={`${activeStep == 1 ? 'hidden' : 'block'
+                  } text-[#657385]`}
               />
             </div>
           </div>

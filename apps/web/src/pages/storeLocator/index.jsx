@@ -52,7 +52,7 @@ export const StoreLocator = () => {
         <>
             <Navbar />
             {/* <section className="mx-[16px] md:mx-[32px] lg:mx-[160px] mb-[4rem]"> */}
-            <section className="relative md:mx-[32px] lg:mx-[160px] lg:pb-[4rem]">
+            <section className="relative lg:mx-[160px] lg:pb-[4rem]">
                 {/* Breadcrumb */}
                 <div className="flex w-max items-center justify-center gap-1.5 rounded-lg bg-none pl-1.5 text-[14px] font-medium text-gray-500 my-2 lg:my-3">
                     <Link

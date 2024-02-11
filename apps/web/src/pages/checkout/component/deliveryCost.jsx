@@ -137,7 +137,7 @@ export const DeliveryCost = ({ deliveryAddress, finalDistance, handleDeliveryCos
             )}
           </fieldset>
         </>
-      ) : (
+      ) : finalDistance > maxDeliveryDistance ? (
         <div className="flex flex-col items-center mt-3">
           <div>
             <img
@@ -153,6 +153,10 @@ export const DeliveryCost = ({ deliveryAddress, finalDistance, handleDeliveryCos
             your location is out of reach for delivery, please choose another address
           </p>
         </div>
+      ) : (
+        <>
+          <div className="mt-[1rem] text-[14px] font-medium text-gray-500">Delivery costs will be displayed once you&apos;ve selected your address</div>
+        </>
       )}
     </section>
   );
