@@ -10,7 +10,7 @@ export const AddressDelivery = ({ handleDeliveryCostChange }) => {
     const [customerLatLng, setCustomerLatLng] = useState()
     const [finalDistance, setFinalDistance] = useState()
 
-    const dummyBranchId = 10
+    const dummyBranchId = 20
     const fetchDummyBranch = async () => {
         try {
             const response = await axios.get(`branches/at-checkout/${dummyBranchId}`)

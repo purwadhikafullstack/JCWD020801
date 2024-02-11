@@ -581,7 +581,7 @@ export const userEmailUpdate = async (req, res) => {
             return res.status(400).send({ message: "This email address is already registered" })
         }
 
-        res.status(200).send({ message: "Email update link has been sent" })
+        res.status(200).send({ message: "Email update link has been sent to your current email" })
     } catch (error) {
         console.log(error);
         res.status(400).send({ message: error.message })

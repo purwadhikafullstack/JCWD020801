@@ -265,7 +265,7 @@ export const ModalUserCreateAddress = ({
           <section
             id="modal-scroll"
             className={`${activeStep == 0 ? 'block' : 'hidden'
-              } w-full h-[52vh] lg:h-full overflow-auto pb-2 pr-3 lg:pr-0 lg:pb-0`}
+              } w-full h-[52vh] lg:h-[50vh] overflow-auto pb-2 pr-3 lg:pr-0 lg:pb-0`}
           >
             <div className="flex flex-col md:flex-row gap-3.5 md:gap-[2rem] w-full">
               {/* Label & Customer Name */}
@@ -439,7 +439,7 @@ export const ModalUserCreateAddress = ({
           {/* 2 */}
           {/* Map */}
           <div
-            className={`${activeStep == 1 ? 'block' : 'hidden'} flex flex-col`}
+            className={`${activeStep == 1 ? 'block' : 'hidden'} flex flex-col `}
           >
             <PlacesAutocomplete
               value={address}
@@ -498,7 +498,7 @@ export const ModalUserCreateAddress = ({
                 </div>
               )}
             </PlacesAutocomplete>
-            <div className="flex flex-col gap-3 mt-4">
+            <div className="flex flex-col gap-3 mt-3">
               <MapWithMarker
                 coordinates={{
                   lat: coordinates.lat || 0,
@@ -545,7 +545,7 @@ export const ModalUserCreateAddress = ({
                 </div>
               </div>
               {Object.keys(formik.errors).length > 0 && (
-                <div className="w-full flex items-center gap-2 rounded-lg bg-[#FDE3E4] text-[14px] py-2 px-3 text-[#EC324E] shadow-sm">
+                <div className="w-full flex items-center gap-2 rounded-lg bg-[#FDE3E4] text-[14px] py-1 px-3 text-[#EC324E] shadow-sm">
                   <IoIosWarning size={15} />
                   <span className="font-medium">
                     You must fill in all of the fields
@@ -556,7 +556,7 @@ export const ModalUserCreateAddress = ({
           </div>
 
           {/* Button Group */}
-          <div className="mt-7 flex justify-between gap-3 items-center">
+          <div className="mt-3 flex justify-between gap-3 items-center">
             <div
               onClick={handlePrev}
               disabled={isFirstStep}

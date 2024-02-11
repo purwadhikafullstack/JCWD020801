@@ -141,9 +141,9 @@ export const NavbarMobile = ({ isOpen, toggleMenu, isOpenCategory, toggleMenuCat
                                         Sign in
                                     </span>
                                     <span className="text-white">or</span>
-                                    <span className="cursor-pointer text-white underline underline-offset-2">
+                                    <Link to={'/register'} className="cursor-pointer text-white underline underline-offset-2">
                                         Create account
-                                    </span>
+                                    </Link>
                                 </div>
                             </>
                         )}
