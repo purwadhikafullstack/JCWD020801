@@ -35,6 +35,22 @@ export const ProductCards = ({ branchData, coordinates }) => {
     }
   }
 
+  const handleAddressClick = () => {
+    if (token) {
+      setModalChangeAddressOpen(!modalChangeAddressOpen)
+    } else {
+      toast.error(
+        <>
+          <div className="font-medium text-[#E74C3C]">Oops!</div>
+          <div className="text-[15px]">Please sign in</div>
+        </>,
+        {
+          position: 'top-center',
+        },
+      );
+    }
+  }
+
   useEffect(() => {
     fetchDeliveryAddress();
   }, [])
@@ -222,7 +238,7 @@ export const ProductCards = ({ branchData, coordinates }) => {
               Delivery to:
             </div>
             <div
-              onClick={() => setModalChangeAddressOpen((!modalChangeAddressOpen))}
+              onClick={handleAddressClick}
               className="flex items-center gap-[0.5rem] cursor-pointer"
             >
               <span className="text-[#00A67C] text-[15.5px] mt-[1px] md:mt-0 md:text-[15px] font-medium underline underline-offset-2">
