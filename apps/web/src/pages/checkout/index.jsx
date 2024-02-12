@@ -53,21 +53,6 @@ export const CheckoutPage = () => {
     }
   };
 
-  const getProductImages = async () => {
-    try {
-      const imagePromises = products.map(async (prod) => {
-        const response = await axios.get(
-          `products/images/${prod?.Product?.id}`,
-        );
-        return response.data.imageProduct;
-      });
-      const images = await Promise.all(imagePromises);
-      setProductImage(images);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
   useEffect(() => {
     getProductImages();
     const snapScript = 'https://app.sandbox.midtrans.com/snap/snap.js';
