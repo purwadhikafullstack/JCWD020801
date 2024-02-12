@@ -3,28 +3,50 @@ import { ModalChangeAddress } from '../component/modalChangeAddress';
 import axios from '../../../api/axios';
 import { DeliveryCost } from './deliveryCost';
 import { calculateDistance } from '../../../functions/functions';
+import { useGeoLocation } from '../../../hooks/useGeoLocation';
 
 export const AddressDelivery = ({ handleDeliveryCostChange }) => {
-    // ----- DUMMY ----
     const [branchLatLng, setBranchLatLng] = useState()
-    const [customerLatLng, setCustomerLatLng] = useState()
+    const [addressLatLng, setAddressLatLng] = useState()
     const [finalDistance, setFinalDistance] = useState()
 
-    const dummyBranchId = 20
-    const fetchDummyBranch = async () => {
+    const { loaded, coordinates } = useGeoLocation()
+    const [branchCity, setBranchCity] = useState()
+    const [branchMaxDistance, setBranchMaxDistance] = useState()
+
+    const fetchNearestBranch = async () => {
+        if (loaded) {
+            try {
+                const response = await axios.post(
+                    `branches/get-nearest?latitude=${coordinates.lat}&longitude=${coordinates.lng}`,
+                );
+                setBranchCity(response.data.result[0].CityId);
+                setBranchMaxDistance(response.data.result[0].maxDeliveryDistance);
+
+                const { latitude, longitude } = response.data.result[0]
+                setBranchLatLng({ latitude, longitude })
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    };
+
+    const fetchMainBranch = async () => {
         try {
-            const response = await axios.get(`branches/at-checkout/${dummyBranchId}`)
+            const response = await axios.get('branches/super-store');
+            setBranchCity(response.data.result.CityId);
+            setBranchMaxDistance(response.data.result.maxDeliveryDistance);
+
             const { latitude, longitude } = response.data.result
             setBranchLatLng({ latitude, longitude })
         } catch (error) {
             console.error(error);
         }
-    }
+    };
 
     const token = localStorage.getItem('token');
     const [modalChangeAddressOpen, setModalChangeAddressOpen] = useState(false);
     const [deliveryAddress, setDeliveryAddress] = useState(null);
-
 
     const fetchDeliveryAddress = async () => {
         try {
@@ -36,7 +58,7 @@ export const AddressDelivery = ({ handleDeliveryCostChange }) => {
             setDeliveryAddress(response.data.result);
 
             const { latitude, longitude } = response.data.result
-            setCustomerLatLng({ latitude, longitude })
+            setAddressLatLng({ latitude, longitude })
         } catch (error) {
             console.log(error);
         }
@@ -44,21 +66,32 @@ export const AddressDelivery = ({ handleDeliveryCostChange }) => {
 
     useEffect(() => {
         fetchDeliveryAddress();
-        fetchDummyBranch();
     }, []);
 
     useEffect(() => {
-        if (branchLatLng && customerLatLng) {
+        if (branchLatLng && addressLatLng) {
             const distance = calculateDistance(
                 branchLatLng.latitude,
                 branchLatLng.longitude,
-                customerLatLng.latitude,
-                customerLatLng.longitude
+                addressLatLng.latitude,
+                addressLatLng.longitude
             );
 
             setFinalDistance(distance);
         }
-    }, [branchLatLng, customerLatLng])
+    }, [branchLatLng, addressLatLng])
+
+    useEffect(() => {
+        if (!loaded) {
+            console.log('Location permission denied. Fetching branch Id from main store.');
+            fetchMainBranch();
+        } else if (coordinates && loaded) {
+            console.log(
+                'Location permission granted. Fetching branch Id from nearest store.',
+            );
+            fetchNearestBranch();
+        }
+    }, [loaded, coordinates?.lat, coordinates?.lng]);
 
     return (
         <>
@@ -140,6 +173,8 @@ export const AddressDelivery = ({ handleDeliveryCostChange }) => {
                 deliveryAddress={deliveryAddress}
                 finalDistance={finalDistance}
                 handleDeliveryCostChange={handleDeliveryCostChange}
+                branchCity={branchCity}
+                branchMaxDistance={branchMaxDistance}
             />
             {/* ----- Modal ----- */}
             <ModalChangeAddress

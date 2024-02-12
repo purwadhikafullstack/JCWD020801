@@ -94,10 +94,10 @@ export const getById = async (req, res) => {
 }
 
 export const getAllbyAdminId = async (req, res) => {
-    try{
+    try {
         const { id } = req.query
         const findBranches = await Branch.findAll({
-            where:{
+            where: {
                 AdminId: id
             }
         })
@@ -107,7 +107,7 @@ export const getAllbyAdminId = async (req, res) => {
         }
 
         return res.status(200).send({ result: findBranches })
-    }catch(error){
+    } catch (error) {
         console.error(error)
         return res.status(500).send({ message: error.message })
     }
@@ -125,12 +125,12 @@ export const addBranch = async (req, res) => {
         })
 
         const findBranchAdmin = await Branch.findOne({
-            where:{
+            where: {
                 AdminId: AdminId
             }
         })
 
-        if(findBranchAdmin){
+        if (findBranchAdmin) {
             return res.status(400).send({ message: "The administrator you've chosen is already registered, please select another administrator" })
         }
 
@@ -247,6 +247,8 @@ export const getNearestBranch = async (req, res) => {
                 'latitude',
                 'address',
                 'contactNumber',
+                'maxDeliveryDistance',
+                'CityId',
                 [
                     Sequelize.fn(
                         'ST_Distance_Sphere',
@@ -294,54 +296,12 @@ export const getTotalBranch = async (req, res) => {
 }
 
 export const getAllBranch = async (req, res) => {
-    try{
+    try {
         const result = await Branch.findAll();
         res.status(200).send({ result: result })
-    }catch(err){
+    } catch (err) {
         console.error(error)
         return res.status(500).send({ message: error.message })
     }
 }
-
-// export const getNearestBranch = async (req, res) => {
-//     try {
-//         const { latitude, longitude } = req.query;
-
-//         const nearestBranch = await Branch.findOne({
-//             attributes: [
-//                 'id',
-//                 'name',
-//                 'longitude',
-//                 'latitude',
-//                 [
-//                     Sequelize.fn(
-//                         'ST_Distance_Sphere',
-//                         Sequelize.literal(`point(${longitude}, ${latitude})`),
-//                         Sequelize.literal('point(longitude, latitude)'),
-//                     ),
-//                     'distance'
-//                 ]
-//             ],
-//             order: [
-//                 [
-//                     Sequelize.fn(
-//                         'ST_Distance_Sphere',
-//                         Sequelize.literal(`point(${longitude}, ${latitude})`),
-//                         Sequelize.literal('point(longitude, latitude)'),
-//                     ),
-//                     'ASC'
-//                 ]
-//             ],
-//             limit: 1
-//         });
-
-//         const result = nearestBranch ? nearestBranch.get({ plain: true }) : null;
-
-//         res.status(200).send({ result: result, distance: result ? result.distance : null });
-
-//     } catch (error) {
-//         console.log(error);
-//         res.status(400).send({ message: error.message });
-//     }
-// };
 
