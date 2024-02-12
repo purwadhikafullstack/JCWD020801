@@ -35,7 +35,7 @@ export const CheckoutPage = () => {
   const handleDeliveryCostChange = (cost) => {
     setSelectedDeliveryCost(cost);
   };
-  // console.log(selectedDeliveryCost);
+  console.log(selectedDeliveryCost);
 
   const getProductImages = async () => {
     try {
