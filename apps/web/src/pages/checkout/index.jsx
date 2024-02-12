@@ -13,27 +13,22 @@ import { useSelector } from 'react-redux';
 import axios from '../../api/axios';
 import { button } from '@material-tailwind/react';
 import { useEffect } from 'react';
-
-const convertToIDR = (price) => {
-  let newPrice = price?.toLocaleString('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    minimumFractionDigits: 0,
-  });
-
-  return newPrice;
-};
+import { convertToIDR } from '../../functions/functions';
 
 export const CheckoutPage = () => {
   const navigate = useNavigate();
   const carts = useSelector((state) => state.cart.data);
-  const token = localStorage.getItem('token');
+  const products = useSelector((state) => state.product.data);
+  const orderId = useSelector((state) => state.cart.order_id);
+  console.log(orderId);
   const [isPaymentOpen, setIsPaymentOpen] = useState(false);
+  const [productImage, setProductImage] = useState();
   const customer = useSelector((state) => state.customer.value);
   const total = carts.reduce(
     (total, item) => total + item.price * item.quantity,
     0,
   );
+  const discount = 3000;
 
   const [selectedDeliveryCost, setSelectedDeliveryCost] = useState(null);
 
@@ -42,7 +37,23 @@ export const CheckoutPage = () => {
   };
   // console.log(selectedDeliveryCost);
 
+  const getProductImages = async () => {
+    try {
+      const imagePromises = products.map(async (prod) => {
+        const response = await axios.get(
+          `products/images/${prod?.Product?.id}`,
+        );
+        return response.data.imageProduct;
+      });
+      const images = await Promise.all(imagePromises);
+      setProductImage(images);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
+    getProductImages();
     const snapScript = 'https://app.sandbox.midtrans.com/snap/snap.js';
 
     const clientKey = import.meta.env.VITE_MIDTRANS_CLIENT_KEY;
@@ -62,19 +73,18 @@ export const CheckoutPage = () => {
   const handleCheckout = async () => {
     try {
       const data = {
-        id: ~~(Math.random() * 100) + 1,
-        total,
+        id: orderId,
+        total: total - discount,
       };
 
-      const response = await axios.post('order', data);
-      // console.log(response);
+      const response = await axios.patch('/order', data);
+      console.log(response);
       window.snap.pay(response.data.token);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const discount = 30000;
   // const delivery = 24000;
 
   return (
@@ -160,7 +170,9 @@ export const CheckoutPage = () => {
             <section className="flex flex-col gap-3 w-full lg:w-[47vw]">
               {/* Order Summary */}
               <OrderSummary
+                products={products}
                 carts={carts}
+                productImage={productImage}
                 total={total}
                 convertToIDR={convertToIDR}
               />
@@ -258,26 +270,27 @@ export const CheckoutPage = () => {
                     <div className="flex items-center justify-between">
                       <h4 className="font-medium text-gray-600">Subtotal</h4>
                       <h4 className="font-semibold tracking-tight text-gray-900">
-                        {convertToIDR(total)}
+                        Rp. {convertToIDR(total)}
                       </h4>
                     </div>
                     <div className="flex items-center justify-between">
                       <h4 className="font-medium text-gray-600">Delivery</h4>
                       <h4 className="font-semibold tracking-tight text-gray-900">
-                        {convertToIDR(selectedDeliveryCost)}
+                        {/* {convertToIDR(selectedDeliveryCost)} */}DeliveryCost
                       </h4>
                     </div>
                     <div className="flex items-center justify-between">
                       <h4 className="font-medium text-[#4eb197]">Discount</h4>
                       <h4 className="font-semibold tracking-tight text-[#4eb197]">
-                        - {convertToIDR(discount)}
+                        Rp. - {convertToIDR(discount)}
                       </h4>
                     </div>
                   </div>
                   <div className="border-t border-[#dcdcdc] flex items-center justify-between pt-[1rem]">
                     <h4 className="font-semibold text-[18px]">Total</h4>
                     <h4 className="font-bold text-[18px]">
-                      {convertToIDR(total + selectedDeliveryCost - discount)}
+                      {/* {convertToIDR(total + selectedDeliveryCost - discount)}  */}
+                      Rp. {convertToIDR(total - discount)}
                     </h4>
                   </div>
                   <button
@@ -318,7 +331,8 @@ export const CheckoutPage = () => {
                   <div className="flex gap-[0.5rem]">
                     <span className="text-[17px] font-medium">Total:</span>
                     <span className="text-[16.5px] font-normal">
-                      {convertToIDR(total + selectedDeliveryCost - discount)}
+                      {/* {convertToIDR(total + selectedDeliveryCost - discount)} */}{' '}
+                      total
                     </span>
                   </div>
                 </div>
@@ -386,26 +400,28 @@ export const CheckoutPage = () => {
                     <div className="flex items-center justify-between">
                       <h4 className="font-medium text-gray-600">Subtotal</h4>
                       <h4 className="font-semibold tracking-tight text-gray-900">
-                        {convertToIDR(total)}
+                        Rp. {convertToIDR(total)}
                       </h4>
                     </div>
                     <div className="flex items-center justify-between">
                       <h4 className="font-medium text-gray-600">Delivery</h4>
                       <h4 className="font-semibold tracking-tight text-gray-900">
-                        {convertToIDR(selectedDeliveryCost)}
+                        {/* {convertToIDR(selectedDeliveryCost)} */} delivery
+                        cost
                       </h4>
                     </div>
                     <div className="flex items-center justify-between">
                       <h4 className="font-medium text-[#4eb197]">Discount</h4>
                       <h4 className="font-semibold tracking-tight text-[#4eb197]">
-                        - {convertToIDR(discount)}
+                        Rp. - {convertToIDR(discount)}
                       </h4>
                     </div>
                   </div>
                   <div className="border-t border-[#dcdcdc] flex items-center justify-between pt-[1rem]">
                     <h4 className="font-semibold text-[18px]">Total</h4>
                     <h4 className="font-bold text-[18px]">
-                      {convertToIDR(total + selectedDeliveryCost - discount)}
+                      {/* {convertToIDR(total + selectedDeliveryCost - discount)} */}
+                      Rp. {convertToIDR(total - discount)}
                     </h4>
                   </div>
                   <button

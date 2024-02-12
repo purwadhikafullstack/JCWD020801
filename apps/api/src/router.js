@@ -31,7 +31,6 @@ router.use('/provinces', provinceRouter);
 router.use('/cities', cityRouter);
 router.use('/shipping', shippingCostRouter);
 router.use('/vouchers', voucherRouter);
-// router.use('/payment', paymentRouter);
 router.use('/order', orderRouter);
 router.use('/order-details', orderDetailsRouter);
 

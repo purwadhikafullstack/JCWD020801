@@ -27,7 +27,7 @@ export const BrowseProducts = ({
 
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [productImage, setProductImage] = useState();
-  // const [product, setProduct] = useState([]);
+
   const customer = useSelector((state) => state.customer.value);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -88,7 +88,6 @@ export const BrowseProducts = ({
 
   useEffect(() => {
     getProductImages();
-    // setProduct(products);
   }, [products]);
 
   return (
@@ -221,7 +220,7 @@ export const BrowseProducts = ({
           </section>
           {/* Card Grid */}
           <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 md:gap-3">
-            {products.map((item, index) => (
+            {products?.map((item, index) => (
               <div className="cursor-pointer col-span-1" key={index}>
                 <div
                   onClick={(event) => {

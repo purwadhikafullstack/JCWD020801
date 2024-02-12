@@ -9,6 +9,7 @@ import {
   addToCart,
   addTotal,
   removeFromCart,
+  setOrderId,
   subtractQuantity,
 } from '../../../redux/cartSlice';
 import { useNavigate } from 'react-router-dom';
@@ -16,6 +17,7 @@ import axios from '../../../api/axios';
 import { useEffect, useState } from 'react';
 
 export const ShoppingCart = ({ isOpenCart, toggleOpenCart }) => {
+  const token = localStorage.getItem('token');
   const navigate = useNavigate();
   const products = useSelector((state) => state.product.data);
 
@@ -34,17 +36,6 @@ export const ShoppingCart = ({ isOpenCart, toggleOpenCart }) => {
 
   dispatch(addTotal(carts.reduce((total, item) => total + item.quantity, 0)));
 
-  const addQty = (item) => {
-    dispatch(
-      addToCart({
-        id: item.id,
-        quantity: 1,
-        price: item.price,
-        name: item.name,
-      }),
-    );
-  };
-
   const getProductImages = async () => {
     try {
       const imagePromises = products.map(async (prod) => {
@@ -62,8 +53,19 @@ export const ShoppingCart = ({ isOpenCart, toggleOpenCart }) => {
 
   useEffect(() => {
     getProductImages();
-    // setProduct(products);
-  }, [products]);
+  }, [carts]);
+
+  const addQty = (item) => {
+    // console.log(item);
+    dispatch(
+      addToCart({
+        id: item.id,
+        quantity: 1,
+        price: item.price,
+        name: item.name,
+      }),
+    );
+  };
 
   const handleSubtractQuantity = (product, item) => {
     if (item.quantity === 1) {
@@ -91,26 +93,28 @@ export const ShoppingCart = ({ isOpenCart, toggleOpenCart }) => {
 
   const handleCheckout = async (data) => {
     try {
-      // const params = {
-      //   product: data,
-      //   quantity:tota,
-      //   total: total
-      // }
-      const response = await axios.post('/order-details', data);
-      // console.log(response);
-      // navigate('/checkout');
+      // alert('checkout');
+
+      const response = await axios.post(
+        '/order',
+        {
+          id: ~~(Math.random() * 100) + 1,
+          products: data,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      console.log(response);
+      console.log(response.data.result[0].OrderId);
+      dispatch(setOrderId(response.data.result[0].OrderId));
+      // alert('checkout');
+      navigate('/checkout');
     } catch (error) {
       console.log(error);
     }
-    // const productId = data.map((item) => item.id);
-    // console.log(productId);
-    // const params = {
-    //   products: data,
-
-    // }
-    // localStorage.setItem('carts', carts);
-    // const cart = localStorage.getItem('carts');
-    // console.log(cart);
   };
 
   return (
@@ -170,7 +174,7 @@ export const ShoppingCart = ({ isOpenCart, toggleOpenCart }) => {
                   className="shadow-inner flex flex-col px-[1.4rem] divide-y-[1px] divide-[#E4E4E4] overflow-y-auto h-[85vh] md:h-[89vh] lg:h-[85vh] pb-[2.5rem] lg:pb-[3.2rem]"
                   id="shopping-cart-scroll"
                 >
-                  {carts.map((item) => {
+                  {carts?.map((item) => {
                     const product = products.find(
                       (product) => product?.ProductId === item.id,
                     );
@@ -190,7 +194,7 @@ export const ShoppingCart = ({ isOpenCart, toggleOpenCart }) => {
                                 ? prodImage.image
                                 : 'https://www.pngkey.com/png/detail/233-2332677_ega-png.png'
                             }
-                            alt=""
+                            alt={product.Product?.name}
                             className="h-[6.5rem] w-[6rem] object-cover rounded-lg"
                           />
                         </div>
@@ -243,6 +247,7 @@ export const ShoppingCart = ({ isOpenCart, toggleOpenCart }) => {
                   </div>
                   <div className="">
                     <button
+                      // disabled={true}
                       onClick={() => handleCheckout(carts)}
                       className="cssbuttons-io-button w-full font-semibold"
                     >
