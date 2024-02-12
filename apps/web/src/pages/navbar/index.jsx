@@ -16,12 +16,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import Headroom from 'react-headroom';
 import axios from '../../api/axios';
 import { MdLocationOn } from "react-icons/md";
+import { useGeoLocation } from '../../hooks/useGeoLocation';
 
 export const Navbar = () => {
   const customer = useSelector((state) => state.customer.value);
   const totalProduct = useSelector((state) => state.cart.totalProduct);
 
-  const { coordinates, loaded } = useSelector((state) => state.geolocation);
+  // const { coordinates, loaded } = useSelector((state) => state.geolocation);
+  const { loaded, coordinates } = useGeoLocation()
   const [formattedAddress, setFormattedAddress] = useState('');
 
   const [isOpen, setIsOpen] = useState(false);

@@ -173,7 +173,7 @@ export const ProductCards = ({ branchData, coordinates }) => {
     <>
       <div className="my-[16px] mx-[16px] md:mx-[32px] lg:mx-[160px]">
         {/* Shopping From */}
-        <div className="flex flex-col md:flex-row w-full items-center justify-start md:justify-between mb-5">
+        <div className="flex flex-col md:flex-row w-full items-center justify-center md:justify-between mb-5">
           {/* Branch */}
           <section className="flex gap-[0.7rem] items-center w-max p-1 bg-[#00A67C] rounded-full">
             <div
@@ -233,7 +233,7 @@ export const ProductCards = ({ branchData, coordinates }) => {
             )}
           </section>
           {/* Address */}
-          <section className="relative flex md:flex-col mt-3 md:mt-0 justify-end w-full md:w-max items-start gap-[0.8rem] md:gap-[0.2rem] p-1">
+          <section className="relative flex md:flex-col mt-3 md:mt-0 justify-center md:justify-end w-full md:w-max items-start gap-[0.8rem] md:gap-[0.2rem] p-1">
             <div className="text-[16px] text-[#757575] font-medium">
               Delivery to:
             </div>

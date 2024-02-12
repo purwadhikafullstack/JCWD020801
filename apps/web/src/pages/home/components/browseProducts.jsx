@@ -151,7 +151,7 @@ export const BrowseProducts = ({ categoryList, product, setCategoryId, branchId 
             <div className="relative ml-auto">
               <div
                 onClick={() => setIsFilterOpen(!isFilterOpen)}
-                className="group flex gap-1 items-center rounded-full py-[0.45rem] hover:text-white px-3.5 border border-[#D1D5D8] cursor-pointer hover:bg-[#F0FAF7] hover:border-[#caede3] transition ease-in-out delay-100"
+                className="group flex gap-1 items-center rounded-full py-[0.45rem] z-20 hover:text-white px-3.5 border border-[#D1D5D8] cursor-pointer hover:bg-[#F0FAF7] hover:border-[#caede3] transition ease-in-out delay-100"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

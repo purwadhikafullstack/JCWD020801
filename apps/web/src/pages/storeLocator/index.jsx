@@ -144,17 +144,21 @@ export const StoreLocator = () => {
                                                 <span className="text-[#212121] font-semibold">
                                                     {item?.name}
                                                 </span>
-                                                {item?.distance < 25000 && (
-                                                    <span className="text-[14px] text-gray-500 font-medium">
-                                                        {formatDistance(item.distance)} away
-                                                    </span>
+                                                {item?.distance && (
+                                                    <>
+                                                        {item?.distance < 25000 && (
+                                                            <span className="text-[14px] text-gray-500 font-medium">
+                                                                {formatDistance(item.distance)} away
+                                                            </span>
+                                                        )}
+                                                    </>
                                                 )}
                                             </div>
                                             <span className="text-[14px] line-clamp-2 mt-[0.4rem] font-normal text-gray-600">
                                                 {item?.address}
                                             </span>
                                             {/* <span className="text-[14px] mt-[0.1rem] font-normal text-[#757575]">{item.phone}</span> */}
-                                            <button className="hidden lg:block rounded-full px-3.5 py-1.5 w-max text-[13px] font-normal text-[#00A67C] transition delay-100 ease-in-out border border-[#00A67C] hover:bg-[#00A67C] hover:text-white mt-[0.8rem]">
+                                            <button className="hidden md:block rounded-full px-3.5 py-1.5 w-max text-[13px] font-normal text-[#00A67C] transition delay-100 ease-in-out border border-[#00A67C] hover:bg-[#00A67C] hover:text-white mt-[0.8rem]">
                                                 View on Map
                                             </button>
                                         </div>

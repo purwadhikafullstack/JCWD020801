@@ -102,9 +102,9 @@ export const NavbarMobile = ({ isOpen, toggleMenu, isOpenCategory, toggleMenuCat
                         <Link to={'/'} onClick={handleLinkClick}>
                             <h3 className="text-[17px] font-medium text-white">Home</h3>
                         </Link>
-                        <div>
+                        <Link to={'/about'} onClick={handleLinkClick}>
                             <h3 className="text-[17px] font-medium text-white">About Us</h3>
-                        </div>
+                        </Link>
                         <Link to={'/store-locator'} onClick={handleLinkClick}>
                             <h3 className="text-[17px] font-medium text-white">
                                 Find a Store
@@ -112,16 +112,16 @@ export const NavbarMobile = ({ isOpen, toggleMenu, isOpenCategory, toggleMenuCat
                         </Link>
                     </div>
                     {/* account */}
-                    <div className="mt-3 flex w-full gap-4 border-t pt-4">
+                    <div className="mt-3 flex w-full items-center gap-4 border-t pt-4">
                         {!customer.id && (
                             <>
                                 <svg
-                                    className="mb-[0.1rem]"
-                                    width="26"
-                                    height="26"
+                                    // width="26"
+                                    // height="26"
                                     viewBox="0 0 24 24"
                                     fill="none"
                                     xmlns="http://www.w3.org/2000/svg"
+                                    className="h-[1.2rem] w-[1.2rem] mb-[0.1rem]"
                                 >
                                     <path
                                         d="M4.1665 21.875V20.8334C4.1665 17.3816 6.96472 14.5834 10.4165 14.5834H14.5832C18.0349 14.5834 20.8332 17.3816 20.8332 20.8334V21.875"
