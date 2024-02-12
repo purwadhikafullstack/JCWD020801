@@ -84,8 +84,19 @@ export const ShoppingCart = ({ isOpenCart, toggleOpenCart }) => {
 
   useEffect(() => {
     getProductImages();
-    // setProduct(products);
-  }, [products]);
+  }, [carts]);
+
+  const addQty = (item) => {
+    // console.log(item);
+    dispatch(
+      addToCart({
+        id: item.id,
+        quantity: 1,
+        price: item.price,
+        name: item.name,
+      }),
+    );
+  };
 
   const handleSubtractQuantity = (product, item) => {
     if (item.quantity === 1) {

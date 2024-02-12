@@ -331,7 +331,8 @@ export const CheckoutPage = () => {
                   <div className="flex gap-[0.5rem]">
                     <span className="text-[17px] font-medium">Total:</span>
                     <span className="text-[16.5px] font-normal">
-                      {convertToIDR(total + selectedDeliveryCost - discount)}
+                      {/* {convertToIDR(total + selectedDeliveryCost - discount)} */}{' '}
+                      total
                     </span>
                   </div>
                 </div>
