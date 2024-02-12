@@ -8,20 +8,16 @@ import { FiPackage } from 'react-icons/fi';
 import deliverySvg from '../../../assets/transport.svg';
 
 const dummyWeight = 1700;
-const dummyDestinationCity = 34;
 
-export const DeliveryCost = ({ deliveryAddress, finalDistance, handleDeliveryCostChange }) => {
+export const DeliveryCost = ({ deliveryAddress, finalDistance, handleDeliveryCostChange, branchCity, branchMaxDistance }) => {
   const token = localStorage.getItem('token');
   const [shippingCost, setShippingCost] = useState(null);
   const [selectedCourier, setSelectedCourier] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const maxDeliveryDistance = 20;
-
   const handleCourierChange = (value) => {
     setSelectedCourier(value);
   };
-
 
   const calculateShippingCost = async () => {
     try {
@@ -30,7 +26,7 @@ export const DeliveryCost = ({ deliveryAddress, finalDistance, handleDeliveryCos
         'shipping/calculate-cost',
         {
           originCityId: deliveryAddress?.CityId,
-          destinationCityId: dummyDestinationCity,
+          destinationCityId: branchCity,
           weight: dummyWeight,
           courier: selectedCourier,
         },
@@ -42,7 +38,7 @@ export const DeliveryCost = ({ deliveryAddress, finalDistance, handleDeliveryCos
       );
       setShippingCost(response.data.shippingcost[0].costs);
       setLoading(false);
-      console.log(shippingCost);
+      // console.log(shippingCost);
     } catch (error) {
       console.error(error);
       setLoading(false);
@@ -60,7 +56,7 @@ export const DeliveryCost = ({ deliveryAddress, finalDistance, handleDeliveryCos
       <h3 className="text-[20px] font-bold border-b border-[#dcdcdc] text-[#28302A] pb-[0.6rem]">
         Delivery Method & Cost
       </h3>
-      {finalDistance < maxDeliveryDistance ? (
+      {finalDistance < branchMaxDistance ? (
         <>
           <div className="flex flex-col md:flex-row gap-2 mt-4 justify-between items-start md:items-center">
             {/* Dropdown for Delivery Method */}
@@ -154,7 +150,7 @@ export const DeliveryCost = ({ deliveryAddress, finalDistance, handleDeliveryCos
             )}
           </fieldset>
         </>
-      ) : finalDistance > maxDeliveryDistance ? (
+      ) : finalDistance > branchMaxDistance ? (
         <div className="flex flex-col items-center mt-3">
           <div>
             <img

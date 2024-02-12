@@ -87,13 +87,13 @@ export const DiscountedProducts = () => {
                 breakpoints: {
                     '(min-width: 0px)': {
                         slides: {
-                            perView: 2,
+                            perView: 2.25,
                             spacing: 8,
                         },
                     },
                     '(min-width: 640px)': {
                         slides: {
-                            perView: 2,
+                            perView: 2.25,
                             spacing: 16,
                         },
                     },
