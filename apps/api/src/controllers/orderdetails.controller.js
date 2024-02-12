@@ -7,18 +7,17 @@ export const createOderDetail = async (req, res) => {
     // console.log('total', total);
     // console.log('product', product);
 
-    const params = data.map((item) => ({
+    const product = data.map((item) => ({
       quantity: item.quantity,
       total: item.price * item.quantity,
-      // ProductId: item.id,
+      ProductId: item.id,
     }));
 
-    const result = await OrderDetail.bulkCreate(params);
+    const result = await OrderDetail.bulkCreate(product);
 
     // console.log('result>>>>'.result);
 
     return res.status(201).send({
-      result,
       message: 'order details has been created successfully',
     });
   } catch (error) {

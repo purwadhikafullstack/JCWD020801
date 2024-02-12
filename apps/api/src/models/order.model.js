@@ -24,7 +24,7 @@ export const init = (sequelize) => {
       },
       payment_method: {
         type: DataTypes.ENUM,
-        allowNull: false,
+        allowNull: true,
         values: ['manual', 'automatic'],
       },
       payment_proof: {
