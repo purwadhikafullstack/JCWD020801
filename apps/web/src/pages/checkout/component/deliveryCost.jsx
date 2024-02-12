@@ -75,17 +75,28 @@ export const DeliveryCost = ({ deliveryAddress, finalDistance, handleDeliveryCos
             </div>
             <div className="flex flex-col gap-1.5 order-first md:order-last mb-[12px] md:mb-0">
               <div className="flex items-center text-[14px] text-[#989D9E] font-[450]">
-                <FiPackage size={16} className="text-[#989D9E] place-self-start mt-[3px] mr-[0.42rem]" />
+                <FiPackage
+                  size={16}
+                  className="text-[#989D9E] place-self-start mt-[3px] mr-[0.42rem]"
+                />
                 <span className=" ">Weight: {formatWeight(dummyWeight)}</span>
                 <span className="text-gray-400 text-[10px] px-1 ">•</span>
-                <span className=" ">Distance: {finalDistance.toFixed(1)} km</span>
+                <span className=" ">
+                  Distance: {finalDistance.toFixed(1)} km
+                </span>
               </div>
             </div>
           </div>
           <fieldset className="flex flex-col mt-4 gap-2.5">
             <legend className="sr-only">Courier Service Options</legend>
             {loading ? (
-              <ContentLoader height={100} width="100%" speed={2} primaryColor="#f3f3f3" secondaryColor="#ecebeb">
+              <ContentLoader
+                height={100}
+                width="100%"
+                speed={2}
+                primaryColor="#f3f3f3"
+                secondaryColor="#ecebeb"
+              >
                 <rect x="0" y="10" rx="3" ry="3" width="40%" height="10" />
                 <rect x="0" y="30" rx="3" ry="3" width="40%" height="10" />
                 <rect x="45%" y="10" rx="3" ry="3" width="60%" height="10" />
@@ -122,10 +133,16 @@ export const DeliveryCost = ({ deliveryAddress, finalDistance, handleDeliveryCos
                         />
                       </svg>
                       <div className="flex flex-col">
-                        <p className="text-gray-800 text-[14px] font-medium">{item.service}</p>
-                        <p className="text-[#989D9E] text-[14px]">{item.description}</p>
+                        <p className="text-gray-800 text-[14px] font-medium">
+                          {item.service}
+                        </p>
+                        <p className="text-[#989D9E] text-[14px]">
+                          {item.description}
+                        </p>
                       </div>
-                      <span className="ml-auto font-semibold ">Rp {convertToIDR(item.cost[0].value)}</span>
+                      <span className="ml-auto font-semibold ">
+                        Rp {convertToIDR(item.cost[0].value)}
+                      </span>
                     </div>
                   </label>
                 </div>
@@ -146,7 +163,8 @@ export const DeliveryCost = ({ deliveryAddress, finalDistance, handleDeliveryCos
             Oops, You&apos;re too far away!
           </h3>
           <p className="text-[14.5px] font-medium text-gray-500 w-[270px] md:w-[300px] text-center opacity-[0.90] mt-[0.4rem] mb-3">
-            your location is out of reach for delivery, please choose another address
+            your location is out of reach for delivery, please choose another
+            address
           </p>
         </div>
       ) : (
