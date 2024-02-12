@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { convertToIDR } from '../../../functions/functions';
 import stockAvail from '../../../assets/home/stock_avail.svg';
 import { toast } from 'react-toastify';
@@ -16,10 +17,17 @@ const filterItems = [
   { title: 'Name: Z - A' },
 ];
 
-export const BrowseProducts = ({ categoryList, product, setCategoryId, branchId }) => {
+export const BrowseProducts = ({
+  products,
+  categoryList,
+  setCategoryId,
+  branchId,
+}) => {
+  // console.log(products);
+
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [productImage, setProductImage] = useState();
-  const [contoh, setContoh] = useState([])
+
   const customer = useSelector((state) => state.customer.value);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -28,14 +36,14 @@ export const BrowseProducts = ({ categoryList, product, setCategoryId, branchId 
     if (Object.keys(customer).length > 0 && customer.isVerified === true) {
       dispatch(
         addToCart({
-          id: item.id,
+          id: item.Product?.id,
+          name: item.Product?.name,
+          price: item.Product?.price,
           quantity: 1,
-          amount: item.price,
-          name: item.name,
         }),
       );
 
-      toast.success(`${item.name} has been added to cart`, {
+      toast.success(`${item.Product?.name} has been added to cart`, {
         position: 'top-center',
         autoClose: 3000,
         hideProgressBar: true,
@@ -60,16 +68,18 @@ export const BrowseProducts = ({ categoryList, product, setCategoryId, branchId 
 
   const getProductImages = async () => {
     try {
-      const imagePromises = product.map(async (prod) => {
-        const response = await axios.get(`products/images/${prod?.Product?.id}`);
+      const imagePromises = products.map(async (prod) => {
+        const response = await axios.get(
+          `products/images/${prod?.Product?.id}`,
+        );
         return response.data.imageProduct;
       });
       const images = await Promise.all(imagePromises);
       setProductImage(images);
     } catch (err) {
-      console.error(err)
+      console.error(err);
     }
-  }
+  };
 
   const handleLinkClick = () => {
     // window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -78,12 +88,11 @@ export const BrowseProducts = ({ categoryList, product, setCategoryId, branchId 
 
   useEffect(() => {
     getProductImages();
-    setContoh(product)
-  }, [product])
+  }, [products]);
 
   return (
     <>
-      <div className="my-[16px] mx-[16px] md:mx-[32px] lg:mx-[160px] my-[2rem]">
+      <div className="my-[16px] mx-[16px] md:mx-[32px] lg:mx-[160px] lg:my-[2rem]">
         <section>
           <div className="flex justify-between">
             <h2 className="text-[25px] md:text-[29px] font-semibold text-gray-900 tracking-tight">
@@ -201,7 +210,7 @@ export const BrowseProducts = ({ categoryList, product, setCategoryId, branchId 
                         key={index}
                         className="text-gray-600 text-[15px] font-medium py-1 px-5 hover:bg-[#F0FAF7] cursor-pointer transition ease-in-out delay-100 hover:text-[#3A826E]"
                       >
-                        {item.title}
+                        {item.name}
                       </motion.span>
                     ))}
                   </motion.div>
@@ -211,15 +220,18 @@ export const BrowseProducts = ({ categoryList, product, setCategoryId, branchId 
           </section>
           {/* Card Grid */}
           <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2 md:gap-3">
-            {product.map((item, index) => (
-              <div
-                onClick={() =>
-                  navigate(`/product-detail/${item.Product?.id}/${branchId}`)
-                }
-                className="cursor-pointer col-span-1"
-                key={index}
-              >
-                <div className="flex h-full flex-col justify-between bg-white p-2 border border-[#D1D5D8] rounded-xl gap-3 hover:border-[#00A67C] transition delay-75 ease-in-out">
+            {products?.map((item, index) => (
+              <div className="cursor-pointer col-span-1" key={index}>
+                <div
+                  onClick={(event) => {
+                    if (!event.target.closest('button')) {
+                      navigate(
+                        `/product-detail/${item.Product?.id}/${branchId}`,
+                      );
+                    }
+                  }}
+                  className="flex h-full flex-col justify-between bg-white p-2 border border-[#D1D5D8] rounded-xl gap-3 hover:border-[#00A67C] transition delay-75 ease-in-out"
+                >
                   <div>
                     <img
                       src={
@@ -250,7 +262,7 @@ export const BrowseProducts = ({ categoryList, product, setCategoryId, branchId 
                       )}
                     </div>
                     <p className="leading-relaxed text-gray-700 text-[14px] md:text-[15px] line-clamp-2">
-                      {item.Product?.description}
+                      {item.Product?.name}
                     </p>
 
                     <div className="flex gap-1.5 items-center">

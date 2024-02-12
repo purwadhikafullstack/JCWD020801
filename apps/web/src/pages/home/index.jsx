@@ -10,14 +10,15 @@ import { Footer } from '../footer';
 import homeLogin from '../../assets/home/home-login.jpg';
 import { Link } from 'react-router-dom';
 import { DiscountedProducts } from './components/discountedProducts';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import slide1 from '../../assets/home/img-slides-1.png';
 import slide2 from '../../assets/home/img-slides-2.png';
-import slide4 from "../../assets/home/img-slides-4.png"
-import slide7 from "../../assets/home/img-slides-7.png"
-import slide8 from "../../assets/home/banner_product.png"
-import axios from "../../api/axios"
-import { GrocerySteps } from "./components/grocerySteps"
+import slide4 from '../../assets/home/img-slides-4.png';
+import slide7 from '../../assets/home/img-slides-7.png';
+import slide8 from '../../assets/home/banner_product.png';
+import axios from '../../api/axios';
+import { GrocerySteps } from './components/grocerySteps';
+import { setNearestBranchProduct } from '../../redux/productSlice';
 import { useGeoLocation } from '../../hooks/useGeoLocation';
 
 const imgSlides = [
@@ -29,13 +30,16 @@ const imgSlides = [
 ];
 
 export const HomePage = () => {
+  const dispatch = useDispatch();
   const customer = useSelector((state) => state.customer.value);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const { loaded, coordinates } = useGeoLocation()
+  const { loaded, coordinates } = useGeoLocation();
   const [branchData, setBranchData] = useState(null);
 
-  const [nearestBranchProduct, setNearestBranchProduct] = useState([]);
+  const nearestBranchProduct = useSelector((state) => state.product.data);
+
+  // const [nearestBranchProduct, setNearestBranchProduct] = useState([]);
   const [categoryId, setCategoryId] = useState(0);
   const [branchId, setBranchId] = useState();
 
@@ -57,6 +61,7 @@ export const HomePage = () => {
   const fetchMainBranch = async () => {
     try {
       const response = await axios.get('branches/super-store');
+      console.log(response.data);
       setBranchData(response.data.result);
     } catch (error) {
       console.error(error);
@@ -68,7 +73,8 @@ export const HomePage = () => {
       const response = await axios.get(
         `products/all?page=1&sortBy=createdAt&sortOrder=desc&branch_id=${branch_id}&category_id=${categoryId}`,
       );
-      setNearestBranchProduct(response.data.result.rows);
+
+      dispatch(setNearestBranchProduct(response.data.result.rows));
     } catch (err) {
       console.error(err);
     }
@@ -170,10 +176,11 @@ export const HomePage = () => {
             <div
               key={slideIndex}
               onClick={() => goToSlide(slideIndex)}
-              className={`${currentIndex === slideIndex
-                ? 'text-gray-800 text-4xl'
-                : 'text-[#BFBFBF] hover:text-gray-800 text-2xl'
-                }  cursor-pointer `}
+              className={`${
+                currentIndex === slideIndex
+                  ? 'text-gray-800 text-4xl'
+                  : 'text-[#BFBFBF] hover:text-gray-800 text-2xl'
+              }  cursor-pointer `}
             >
               {currentIndex === slideIndex ? <CgLoadbar /> : <RxDotFilled />}
             </div>
@@ -184,10 +191,14 @@ export const HomePage = () => {
           <IoIosArrowForward onClick={nextSlide} size={22} />
         </div>
       </div>
-      <ProductCards branchData={branchData} coordinates={coordinates} />
+      <ProductCards
+        branchData={branchData}
+        coordinates={coordinates}
+        products={nearestBranchProduct}
+      />
       <DiscountedProducts />
       <BrowseProducts
-        product={nearestBranchProduct}
+        products={nearestBranchProduct}
         categoryList={categoryList}
         setCategoryId={setCategoryId}
         branchId={branchId}
