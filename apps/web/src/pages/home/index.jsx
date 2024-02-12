@@ -192,9 +192,9 @@ export const HomePage = () => {
         </div>
       </div>
       <ProductCards
+        products={nearestBranchProduct}
         branchData={branchData}
         coordinates={coordinates}
-        products={nearestBranchProduct}
       />
       <DiscountedProducts />
       <BrowseProducts
