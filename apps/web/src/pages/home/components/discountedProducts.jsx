@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from 'react';
 import 'keen-slider/keen-slider.min.css';
 import KeenSlider from 'keen-slider';
 import { useScroll, useTransform, motion } from 'framer-motion';
+import axios from '../../../api/axios';
+import { useNavigate } from 'react-router-dom';
 
 const cardsData = [
     {
@@ -50,7 +52,10 @@ const cardsData = [
     },
 ];
 
-export const DiscountedProducts = () => {
+export const DiscountedProducts = ({ product, branchId }) => {
+    const [productImage, setProductImage] = useState();
+    const navigate = useNavigate();
+
     const [keenSlider, setKeenSlider] = useState(null);
     const sliderRef = useRef(null);
 
@@ -117,6 +122,23 @@ export const DiscountedProducts = () => {
             setKeenSlider(slider);
         }
     }, []);
+
+    const getProductImages = async () => {
+        try {
+            const imagePromises = product?.map(async (prod) => {
+                const response = await axios.get(`products/images/${prod?.Product?.id}`);
+                return response.data.imageProduct;
+            });
+            const images = await Promise.all(imagePromises);
+            setProductImage(images);
+        } catch (err) {
+            console.error(err)
+        }
+    }
+
+    useEffect(() => {
+        getProductImages();
+    }, [product])
 
     return (
         <>
@@ -330,15 +352,16 @@ export const DiscountedProducts = () => {
                     </section>
                     <section ref={sliderRef}>
                         <div id="keen-slider" className="keen-slider">
-                            {cardsData.map((item, index) => (
+                            {product?.map((item, index) => (
                                 <div
                                     className="keen-slider__slide cursor-pointer"
                                     key={index}
+                                    onClick={() => navigate(`/product-detail/${item.Product?.id}/${branchId}`)}
                                 >
                                     <div className="flex h-full flex-col justify-between bg-white p-2 border border-[#D1D5D8] rounded-xl gap-3 hover:border-[#00A67C] transition delay-100 ease-in-out">
                                         <div>
                                             <img
-                                                src={item.img}
+                                                src={productImage[index]?.image ? productImage[index]?.image : 'https://www.pngkey.com/png/detail/233-2332677_ega-png.png'}
                                                 alt=""
                                                 className="rounded-lg h-[140px] md:h-[145px] xl:h-[180px] w-full object-cover"
                                             />
@@ -347,11 +370,14 @@ export const DiscountedProducts = () => {
                                             <div className="flex gap-1">
                                                 <span className="font-bold text-[13px]">Rp</span>
                                                 <p className="text-[16px] md:text-[18px] font-bold text-rose-600 tracking-tight">
-                                                    {convertToIDR(item.price)}
+                                                    {convertToIDR(item?.discounted_price)}
                                                 </p>
+                                                <div className="font-semibold text-[#757575] text-[15px] line-through">
+                                                    Rp {item?.original_price}
+                                                </div>
                                             </div>
                                             <p className="leading-relaxed text-gray-700 text-[14px] md:text-[15px] line-clamp-2">
-                                                {item.desc}
+                                                {item.Product?.desc}
                                             </p>
 
                                             <div className="flex gap-1.5 items-center">
@@ -363,7 +389,7 @@ export const DiscountedProducts = () => {
                                                 <span className="text-[#067627] font-medium text-[13px] md:text-[14px]">
                                                     stock:{' '}
                                                     <span className="text-[13px] md:text-[14px]">
-                                                        {item.stock}
+                                                        {item?.stock}
                                                     </span>{' '}
                                                 </span>
                                             </div>

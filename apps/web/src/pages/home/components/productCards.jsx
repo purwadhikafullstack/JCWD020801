@@ -19,8 +19,6 @@ export const ProductCards = ({ branchData, coordinates }) => {
   const products = useSelector((state) => state.product.data);
   const dispatch = useDispatch();
 
-  console.log(products);
-
   const [keenSlider, setKeenSlider] = useState(null);
   const sliderRef = useRef(null);
 
@@ -196,7 +194,7 @@ export const ProductCards = ({ branchData, coordinates }) => {
         </div>
         {/* Cards */}
         <>
-          <section className="border-y border-[#D1D5D8]">
+          {/* <section className="border-y border-[#D1D5D8]">
             <div className="pb-[2rem] pt-[1.4rem]">
               <div className="items-center justify-between sm:flex">
                 <h2 className="text-[25px] md:text-[28px] font-semibold text-gray-900 tracking-tight">
@@ -254,7 +252,7 @@ export const ProductCards = ({ branchData, coordinates }) => {
                   </div>
                 </div>
               </div>
-              {/* ---- */}
+              
               <div className="mt-6" ref={sliderRef}>
                 <div id="keen-slider" className="keen-slider">
                   {products.map((item, index) => (
@@ -310,7 +308,7 @@ export const ProductCards = ({ branchData, coordinates }) => {
                 </div>
               </div>
             </div>
-          </section>
+          </section> */}
         </>
       </div>
     </>

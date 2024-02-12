@@ -8,55 +8,13 @@ import axios from "../../api/axios";
 import { formatDistance } from "../../functions/functions";
 import { Link, useParams } from "react-router-dom";
 
-const categoryList = [
-    {
-        name: 'Meat & Poultry',
-        subcategory: [
-            'Beef',
-            'Lamb',
-            'Chicken',
-            'Duck',
-            'Sausage',
-        ],
-    },
-    {
-        name: 'Seafood',
-        subcategory: [
-            'Fish Fillets',
-            'Fish Whole',
-            'Salmon',
-            'Crab',
-            'Lobster',
-            'Shrimp',
-        ],
-    },
-    {
-        name: 'Fresh',
-        // subcategory: {
-        //     list: ['Fruits', 'Berries', 'Vegetables', 'Dried Fruits & Nuts'],
-        // },
-    },
-    { name: 'Spice & Herbs' },
-    {
-        name: 'Dairy',
-        // subcategory: { list: ['Eggs', 'Milk', 'Yoghurt', 'Sour Cream', 'Pudding'] },
-    },
-    { name: 'Drinks' },
-    { name: 'Frozen' },
-    { name: 'Snacks' },
-    { name: 'Beauty' },
-    { name: 'Healthcare' },
-    { name: 'Household' },
-    { name: 'Pet' },
-];
-
 const filterItems = [
-    { title: "Relevance" },
-    { title: "Price: Lowest first" },
-    { title: "Price: Highest first" },
-    { title: "Name: A - Z" },
-    { title: "Name: Z - A" },
-]
+    { title: 'Relevance', sort: 'createdAt', order: 'desc' },
+    { title: 'Price: Lowest first', sort: 'price', order: 'asc' },
+    { title: 'Price: Highest first', sort: 'price', order: 'desc' },
+    { title: 'Name: A - Z', sort: 'name', order: 'asc' },
+    { title: 'Name: Z - A', sort: 'name', order: 'desc' },
+];
 
 export const ProductCatalogue = () => {
     const [selectedCategory, setSelectedCategory] = useState(null);
@@ -74,15 +32,30 @@ export const ProductCatalogue = () => {
     const [branchId, setBranchId] = useState();
 
     const [nearestBranchProduct, setNearestBranchProduct] = useState([])
+    const [pageLimit, setPageLimit] = useState(10);
+
+    const handlePageLimit = () => {
+        if (nearestBranchProduct.length % 10 === 0) {
+            setPageLimit(prevLimit => prevLimit + 10);
+        }
+    }
+
+    //filter
+    const [sort, setSort] = useState('createdAt')
+    const [order, setOrder] = useState('desc')
+    const handleFilter = (sortBy, orderBy) => {
+        setSort(sortBy);
+        setOrder(orderBy)
+    }
 
     const fetchNearestBranchProduct = async (branch_id) => {
         try {
             if (searhValue) {
-                const response = await axios.get(`products/all?page=1&sortBy=createdAt&sortOrder=desc&branch_id=${branch_id}&category_id=${categoryId}&search=${searhValue}`)
+                const response = await axios.get(`products/all?page=1&sortBy=${sort}&sortOrder=${order}&limit=${pageLimit}&branch_id=${branch_id}&category_id=${categoryId}&search=${searhValue}`)
                 setNearestBranchProduct(response.data.result.rows)
                 setCount(response.data.result.count)
             } else {
-                const response = await axios.get(`products/all?page=1&sortBy=createdAt&sortOrder=desc&branch_id=${branch_id}&category_id=${categoryId}&search=`)
+                const response = await axios.get(`products/all?page=1&sortBy=${sort}&sortOrder=${order}&limit=${pageLimit}&branch_id=${branch_id}&category_id=${categoryId}&search=`)
                 setNearestBranchProduct(response.data.result.rows)
                 setCount(response.data.result.count)
             }
@@ -108,6 +81,8 @@ export const ProductCatalogue = () => {
         try {
             const response = await axios.get('branches/super-store');
             setBranchData(response.data.result)
+            fetchNearestBranchProduct(response.data.result.id)
+            setBranchId(response.data.result.id)
         } catch (error) {
             console.error(error);
         }
@@ -155,6 +130,10 @@ export const ProductCatalogue = () => {
         setCategoryId(params.category_id)
         setSearchValue(params.search)
     }, [params])
+
+    useEffect(() => {
+        fetchNearestBranchProduct(branchId);
+    }, [pageLimit, sort, order])
 
     return (
         <>
@@ -342,13 +321,6 @@ export const ProductCatalogue = () => {
                         {/* Title & Filters */}
                         <section className="flex flex-col w-full">
                             <div className="order-last lg:order-first mb-4 lg:mb-0 flex items-end tracking-tight gap-[0.7rem]">
-                                <div className="flex text-[24px]">
-                                    <h4 className="text-[#343538] font-semibold">{nearestBranchProduct[0]?.Product?.Category?.name}</h4>
-                                    {/* <h4 className="text-[#067627] font-semibold whitespace-pre">
-                                        {' '}
-                                        / Fish Fillets
-                                    </h4> */}
-                                </div>
                                 <span className="text-[#939393] font-medium mb-[0.2rem]">
                                     {count} results
                                 </span>
@@ -356,7 +328,7 @@ export const ProductCatalogue = () => {
                             {/* Filter & Sort */}
                             <div className="flex w-full my-2 lg:my-3">
                                 <section className="no-scrollbar w-full flex justify-between items-center gap-[0.3rem] lg:gap-0">
-                                    <div className="flex gap-[0.3rem] order-last lg:order-first overflow-auto no-scrollbar">
+                                    {/* <div className="flex gap-[0.3rem] order-last lg:order-first overflow-auto no-scrollbar">
                                         <div className="group flex gap-1 h-max items-center rounded-full py-[0.45rem] px-3.5 border border-[#D1D5D8] cursor-pointer hover:bg-[#343538] hover:border-[#343538] transition ease-in-out delay-75">
                                             <span className="text-gray-600 text-[14px] group-hover:text-white font-medium ">
                                                 Discount
@@ -367,7 +339,7 @@ export const ProductCatalogue = () => {
                                                 Buy 1, Get 1
                                             </span>
                                         </div>
-                                    </div>
+                                    </div> */}
                                     <div className="relative">
                                         <div
                                             onClick={() => setIsSortOpen(!isSortOpen)}
@@ -415,6 +387,7 @@ export const ProductCatalogue = () => {
                                                         <motion.span
                                                             key={index}
                                                             className="w-full text-gray-600 text-[14.5px] font-medium py-1 px-5 hover:bg-gray-100 cursor-pointer transition ease-in-out delay-100 hover:text-gray-700"
+                                                            onClick={() => {handleFilter(item.sort, item.order)}}
                                                         >
                                                             {item.title}
                                                         </motion.span>
@@ -427,7 +400,7 @@ export const ProductCatalogue = () => {
                             </div>
                         </section>
                         {/* Product Cards  */}
-                        <ProductCatalogueData product={nearestBranchProduct} branchId={branchId}/>
+                        <ProductCatalogueData product={nearestBranchProduct} branchId={branchId} handlePageLimit={handlePageLimit} />
                     </section>
                 </section>
             </section>

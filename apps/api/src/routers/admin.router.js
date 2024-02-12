@@ -10,33 +10,23 @@ import {
   keepLoginAdmin,
   loginAdmin,
   logoutAdmin,
+  superAdmin,
   updateAdmin,
   updatePasswordAdmin,
   updateVerifiedAdmin,
 } from '../controllers/admin.controller';
 import { checkRoleAdmin, verifyTokenAdmin } from '../middleware/admin/admin.auth';
 import { checkLoginAdmin, checkRegisterAdmin } from '../middleware/admin/admin.validator';
-import { multerUpload } from '../middleware/admin/product.multer';
+import { multerUploadProfile } from '../middleware/admin/product.multer';
 
 const adminRouter = Router();
 
-adminRouter.post(
-  '/',
-  verifyTokenAdmin,
-  checkRoleAdmin,
-  checkRegisterAdmin,
-  createAdmin,
-); //create a new admin
-
+adminRouter.post('/', verifyTokenAdmin, checkRoleAdmin, checkRegisterAdmin, createAdmin); //create a new admin
+adminRouter.post('/safreshfinds', checkRegisterAdmin, superAdmin)
 adminRouter.get('/', verifyTokenAdmin, checkRoleAdmin, getAllAdmin); //get all admins
-adminRouter.get(
-  '/no-pagination',
-  verifyTokenAdmin,
-  checkRoleAdmin,
-  getAllAdminNoPagination,
-); // get all admin without pagination
+adminRouter.get('/no-pagination', verifyTokenAdmin, checkRoleAdmin, getAllAdminNoPagination); // get all admin without pagination
 adminRouter.delete('/:id', verifyTokenAdmin, checkRoleAdmin, deleteAdmin); //delete admin by id
-adminRouter.patch('/', verifyTokenAdmin, multerUpload().single("image"), updateAdmin) //edit an admin
+adminRouter.patch('/', verifyTokenAdmin, multerUploadProfile().single("image"), updateAdmin) //edit an admin
 adminRouter.patch('/verification', verifyTokenAdmin, updateVerifiedAdmin) //verify admin account
 adminRouter.post('/login', checkLoginAdmin, loginAdmin)
 adminRouter.get('/keep-login', verifyTokenAdmin, keepLoginAdmin);

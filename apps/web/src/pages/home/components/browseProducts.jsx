@@ -9,14 +9,14 @@ import { useNavigate } from 'react-router-dom';
 import axios from '../../../api/axios';
 
 const filterItems = [
-  { title: 'Relevance' },
-  { title: 'Price: Lowest first' },
-  { title: 'Price: Highest first' },
-  { title: 'Name: A - Z' },
-  { title: 'Name: Z - A' },
+  { title: 'Relevance', sort: 'createdAt', order: 'desc' },
+  { title: 'Price: Lowest first', sort: 'price', order: 'asc' },
+  { title: 'Price: Highest first', sort: 'price', order: 'desc' },
+  { title: 'Name: A - Z', sort: 'name', order: 'asc' },
+  { title: 'Name: Z - A', sort: 'name', order: 'desc' },
 ];
 
-export const BrowseProducts = ({ categoryList, product, setCategoryId, branchId }) => {
+export const BrowseProducts = ({ categoryList, product, setCategoryId, branchId, handleFilter, handlePageLimit }) => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [productImage, setProductImage] = useState();
   const [contoh, setContoh] = useState([])
@@ -73,7 +73,6 @@ export const BrowseProducts = ({ categoryList, product, setCategoryId, branchId 
 
   useEffect(() => {
     getProductImages();
-    setContoh(product)
   }, [product])
 
   return (
@@ -199,6 +198,7 @@ export const BrowseProducts = ({ categoryList, product, setCategoryId, branchId 
                       <motion.span
                         key={index}
                         className="text-gray-600 text-[15px] font-medium py-1 px-5 hover:bg-[#F0FAF7] cursor-pointer transition ease-in-out delay-100 hover:text-[#3A826E]"
+                        onClick={() => {handleFilter(item.sort, item.order)}}
                       >
                         {item.title}
                       </motion.span>
@@ -239,8 +239,8 @@ export const BrowseProducts = ({ categoryList, product, setCategoryId, branchId 
                         </div>
                       }
                     </div>
-                    <p className="leading-relaxed text-gray-700 text-[14px] md:text-[15px] line-clamp-2">
-                      {item.Product?.description}
+                    <p className="leading-relaxed text-gray-900 text-[14px] md:text-[15px] line-clamp-2">
+                      {item.Product?.name}
                     </p>
 
                     <div className="flex gap-1.5 items-center">
@@ -269,49 +269,7 @@ export const BrowseProducts = ({ categoryList, product, setCategoryId, branchId 
           </section>
           {/* Pagination */}
           <div className="flex items-center justify-center gap-2 mt-[1.4rem] md:mt-[1.8rem]">
-            <button
-              // onClick={() => handlePageChange(currentPage - 1)}
-              // disabled={currentPage === 1}
-              className="rounded-lg border border-[#E0E0E0] p-1.5 hover:shadow-sm disabled:cursor-not-allowed disabled:opacity-[0.65] transition ease-in-out delay-100"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="#7a7a7a"
-                className="h-[1.2rem] w-[1.2rem] rtl:rotate-180"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M15.75 19.5L8.25 12l7.5-7.5"
-                />
-              </svg>
-            </button>
-            <div className="text-[#898989] text-[15px] font-medium mx-1.5">
-              {/* {currentPage} of {totalPages} */}1 of 12
-            </div>
-            <button
-              // onClick={() => handlePageChange(currentPage + 1)}
-              // disabled={currentPage === totalPages}
-              className="rounded-lg border border-[#E0E0E0] p-1.5 hover:shadow-sm disabled:cursor-not-allowed disabled:opacity-[0.65] transition ease-in-out delay-100"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="#7a7a7a"
-                className="h-[1.2rem] w-[1.2rem] rotate-180"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M15.75 19.5L8.25 12l7.5-7.5"
-                />
-              </svg>
-            </button>
+            <button onClick={handlePageLimit} className="text-[#898989] rounded-lg border border-[#E0E0E0] p-1.5 hover:shadow-sm disabled:cursor-not-allowed disabled:opacity-[0.65] transition ease-in-out delay-100 ">Load more</button>            
           </div>
         </section>
       </div>

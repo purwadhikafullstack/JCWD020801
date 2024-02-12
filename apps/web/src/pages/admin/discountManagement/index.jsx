@@ -6,9 +6,11 @@ import { handleSortBy, handleReset, updateURL } from "../components/adminUtils";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "../../../api/axios";
+import { toast } from 'react-toastify';
 import ModalAddDiscount from "./components/modalAddDiscount";
 import DiscountTable from "./components/discountTable";
 import ModalDelete from "../components/modalDelete";
+import VoucherTable from "./components/voucherTable";
 
 export default function DiscountManagement() {
     //TAB
@@ -16,7 +18,6 @@ export default function DiscountManagement() {
     const handleTabChangeInParent = (value) => { setTabValueFromChild(value) };
 
     const [discountData, setDiscountData] = useState([]);
-    console.log(discountData);
     const [voucherData, setVoucherData] = useState([])
     const [clickedData, setClickedData] = useState([]);
     const [refreshTable, setRefreshTable] = useState(false)
@@ -81,8 +82,44 @@ export default function DiscountManagement() {
             setTotalPages(response.data?.totalPages)
         } catch (err) {
             console.log(err);
+            toast.error(err.response.data.message, {
+                position: "top-center",
+                hideProgressBar: true,
+                theme: "colored"
+            });
+            if (err.response.data.relogin === true) {
+                localStorage.removeItem("admtoken")
+                navigate('/login-admin')
+            }
         }
     }
+
+    const getVoucherData = async (page, sort, order, search) => {
+        try {
+            const response = await axios.get(`vouchers/?page=${page}&sortBy=${sort}&sortOrder=${order}&search=${search}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            updateURL(navigate, page, sort, order, search)
+            setVoucherData(response.data?.result.rows)
+            setTotalPages(response.data?.totalPages)
+        } catch (err) {
+            console.log(err);
+            toast.error(err.response.data.message, {
+                position: "top-center",
+                hideProgressBar: true,
+                theme: "colored"
+            });
+        }
+    }
+
+    useEffect(() => {
+        if (tabValueFromChild === 1) {
+            getVoucherData(currentPageVoucher, sortBy.toLowerCase(), sortOrderVoucher, debouncedSearchValueVoucher)
+        }
+        getVoucherData(currentPageVoucher, sortBy.toLowerCase(), sortOrderVoucher, debouncedSearchValueVoucher)
+    }, [currentPageVoucher, debouncedSearchValueVoucher, sortOrderVoucher, sortByVoucher, refreshTable, tabValueFromChild])
 
     useEffect(() => {
         getDiscountData(currentPage, sortBy.toLowerCase(), sortOrder, debouncedSearchValue)
@@ -114,7 +151,14 @@ export default function DiscountManagement() {
                         handleSortBy={handleSortByColumn}
                     />
                     :
-                    <></>}
+                    <VoucherTable
+                        handleDelete={handleDelete}
+                        voucherData={voucherData}
+                        currentPage={currentPageVoucher}
+                        handlePageChange={handlePageChangeVoucher}
+                        totalPages={totalPagesVoucher}
+                        handleSortBy={handleSortByColumnVoucher}
+                    />}
             </div>
             <ModalAddDiscount
                 openModalAdd={openModalAdd}
@@ -123,7 +167,7 @@ export default function DiscountManagement() {
                 handleRefreshTable={handleRefreshTable}
             />
             <ModalDelete
-                api={tabValueFromChild === 0 ? '/products/discount' : ''}
+                api={tabValueFromChild === 0 ? '/products/discount' : '/vouchers'}
                 openDelete={openDelete}
                 handleDelete={handleDelete}
                 getData={getDiscountData}

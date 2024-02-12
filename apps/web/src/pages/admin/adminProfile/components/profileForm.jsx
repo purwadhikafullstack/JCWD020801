@@ -16,7 +16,7 @@ export default function AdminProfileForm({ adminData }) {
     const handleSubmit = async (data) => {
         try {
             for (var pair of data.entries()) {
-                console.log(pair[0]+ ', ' + pair[1]); 
+                console.log(pair[0] + ', ' + pair[1]);
             }
             const response = await axios.patch('admins/', data, {
                 headers: {
@@ -54,7 +54,7 @@ export default function AdminProfileForm({ adminData }) {
             const formData = new FormData();
             formData.append("name", values.name)
             formData.append("username", values.username);
-            if(values.password){
+            if (values.password) {
                 formData.append("password", values.password);
             }
             formData.append("image", selectedFile)
@@ -64,9 +64,9 @@ export default function AdminProfileForm({ adminData }) {
         },
     });
     return (
-        <div className="flex flex-col p-8 bg-white shadow-md rounded-3xl w-96 h-auto items-center">
+        <div className="flex flex-col p-8 bg-white shadow-sm rounded-3xl w-96 h-auto items-center">
             <form onSubmit={formik.handleSubmit}>
-                <div className="flex flex-col gap-3 w-full">
+                <div className="flex flex-col gap-4 w-full">
                     <Typography variant="h3">Edit profile</Typography>
                     <Typography className="-mb-2" variant="h6">Name</Typography>
                     <Input name="name" autoComplete="new" label="name"
@@ -80,8 +80,14 @@ export default function AdminProfileForm({ adminData }) {
                         Profile Picture
                     </Typography>
                     {selectedFile && <img src={selectedFile ? URL.createObjectURL(selectedFile) : ''} className="w-32 h-32 rounded-lg object-cover"></img>}
-                    <input type="file" name="image" autoComplete="new" size="sm"
-                        onChange={handleFileChange} />
+                    <label>
+                        <input type="file"
+                            name="image"
+                            autoComplete="new"
+                            size="sm"
+                            onChange={handleFileChange}
+                            className="file:mr-5 file:py-2 file:px-6 file:rounded-full file:border-0 file:text-sm file:font-medium file:bg-[#72c1ac] file:text-white hover:file:cursor-pointer hover:file:bg-[#41907a] hover:file:text-white" />
+                    </label>
                     <Typography className="-mb-2" variant="h6">Password</Typography>
                     <Input
                         name="password"

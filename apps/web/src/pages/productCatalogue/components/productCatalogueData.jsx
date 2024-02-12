@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "../../../api/axios";
 import { useEffect, useState } from "react";
 
-export const ProductCatalogueData = ({ product, branchId }) => {
+export const ProductCatalogueData = ({ product, branchId, handlePageLimit }) => {
     const [productImage, setProductImage] = useState();
     const navigate = useNavigate();
 
@@ -57,8 +57,8 @@ export const ProductCatalogueData = ({ product, branchId }) => {
                                         </div>
                                     }
                                 </div>
-                                <p className="leading-relaxed text-gray-700 text-[14px] line-clamp-2">
-                                    {item.Product?.description}
+                                <p className="leading-relaxed text-gray-900 text-[14px] line-clamp-2">
+                                    {item.Product?.name}
                                 </p>
 
                                 <div className="flex gap-1.5 items-center">
@@ -87,50 +87,7 @@ export const ProductCatalogueData = ({ product, branchId }) => {
             </section>
             {/* Pagination */}
             <div className="flex items-center justify-center gap-2 mt-[1.4rem] md:mt-[1.8rem]">
-                <button
-                    // onClick={() => handlePageChange(currentPage - 1)}
-                    // disabled={currentPage === 1}
-                    className="rounded-lg border border-[#E0E0E0] p-1.5 hover:shadow-sm disabled:cursor-not-allowed disabled:opacity-[0.65] transition ease-in-out delay-100"
-                >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth="1.5"
-                        stroke="#7a7a7a"
-                        className="h-[1.2rem] w-[1.2rem] rtl:rotate-180"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M15.75 19.5L8.25 12l7.5-7.5"
-                        />
-                    </svg>
-                </button>
-                <div className="text-[#898989] text-[15px] font-medium mx-1.5">
-                    {/* {currentPage} of {totalPages} */}
-                    1 of 12
-                </div>
-                <button
-                    // onClick={() => handlePageChange(currentPage + 1)}
-                    // disabled={currentPage === totalPages}
-                    className="rounded-lg border border-[#E0E0E0] p-1.5 hover:shadow-sm disabled:cursor-not-allowed disabled:opacity-[0.65] transition ease-in-out delay-100"
-                >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth="1.5"
-                        stroke="#7a7a7a"
-                        className="h-[1.2rem] w-[1.2rem] rotate-180"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M15.75 19.5L8.25 12l7.5-7.5"
-                        />
-                    </svg>
-                </button>
+            <button onClick={handlePageLimit} className="text-[#898989] rounded-lg border border-[#E0E0E0] p-1.5 hover:shadow-sm disabled:cursor-not-allowed disabled:opacity-[0.65] transition ease-in-out delay-100 ">Load more</button>
             </div>
         </>
     )

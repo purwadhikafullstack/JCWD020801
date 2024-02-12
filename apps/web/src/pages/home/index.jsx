@@ -35,8 +35,25 @@ export const HomePage = () => {
   const [branchData, setBranchData] = useState(null);
 
   const [nearestBranchProduct, setNearestBranchProduct] = useState([]);
+  const [nearestBranchProductDiscounted, setNearestBranchProductDiscounted] = useState([]);
   const [categoryId, setCategoryId] = useState(0);
   const [branchId, setBranchId] = useState();
+
+  //filter
+  const [sort, setSort] = useState('createdAt')
+  const [order, setOrder] = useState('desc')
+  const handleFilter = (sortBy, orderBy) => {
+    setSort(sortBy);
+    setOrder(orderBy)
+  }
+  
+  const [pageLimit, setPageLimit] = useState(5);
+
+  const handlePageLimit = () => {
+    if (nearestBranchProduct.length % 5 === 0) {
+      setPageLimit(prevLimit => prevLimit + 5);
+    }
+  }
 
   const fetchNearestBranch = async () => {
     if (loaded) {
@@ -46,6 +63,7 @@ export const HomePage = () => {
         );
         setBranchData(response.data.result[0]);
         fetchNearestBranchProduct(response.data.result[0].id);
+        fetchNearestBranchProductDiscounted(response.data.result[0].id)
         setBranchId(response.data.result[0].id);
       } catch (error) {
         console.log(error);
@@ -57,6 +75,9 @@ export const HomePage = () => {
     try {
       const response = await axios.get('branches/super-store');
       setBranchData(response.data.result);
+      fetchNearestBranchProduct(response.data.result.id);
+      fetchNearestBranchProductDiscounted(response.data.result.id)
+      setBranchId(response.data.result.id);
     } catch (error) {
       console.error(error);
     }
@@ -65,7 +86,7 @@ export const HomePage = () => {
   const fetchNearestBranchProduct = async (branch_id) => {
     try {
       const response = await axios.get(
-        `products/all?page=1&sortBy=createdAt&sortOrder=desc&branch_id=${branch_id}&category_id=${categoryId}`,
+        `products/all?page=1&sortBy=${sort}&sortOrder=${order}&limit=${pageLimit}&branch_id=${branch_id}&category_id=${categoryId}`,
       );
       setNearestBranchProduct(response.data.result.rows);
     } catch (err) {
@@ -73,8 +94,24 @@ export const HomePage = () => {
     }
   };
 
+  const fetchNearestBranchProductDiscounted = async (branch_id) => {
+    try {
+      const response = await axios.get(
+        `products/all?page=1&sortBy=createdAt&sortOrder=desc&limit=${5}&branch_id=${branch_id}&discounted=${true}`,
+      );
+      setNearestBranchProductDiscounted(response.data.result.rows);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
-    if (coordinates === null) {
+    fetchNearestBranchProduct(branchId);
+    fetchNearestBranchProductDiscounted(branchId)
+  }, [pageLimit])
+
+  useEffect(() => {
+    if (coordinates.lat === null && coordinates.lng === null) {
       console.log('Location permission denied. Fetching data from main store.');
       fetchMainBranch();
     } else if (coordinates && loaded) {
@@ -83,7 +120,7 @@ export const HomePage = () => {
       );
       fetchNearestBranch();
     }
-  }, [loaded, coordinates?.lat, coordinates?.lng, categoryId]);
+  }, [loaded, coordinates?.lat, coordinates?.lng, categoryId, sort, order]);
 
   const prevSlide = () => {
     const isFirstSlide = currentIndex === 0;
@@ -140,7 +177,7 @@ export const HomePage = () => {
                 and many more
               </span>
             </div>
-            <Link to={'/catalogue'}>
+            <Link to={`/catalogue/0/`}>
               <button
                 type="submit"
                 className="gap-2.5 flex items-center mt-4 md:mt-3 rounded-full bg-[#28302A] px-4 py-2.5 w-max text-[14px] font-medium text-white transition delay-100 ease-in-out hover:bg-[#151a17] "
@@ -170,8 +207,8 @@ export const HomePage = () => {
               key={slideIndex}
               onClick={() => goToSlide(slideIndex)}
               className={`${currentIndex === slideIndex
-                  ? 'text-gray-800 text-4xl'
-                  : 'text-[#BFBFBF] hover:text-gray-800 text-2xl'
+                ? 'text-gray-800 text-4xl'
+                : 'text-[#BFBFBF] hover:text-gray-800 text-2xl'
                 }  cursor-pointer `}
             >
               {currentIndex === slideIndex ? <CgLoadbar /> : <RxDotFilled />}
@@ -184,12 +221,17 @@ export const HomePage = () => {
         </div>
       </div>
       <ProductCards branchData={branchData} coordinates={coordinates} />
-      <DiscountedProducts />
+      <DiscountedProducts
+        product={nearestBranchProductDiscounted}
+        branchId={branchId}
+      />
       <BrowseProducts
         product={nearestBranchProduct}
         categoryList={categoryList}
         setCategoryId={setCategoryId}
+        handleFilter={handleFilter}
         branchId={branchId}
+        handlePageLimit={handlePageLimit}
       />
       {/*  */}
       {/* bg-[#f9f9f9]  */}

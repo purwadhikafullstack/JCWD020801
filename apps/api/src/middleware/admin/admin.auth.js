@@ -4,7 +4,6 @@ require('dotenv').config();
 export const verifyTokenAdmin = (req, res, next) => {
   try {
     let token = req.headers.authorization;
-    console.log(token, '>>>>token');
     if (token == null) {
       return res.status(401).send({
         message: 'Token is missing',
@@ -18,7 +17,8 @@ export const verifyTokenAdmin = (req, res, next) => {
   } catch (err) {
     if (err.name === 'TokenExpiredError') {
       return res.status(401).json({
-        message: 'Admin token has expired',
+        message: 'Your session has expired, please login again.',
+        relogin: true
       });
     } else {
       return res.status(401).json({

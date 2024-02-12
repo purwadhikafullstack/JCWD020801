@@ -14,7 +14,7 @@ export const apiTotalAdmin = async () => {
                 Authorization: `Bearer ${token}`,
             },
         })
-        return response.data.totalAdmin
+        return response.data
     } catch (err) {
         console.log(err)
     }
@@ -62,10 +62,10 @@ export const apiTotalBranch = async () => {
     }
 }
 
-export const apiTotalDiscount = async () => {
+export const apiTotalDiscount = async (adminDataRedux) => {
     const token = localStorage.getItem('admtoken')
     try {
-        const response = await axios.get('products/discount/total', {
+        const response = await axios.get(`products/discount/total?admid=${adminDataRedux.id}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -76,14 +76,22 @@ export const apiTotalDiscount = async () => {
     }
 }
 
-export const getCardData = async () => {
+export const getCardData = async (adminDataRedux) => {
     const totalAdmin = await apiTotalAdmin();
     const totalProduct = await apiTotalProduct();
     const totalCustomer = await apiTotalCustomer();
     const totalBranch = await apiTotalBranch();
-    const totalDiscount = await apiTotalDiscount();
+    const totalDiscount = await apiTotalDiscount(adminDataRedux);
 
     const card_data = [
+        { 
+            title: 'products',
+            desc: 'Manage product', 
+            path: '/product-management',
+            icon: <FaPlateWheat style={{ fontSize: '34px' }} />, 
+            data: totalProduct,
+            admin: true
+        },
         { 
             title: 'branches', 
             desc: 'Manage branch', 
@@ -96,7 +104,8 @@ export const getCardData = async () => {
             desc: 'Manage admin', 
             path: '/admin-management', 
             icon: <GoPeople style={{ fontSize: '34px' }} />,
-            data: totalAdmin
+            data: totalAdmin.totalAdmin,
+            latest_data: totalAdmin.latestAdded
         },
         { 
             title: 'customers',
@@ -107,22 +116,14 @@ export const getCardData = async () => {
             admin: true
         },
         { 
-            title: 'products',
-            desc: 'Manage product', 
-            path: '/product-management',
-            icon: <FaPlateWheat style={{ fontSize: '34px' }} />, 
-            data: totalProduct,
-            admin: true
-        },
-        { 
             title: 'collected',
             desc: 'See reports', 
-            path: '/',
+            path: '/report-management',
             icon: <VscGraphLine style={{ fontSize: '34px' }} />, 
-            data: 'Rp.2.200.000' 
+            data: 'Rp.2.700.000' 
         },
         { 
-            title: 'discounts available',
+            title: 'discounts',
             desc: 'Manage discount', 
             path: '/discount-management',
             icon: <MdOutlineDiscount style={{ fontSize: '34px' }} />, 

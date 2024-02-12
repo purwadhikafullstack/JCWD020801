@@ -43,6 +43,7 @@ export default function AdminVerification() {
       setVerCode(response.data.result);
     } catch (err) {
       console.log(err);
+      toast.error(err.response.data.message, { position: "top-center" });
     }
   }
 
@@ -56,7 +57,7 @@ export default function AdminVerification() {
       handleOpenSdialog();
     } catch (err) {
       console.log(err);
-      toast.error(err.response.data.message);
+      toast.error(err.response.data.message, { position: "top-center" });
     }
   }
 
@@ -86,10 +87,18 @@ export default function AdminVerification() {
 
   const handleVerCode = () => {
     if (inputVerCode === verCode?.verification_code) {
-      toast.success("Create your password")
+      toast.success("Create your password", {
+        position: "top-center",
+        hideProgressBar: true,
+        theme: "colored"
+    })
       setSame(true)
     } else {
-      toast.error("Wrong verification code. Please contact your super admin to get your verification code.")
+      toast.error("Wrong verification code. Please contact your super admin to get your verification code.", {
+        position: "top-center",
+        hideProgressBar: true,
+        theme: "colored"
+    })
     }
   }
 
@@ -99,9 +108,9 @@ export default function AdminVerification() {
 
   return (
     <>
-      <div className="flex flex-col w-screen h-screen items-center gap-5 bg-[#edf7f4]">
-        <div className="flex flex-col items-center justify-center border-2 md:mt-52 p-14 rounded-2xl shadow-md bg-white">
-          <div className="flex flex-col items-center justify-center gap-2 p-11">
+      <div className="flex flex-col w-screen h-screen items-center gap-5 justify-center md:bg-[#edf7f4]">
+        <div className="flex flex-col items-center justify-center md:border-2 p-14 rounded-2xl md:shadow-sm bg-white">
+          <div className="flex flex-col items-center justify-center gap-3 p-2 md:p-11">
             {verCode?.verification_code && verCode?.password == null ?
               <>
                 <Typography className="text-[#41907a]" variant="h2">Email Verified</Typography>
@@ -109,7 +118,7 @@ export default function AdminVerification() {
                 {same === false ?
                   <>
                     <div className="flex flex-row items-center justify-center gap-2">
-                      <Typography>Input verification code to create your password</Typography>
+                      <Typography >Input verification code to create your password</Typography>
                       <Helper content={'Contact your super admin to get your verification code'} />
                     </div>
                     <Input label="Verification Code" onChange={(e) => handleInput(e)}></Input>
@@ -162,13 +171,6 @@ export default function AdminVerification() {
           </div>
         </div>
       </div>
-      <ToastContainer
-        position="top-center"
-        hideProgressBar={true}
-        theme="colored"
-        className={'rounded-lg'}
-        style={{ zIndex: 10001 }}
-      />
       <SuccessDialog
         openSDialog={openSDialog}
         handleOpenSDialog={handleOpenSdialog}
