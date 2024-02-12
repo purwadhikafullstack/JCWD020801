@@ -156,28 +156,27 @@ export const ProductCards = ({ branchData, coordinates, products }) => {
   //       }),
   //     );
 
-      toast.success(`${item.name} has been added to cart`, {
-        position: 'top-center',
-        autoClose: 3000,
-        hideProgressBar: true,
-        theme: 'light',
-      });
-    } else {
-      toast.error(
-        <>
-          <div className="font-semibold text-[#E74C3C]">Oops!</div>
-          <div className="text-[15px]">
-            Please Sign in to access this feature
-          </div>
-        </>,
-        {
-          position: 'top-center',
-          autoClose: 2000,
-        },
-      );
-      // setTimeout(() => navigate('/signin'), 3500);
-    }
-  };
+  // toast.success(`${item.name} has been added to cart`, {
+  //   position: 'top-center',
+  //   autoClose: 3000,
+  //   hideProgressBar: true,
+  //   theme: 'light',
+  // });
+  // } else {
+  //   toast.error(
+  //     <>
+  //       <div className="font-semibold text-[#E74C3C]">Oops!</div>
+  //       <div className="text-[15px]">
+  //         Please Sign in to access this feature
+  //       </div>
+  //     </>,
+  //     {
+  //       position: 'top-center',
+  //       autoClose: 2000,
+  //     },
+  //   );
+  //   // setTimeout(() => navigate('/signin'), 3500);
+  // }
 
   return (
     <>
