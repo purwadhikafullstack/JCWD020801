@@ -84,7 +84,7 @@ export const BrowseProducts = ({
   const handleLinkClick = () => {
     // window.scrollTo({ top: 0, behavior: 'smooth' });
     window.scrollTo({ top: 0 });
-  }
+  };
 
   useEffect(() => {
     getProductImages();
@@ -291,7 +291,11 @@ export const BrowseProducts = ({
           </section>
           {/*  */}
           <div className="w-full flex justify-center mt-[1.1rem]">
-            <Link to={'/catalogue'} onClick={handleLinkClick} className="font-medium text-[#898989] hover:underline underline-offset-2 cursor-pointer text-[15.5px]">
+            <Link
+              to={'/catalogue'}
+              onClick={handleLinkClick}
+              className="font-medium text-[#898989] hover:underline underline-offset-2 cursor-pointer text-[15.5px]"
+            >
               View all
             </Link>
           </div>

@@ -191,10 +191,10 @@ export const HomePage = () => {
           <IoIosArrowForward onClick={nextSlide} size={22} />
         </div>
       </div>
-      <ProductCards
+      <ProductCard
+        products={nearestBranchProduct}
         branchData={branchData}
         coordinates={coordinates}
-        products={nearestBranchProduct}
       />
       <DiscountedProducts />
       <BrowseProducts

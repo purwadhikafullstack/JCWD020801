@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import 'keen-slider/keen-slider.min.css';
 import KeenSlider from 'keen-slider';
 import { useEffect, useRef, useState } from 'react';
@@ -15,23 +16,18 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ModalChangeAddress } from '../../checkout/component/modalChangeAddress';
 
-export const ProductCards = ({ branchData, coordinates, products }) => {
+export const ProductCards = ({ products, branchData, coordinates }) => {
   const token = localStorage.getItem('token');
   const [modalChangeAddressOpen, setModalChangeAddressOpen] = useState(false);
   const [deliveryAddress, setDeliveryAddress] = useState(null);
   // console.log(deliveryAddress);
   const customer = useSelector((state) => state.customer.value);
-
   const navigate = useNavigate();
-
-  // const products = useSelector((state) => state.product.data);
-  console.log(products);
   const dispatch = useDispatch();
-
   // console.log(products);
-
   const [keenSlider, setKeenSlider] = useState(null);
   const sliderRef = useRef(null);
+  const [productImage, setProductImage] = useState();
 
   const fetchDeliveryAddress = async () => {
     try {
@@ -62,34 +58,25 @@ export const ProductCards = ({ branchData, coordinates, products }) => {
     }
   };
 
-  const handleAddressClick = () => {
-    if (token) {
-      setModalChangeAddressOpen(!modalChangeAddressOpen)
-    } else {
-      toast.error(
-        <>
-          <div className="font-medium text-[#E74C3C]">Oops!</div>
-          <div className="text-[15px]">Please sign in</div>
-        </>,
-        {
-          position: 'top-center',
-        },
-      );
+  const getProductImages = async () => {
+    try {
+      const imagePromises = products.map(async (prod) => {
+        const response = await axios.get(
+          `products/images/${prod?.Product?.id}`,
+        );
+        return response.data.imageProduct;
+      });
+      const images = await Promise.all(imagePromises);
+      setProductImage(images);
+    } catch (err) {
+      console.error(err);
     }
-  }
+  };
 
   useEffect(() => {
     fetchDeliveryAddress();
-  }, []);
-
-  // const customer = useSelector((state) => state.customer.value);
-  // const navigate = useNavigate()
-
-  // const products = useSelector((state) => state.product.data);
-  // const dispatch = useDispatch();
-
-  // const [keenSlider, setKeenSlider] = useState(null);
-  // const sliderRef = useRef(null);
+    getProductImages();
+  }, [products]);
 
   // const fetchProduct = async () => {
   //   try {
@@ -100,99 +87,100 @@ export const ProductCards = ({ branchData, coordinates, products }) => {
   //   }
   // };
 
-  // const slidePrev = () => {
-  //   if (keenSlider) {
-  //     keenSlider.prev();
-  //   }
-  // };
+  const slidePrev = () => {
+    if (keenSlider) {
+      keenSlider.prev();
+    }
+  };
 
-  // const slideNext = () => {
-  //   if (keenSlider) {
-  //     keenSlider.next();
-  //   }
-  // };
+  const slideNext = () => {
+    if (keenSlider) {
+      keenSlider.next();
+    }
+  };
 
-  // useEffect(() => {
-  //   if (sliderRef.current) {
-  //     const slider = new KeenSlider(sliderRef.current, {
-  //       loop: true,
-  //       slides: {
-  //         origin: 'center',
-  //         perView: 1.25,
-  //         spacing: 16,
-  //       },
-  //       breakpoints: {
-  //         '(min-width: 0px)': {
-  //           slides: {
-  //             perView: 2,
-  //             spacing: 8,
-  //           },
-  //         },
-  //         '(min-width: 640px)': {
-  //           slides: {
-  //             perView: 2,
-  //             spacing: 16,
-  //           },
-  //         },
-  //         '(min-width: 768px)': {
-  //           slides: {
-  //             perView: 3.25,
-  //             spacing: 15,
-  //           },
-  //         },
-  //         '(min-width: 1024px)': {
-  //           slides: {
-  //             origin: 'auto',
-  //             perView: 4.25,
-  //             spacing: 10,
-  //           },
-  //         },
-  //         '(min-width: 1280px)': {
-  //           slides: {
-  //             origin: 'auto',
-  //             perView: 4.5,
-  //             spacing: 22,
-  //           },
-  //         },
-  //       },
-  //     });
+  useEffect(() => {
+    if (sliderRef.current) {
+      const slider = new KeenSlider(sliderRef.current, {
+        loop: true,
+        slides: {
+          origin: 'center',
+          perView: 1.25,
+          spacing: 16,
+        },
+        breakpoints: {
+          '(min-width: 0px)': {
+            slides: {
+              perView: 2,
+              spacing: 8,
+            },
+          },
+          '(min-width: 640px)': {
+            slides: {
+              perView: 2,
+              spacing: 16,
+            },
+          },
+          '(min-width: 768px)': {
+            slides: {
+              perView: 3.25,
+              spacing: 15,
+            },
+          },
+          '(min-width: 1024px)': {
+            slides: {
+              origin: 'auto',
+              perView: 4.25,
+              spacing: 10,
+            },
+          },
+          '(min-width: 1280px)': {
+            slides: {
+              origin: 'auto',
+              perView: 4.5,
+              spacing: 22,
+            },
+          },
+        },
+      });
 
-  //     setKeenSlider(slider);
-  //   }
-  // }, []);
+      setKeenSlider(slider);
+    }
+  }, []);
 
-  // const handleAddtoCart = (item) => {
-  //   if (Object.keys(customer).length > 0 && customer.isVerified === true) {
-  //     dispatch(
-  //       addToCart({
-  //         id: item.id,
-  //         quantity: 1,
-  //         price: item.price,
-  //         name: item.name,
-  //       }),
-  //     );
+  const handleAddtoCart = (item) => {
+    if (Object.keys(customer).length > 0 && customer.isVerified === true) {
+      dispatch(
+        addToCart({
+          id: item.Product?.id,
+          name: item.Product?.name,
+          price: item.Product?.price,
+          quantity: 1,
+        }),
+      );
 
-  // toast.success(`${item.name} has been added to cart`, {
-  //   position: 'top-center',
-  //   autoClose: 3000,
-  //   hideProgressBar: true,
-  //   theme: 'light',
-  // });
-  // } else {
-  //   toast.error(
-  //     <>
-  //       <div className="font-semibold text-[#E74C3C]">Oops!</div>
-  //       <div className="text-[15px]">
-  //         Please Sign in to access this feature
-  //       </div>
-  //     </>,
-  //     {
-  //       position: 'top-center',
-  //       autoClose: 2000,
-  //     },
-  //   );
-  //   // setTimeout(() => navigate('/signin'), 3500);
-  // }
+      toast.success(`${item.Product?.name} has been added to cart`, {
+        position: 'top-center',
+        autoClose: 3000,
+        hideProgressBar: true,
+        theme: 'light',
+      });
+    } else {
+      toast.error(
+        <>
+          <div className="font-semibold text-[#E74C3C]">Oops!</div>
+          <div className="text-[15px]">
+            Please Sign in to access this feature
+          </div>
+        </>,
+        {
+          position: 'top-center',
+          autoClose: 2000,
+        },
+      );
+      setTimeout(() => navigate('/signin'), 3500);
+    }
+  };
 
   return (
     <>
@@ -291,7 +279,7 @@ export const ProductCards = ({ branchData, coordinates, products }) => {
         </div>
         {/* Cards */}
         <>
-          {/* <section className="border-y border-[#D1D5D8]">
+          <section className="border-y border-[#D1D5D8]">
             <div className="pb-[2rem] pt-[1.4rem]">
               <div className="items-center justify-between sm:flex">
                 <h2 className="text-[25px] md:text-[28px] font-semibold text-gray-900 tracking-tight">
@@ -351,7 +339,7 @@ export const ProductCards = ({ branchData, coordinates, products }) => {
               </div>
               <div className="mt-6" ref={sliderRef}>
                 <div id="keen-slider" className="keen-slider">
-                  {products.map((item, index) => (
+                  {products?.map((item, index) => (
                     <div
                       className="keen-slider__slide cursor-pointer"
                       key={index}
@@ -359,7 +347,11 @@ export const ProductCards = ({ branchData, coordinates, products }) => {
                       <div className="flex h-full flex-col justify-between bg-white p-2 border border-[#D1D5D8] rounded-xl gap-3 hover:border-[#00A67C] transition delay-100 ease-in-out">
                         <div>
                           <img
-                            src={item.img}
+                            src={
+                              productImage[index]?.image
+                                ? productImage[index]?.image
+                                : 'https://www.pngkey.com/png/detail/233-2332677_ega-png.png'
+                            }
                             alt=""
                             className="rounded-lg h-[140px] md:h-[145px] xl:h-[180px] w-full object-cover"
                           />
@@ -415,7 +407,7 @@ export const ProductCards = ({ branchData, coordinates, products }) => {
                 </div>
               </div>
             </div>
-          </section> */}
+          </section>
         </>
       </div>
       <ModalChangeAddress
