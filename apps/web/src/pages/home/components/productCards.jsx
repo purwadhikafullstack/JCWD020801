@@ -73,22 +73,6 @@ export const ProductCards = ({ products, branchData, coordinates }) => {
     }
   };
 
-  const handleAddressClick = () => {
-    if (token) {
-      setModalChangeAddressOpen(!modalChangeAddressOpen)
-    } else {
-      toast.error(
-        <>
-          <div className="font-medium text-[#E74C3C]">Oops!</div>
-          <div className="text-[15px]">Please sign in</div>
-        </>,
-        {
-          position: 'top-center',
-        },
-      );
-    }
-  }
-
   useEffect(() => {
     fetchDeliveryAddress();
     getProductImages();
