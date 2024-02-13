@@ -1,42 +1,34 @@
-import { Navbar } from '../navbar';
-import stockAvail from '../../assets/home/stock_avail.svg';
-import { MinusIcon, PlusIcon } from '@heroicons/react/24/solid';
-import { Footer } from '../footer';
-import { useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import axios from '../../api/axios';
-import { useDispatch, useSelector } from 'react-redux';
-import { addToCart } from '../../redux/cartSlice';
-import { toast } from 'react-toastify';
-
-const dummyImg = [
-  {
-    id: 1,
-    img: 'https://www.instacart.com/assets/domains/product-image/file/large_ec9119c1-ec2f-4e6a-8387-6d6249180f7f.jpg',
-  },
-  {
-    id: 2,
-    img: 'https://www.instacart.com/assets/domains/product-image/file/large_b96dbb95-ee6a-4f58-83fd-53b1342a567d.jpg',
-  },
-  {
-    id: 3,
-    img: 'https://www.instacart.com/assets/domains/product-image/file/large_6a7da7e2-02a5-4df5-a6fe-e3adc96ed63c.jpg',
-  },
-];
+import { Navbar } from "../navbar"
+import stockAvail from '../../assets/home/stock_avail.svg'
+import { MinusIcon, PlusIcon } from "@heroicons/react/24/solid"
+import { Footer } from "../footer"
+import { useParams } from "react-router-dom"
+import { useEffect, useLayoutEffect, useState } from "react"
+import axios from "../../api/axios"
+import { useDispatch, useSelector } from "react-redux"
+import { addToCart } from "../../redux/cartSlice"
+import { toast } from "react-toastify"
+import { setNearestBranchProduct } from '../../redux/productSlice';
 
 export const ProductDetail = () => {
   const params = useParams();
   const [productData, setProductData] = useState();
   const [productImages, setProductImages] = useState();
+  const [mainImage, setMainImage] = useState();
+  const [productId, setProductId] = useState()
+  
+
+  const handleMainImage = (image) => {
+    setMainImage(image)
+  }
   const [price, setPrice] = useState();
   const [discountedPrice, setDiscountedPrice] = useState();
   const [quantity, setQuantity] = useState(1);
   const customer = useSelector((state) => state.customer.value);
   const dispatch = useDispatch();
-  console.log('qty', quantity);
+  
 
   const handleQuantity = (action) => {
-    console.log(action);
     setQuantity((prevQuantity) => {
       if (action === 'add') {
         return prevQuantity + 1;
@@ -50,9 +42,9 @@ export const ProductDetail = () => {
 
   const handleAddtoCart = (item) => {
     if (Object.keys(customer).length > 0 && customer.isVerified === true) {
-      dispatch(addToCart({ id: item.id, quantity: 1, amount: item.price }));
+      dispatch(addToCart({ id: item.Product?.id, name:item.Product?.name, quantity: 1, price: item.Product?.price }));
 
-      toast.success(`${item.title} has been added to cart`, {
+      toast.success(`${item.Product?.name} has been added to cart`, {
         position: 'top-center',
         autoClose: 3000,
         hideProgressBar: true,
@@ -74,16 +66,14 @@ export const ProductDetail = () => {
     }
   };
 
-  console.log(productData);
-  console.log('Price', price);
-  console.log('Discounted Price', discountedPrice);
-
   const getProductBranchById = async () => {
     try {
       const response = await axios.get(
         `products/branch-product/${params.id}/${params.branch_id}`,
       );
+      const resultArray = [response.data.result];
       setProductData(response.data.result);
+      dispatch(setNearestBranchProduct(resultArray));
       setPrice(response.data.result.original_price);
       setDiscountedPrice(response.data.result.discounted_price);
     } catch (err) {
@@ -93,8 +83,10 @@ export const ProductDetail = () => {
 
   const getProductImage = async () => {
     try {
-      const response = await axios.get(`products/images/${params.id}`);
-      setProductImages(response.data.imageProduct.image);
+      const response = await axios.get(`products/images-all/${params.id}`);
+      setProductImages(response.data?.imageProduct);
+      setMainImage(response?.data?.imageProduct[0]?.image)
+      setProductId(response?.data?.imageProduct[0]?.ProductId)
     } catch (err) {
       console.error(err);
     }
@@ -104,6 +96,10 @@ export const ProductDetail = () => {
     getProductBranchById();
     getProductImage();
   }, []);
+
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0)
+  });
 
   return (
     <>
@@ -130,10 +126,11 @@ export const ProductDetail = () => {
                 </svg>
               </button>
               <div className="flex lg:flex-col gap-[1.4rem] ">
-                {dummyImg.map((item) => (
+                {productImages?.map((item) => (
                   <img
+                    onClick={() => handleMainImage(item.image)}
                     key={item.id}
-                    src={item.img}
+                    src={item.image}
                     className="h-[3.4rem] w-[3.4rem] object-cover rounded-xl border border-[#D1D5D8]"
                   ></img>
                 ))}
@@ -157,7 +154,7 @@ export const ProductDetail = () => {
             <div className="relative flex items-center h-full w-full lg:w-max lg:shrink-0">
               <div className="relative w-full">
                 <img
-                  src={productImages}
+                  src={mainImage}
                   alt=""
                   className="rounded-2xl h-[45vh] w-[90vw] md:h-[40vh] md:w-[70vw] lg:h-[50vh] lg:w-[28rem] object-cover"
                 />

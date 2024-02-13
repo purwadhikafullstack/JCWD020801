@@ -5,10 +5,12 @@ import CustomerTable from "./components/customerTable";
 import { handleSortBy, updateURL } from "../components/adminUtils";
 import { useDebounce } from 'use-debounce';
 import axios from "../../../api/axios";
+import { toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
 
 export default function CustomerManagement() {
     const [customerData, setCustomerData] = useState([]);
+    const [allCustomerData, setAllCustomerData] = useState([]);
     const [clickedData, setClickedData] = useState([]);
     const [refreshTable, setRefreshTable] = useState(false)
     const handleRefreshTable = () => setRefreshTable(!refreshTable)
@@ -40,11 +42,26 @@ export default function CustomerManagement() {
                     Authorization: `Bearer ${token}`,
                 },
             });
+            const response_all = await axios.get(`customer/all?all=${true}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            setAllCustomerData(response_all.data?.result)
             setCustomerData(response.data?.result.rows)
             setTotalPages(response.data?.totalPages)
             updateURL(navigate, page, sort, order, search)
         } catch (err) {
             console.log(err);
+            toast.error(err.response.data.message, {
+                position: "top-center",
+                hideProgressBar: true,
+                theme: "colored"
+            });
+            if (err.response.data.relogin === true) {
+                localStorage.removeItem("admtoken")
+                navigate('/login-admin')
+            }
         }
     }
 
@@ -61,7 +78,9 @@ export default function CustomerManagement() {
                     description={'The current list of registered customers.'}
                     showAddButton={false}
                     searchValue={searchValue}
-                    setSearchValue={setSearchValue} />
+                    setSearchValue={setSearchValue}
+                    page={'customer-management'}
+                    csvData={allCustomerData} />
                 <CustomerTable
                     customerData={customerData}
                     currentPage={currentPage}

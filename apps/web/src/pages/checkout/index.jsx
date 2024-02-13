@@ -20,7 +20,7 @@ export const CheckoutPage = () => {
   const carts = useSelector((state) => state.cart.data);
   const products = useSelector((state) => state.product.data);
   const orderId = useSelector((state) => state.cart.order_id);
-  console.log(orderId);
+  
   const [isPaymentOpen, setIsPaymentOpen] = useState(false);
   const [productImage, setProductImage] = useState();
   const customer = useSelector((state) => state.customer.value);
@@ -30,13 +30,11 @@ export const CheckoutPage = () => {
   );
   const discount = 3000;
 
-  const [selectedDeliveryCost, setSelectedDeliveryCost] = useState(null);
+  const [selectedDeliveryCost, setSelectedDeliveryCost] = useState(0);
 
   const handleDeliveryCostChange = (cost) => {
     setSelectedDeliveryCost(cost);
   };
-
-  console.log(selectedDeliveryCost);
 
   const getProductImages = async () => {
     try {
@@ -277,7 +275,7 @@ export const CheckoutPage = () => {
                     <div className="flex items-center justify-between">
                       <h4 className="font-medium text-gray-600">Delivery</h4>
                       <h4 className="font-semibold tracking-tight text-gray-900">
-                        {/* {convertToIDR(selectedDeliveryCost)} */}DeliveryCost
+                        {convertToIDR(selectedDeliveryCost)}
                       </h4>
                     </div>
                     <div className="flex items-center justify-between">
@@ -290,8 +288,8 @@ export const CheckoutPage = () => {
                   <div className="border-t border-[#dcdcdc] flex items-center justify-between pt-[1rem]">
                     <h4 className="font-semibold text-[18px]">Total</h4>
                     <h4 className="font-bold text-[18px]">
-                      {/* {convertToIDR(total + selectedDeliveryCost - discount)}  */}
-                      Rp. {convertToIDR(total - discount)}
+                      {convertToIDR(total + selectedDeliveryCost - discount)} 
+                      
                     </h4>
                   </div>
                   <button
@@ -332,7 +330,7 @@ export const CheckoutPage = () => {
                   <div className="flex gap-[0.5rem]">
                     <span className="text-[17px] font-medium">Total:</span>
                     <span className="text-[16.5px] font-normal">
-                      {/* {convertToIDR(total + selectedDeliveryCost - discount)} */}{' '}
+                      {convertToIDR(total + selectedDeliveryCost - discount)}{' '}
                       total
                     </span>
                   </div>
@@ -407,8 +405,7 @@ export const CheckoutPage = () => {
                     <div className="flex items-center justify-between">
                       <h4 className="font-medium text-gray-600">Delivery</h4>
                       <h4 className="font-semibold tracking-tight text-gray-900">
-                        {/* {convertToIDR(selectedDeliveryCost)} */} delivery
-                        cost
+                        {convertToIDR(selectedDeliveryCost)}
                       </h4>
                     </div>
                     <div className="flex items-center justify-between">
@@ -421,8 +418,7 @@ export const CheckoutPage = () => {
                   <div className="border-t border-[#dcdcdc] flex items-center justify-between pt-[1rem]">
                     <h4 className="font-semibold text-[18px]">Total</h4>
                     <h4 className="font-bold text-[18px]">
-                      {/* {convertToIDR(total + selectedDeliveryCost - discount)} */}
-                      Rp. {convertToIDR(total - discount)}
+                      {convertToIDR(total + selectedDeliveryCost - discount)}
                     </h4>
                   </div>
                   <button

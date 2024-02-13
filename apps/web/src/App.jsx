@@ -1,4 +1,5 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider} from 'react-router-dom';
+import { toast } from 'react-toastify';
 import LoginAdmin from './pages/admin/loginAdmin';
 import AdminManagement from './pages/admin/adminManagement';
 import CustomerManagement from './pages/admin/customerManagement';
@@ -36,6 +37,7 @@ import { ProductDetail } from './pages/productDetail';
 import DiscountManagement from './pages/admin/discountManagement';
 import { Admin404 } from './pages/404admin';
 import { About } from './pages/about';
+import ReportManagement from './pages/admin/reportManagement';
 
 const router = createBrowserRouter([
   //Untuk yang tidak butuh token
@@ -76,6 +78,7 @@ const router = createBrowserRouter([
       { path: '/store-management/:id', element: <StoreBranchDetail /> },
       { path: '/stock-management', element: <StockManagement /> },
       { path: '/discount-management', element: <DiscountManagement /> },
+      { path: '/report-management', element: <ReportManagement/> },
     ],
   },
 ]);
@@ -98,10 +101,11 @@ function App() {
       });
       dispatch(setDataAdmin(response.data.result));
     } catch (err) {
-      if (err.response.status === 401) {
-        localStorage.removeItem('admtoken');
-        handleOpen();
-      }
+      toast.error(err.response.data.message, {
+        position: "top-center",
+        hideProgressBar: true,
+        theme: "colored"
+      });
     }
   };
 
@@ -128,7 +132,7 @@ function App() {
     if (admtoken) {
       keepLoginAdmin();
     }
-  }, [token]);
+  }, []);
 
   return (
     <>

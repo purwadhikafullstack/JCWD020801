@@ -10,6 +10,7 @@ const transporter = require('../middleware/transporter');
 import path from 'path';
 import CustomerVoucher from '../models/customervoucher.model';
 import Voucher from '../models/voucher.model';
+import moment from 'moment'
 require("dotenv").config()
 
 export const userRegister = async (req, res) => {
@@ -581,7 +582,7 @@ export const userEmailUpdate = async (req, res) => {
             return res.status(400).send({ message: "This email address is already registered" })
         }
 
-        res.status(200).send({ message: "Email update link has been sent to your current email" })
+        res.status(200).send({ message: "Email update link has been sent to your new email" })
     } catch (error) {
         console.log(error);
         res.status(400).send({ message: error.message })
@@ -618,14 +619,23 @@ export const getTotalCustomer = async (req, res) => {
 
 export const getAllCustomer = async (req, res) => {
     try {
-        const { page, sortBy, sortOrder = 'asc', search = '' } = req.query;
+        const { page, sortBy, sortOrder = 'asc', search = '', all } = req.query;
         const limit = 5;
         const offset = (page - 1) * limit;
 
+        if(all && all === 'true'){
+            const dataCustomer = await Customer.findAll();
+            dataCustomer.forEach(row => {
+                row.dataValues.formattedCreatedAt = moment(row.createdAt).format('MMMM Do YYYY, h:mm:ss a');
+                row.dataValues.formattedUpdatedAt = moment(row.updatedAt).format('MMMM Do YYYY, h:mm:ss a');
+            });
+            return res.status(200).send({ result: dataCustomer})
+        }
+
         const dataCustomer = await Customer.findAndCountAll({
             where: {
-                firstname: {
-                    [Op.like]: `%${search}%`
+                firstname: { 
+                    [Op.like]: `%${search}%` 
                 }
             },
             attributes: {

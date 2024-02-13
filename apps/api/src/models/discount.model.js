@@ -1,4 +1,4 @@
-import { Model, DataTypes } from 'sequelize';
+import { Model, DataTypes, INTEGER } from 'sequelize';
 
 export default class Discount extends Model {
   static associate(models) {
@@ -30,6 +30,10 @@ export const init = (sequelize) => {
       max_discount: {
         type: DataTypes.INTEGER,
         allowNull: true,
+      },
+      difference:{
+        type: DataTypes.INTEGER,
+        allowNull: false,
       },
       start_date: {
         type: DataTypes.DATE,

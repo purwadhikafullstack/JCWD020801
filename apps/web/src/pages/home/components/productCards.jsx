@@ -24,7 +24,7 @@ export const ProductCards = ({ products, branchData, coordinates }) => {
   const customer = useSelector((state) => state.customer.value);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  // console.log(products);
+
   const [keenSlider, setKeenSlider] = useState(null);
   const sliderRef = useRef(null);
   const [productImage, setProductImage] = useState();
@@ -278,137 +278,7 @@ export const ProductCards = ({ products, branchData, coordinates }) => {
           </section>
         </div>
         {/* Cards */}
-        <>
-          <section className="border-y border-[#D1D5D8]">
-            <div className="pb-[2rem] pt-[1.4rem]">
-              <div className="items-center justify-between sm:flex">
-                <h2 className="text-[25px] md:text-[28px] font-semibold text-gray-900 tracking-tight">
-                  Best Selling Products
-                </h2>
-
-                <div className="flex items-center justify-between gap-5 mt-3 md:mt-0">
-                  <span className="font-semibold text-[#28302A] hover:underline underline-offset-2 cursor-pointer ">
-                    View all
-                  </span>
-                  <div className="flex gap-3">
-                    <button
-                      aria-label="Previous slide"
-                      id="keen-slider-previous"
-                      onClick={slidePrev}
-                      className="rounded-full border border-gray-300 p-3 transition hover:bg-gray-50"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth="1.5"
-                        stroke="currentColor"
-                        className="h-5 w-5 rtl:rotate-180"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M15.75 19.5L8.25 12l7.5-7.5"
-                        />
-                      </svg>
-                    </button>
-
-                    <button
-                      aria-label="Next slide"
-                      id="keen-slider-next"
-                      onClick={slideNext}
-                      className="rounded-full border border-gray-300 p-3 transition hover:bg-gray-50"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth="1.5"
-                        stroke="currentColor"
-                        className="h-5 w-5 rotate-180"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M15.75 19.5L8.25 12l7.5-7.5"
-                        />
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div className="mt-6" ref={sliderRef}>
-                <div id="keen-slider" className="keen-slider">
-                  {products?.map((item, index) => (
-                    <div
-                      className="keen-slider__slide cursor-pointer"
-                      key={index}
-                    >
-                      <div className="flex h-full flex-col justify-between bg-white p-2 border border-[#D1D5D8] rounded-xl gap-3 hover:border-[#00A67C] transition delay-100 ease-in-out">
-                        <div>
-                          <img
-                            src={
-                              productImage[index]?.image
-                                ? productImage[index]?.image
-                                : 'https://www.pngkey.com/png/detail/233-2332677_ega-png.png'
-                            }
-                            alt=""
-                            className="rounded-lg h-[140px] md:h-[145px] xl:h-[180px] w-full object-cover"
-                          />
-                        </div>
-                        <div className="px-1.5 flex flex-col gap-2">
-                          <div className="flex gap-1">
-                            <span className="font-bold text-[13px]">Rp</span>
-                            <p className="text-[16px] md:text-[18px] font-bold text-rose-600 tracking-tight">
-                              {convertToIDR(item.original_price)}
-                            </p>
-                          </div>
-                          <p className="leading-relaxed text-gray-700 text-[14px] md:text-[15px] line-clamp-2">
-                            {item.Product?.name}
-                          </p>
-
-                          <div className="flex gap-1.5 items-center">
-                            <img
-                              src={
-                                item.stock === 0 || null
-                                  ? stockNonAvail
-                                  : stockAvail
-                              }
-                              alt=""
-                              className=" h-3 pt-[0.1rem]"
-                            />
-
-                            <span
-                              className={`${
-                                item.stock === 0 || null
-                                  ? 'text-gray-500'
-                                  : 'text-[#067627] '
-                              } font-medium text-[13px] md:text-[14px]`}
-                            >
-                              stock:{' '}
-                              <span className="text-[13px] md:text-[14px]">
-                                {item.stock}
-                              </span>{' '}
-                            </span>
-                          </div>
-                        </div>
-                        <button
-                          disabled={item.stock > 0 ? false : true}
-                          onClick={() => handleAddtoCart(item)}
-                          className={`mt-1 mb-[0.2rem] w-full rounded-full  text-white py-[0.4rem] text-[14px] ${
-                            item.stock > 0 ? 'bg-[#00A67C]' : ' bg-gray-500'
-                          }`}
-                        >
-                          {item.stock > 0 ? 'Add to Cart' : 'Out of Stock'}
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </section>
-        </>
+        
       </div>
       <ModalChangeAddress
         modalChangeAddressOpen={modalChangeAddressOpen}

@@ -19,6 +19,10 @@ export const init = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      latitude: {
+        type: DataTypes.DECIMAL,
+        allowNull: false,
+      },
       longitude: {
         type: DataTypes.DOUBLE,
         allowNull: false,

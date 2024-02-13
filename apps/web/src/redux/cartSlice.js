@@ -14,6 +14,7 @@ export const cartSlice = createSlice({
       const itemInCart = state.data.find(
         (item) => item.id === action.payload.id,
       );
+      console.log("ITEM IN CART", itemInCart);
       if (itemInCart) {
         itemInCart.quantity++;
       } else {

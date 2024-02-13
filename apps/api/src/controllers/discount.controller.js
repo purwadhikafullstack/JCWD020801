@@ -9,7 +9,6 @@ import Admin from "../models/admin.model";
 export const getAllDiscount = async (req, res) => {
     try {
         const { page, sortBy, sortOrder = 'asc', search, admid } = req.query;
-        console.log(req.query);
         const limit = 5;
         const offset = (page - 1) * limit;
 
@@ -75,7 +74,41 @@ export const getAllDiscount = async (req, res) => {
 
 export const getTotalDiscount = async (req, res) => {
     try {
-        const totalDiscount = await Discount.count()
+        const {admid} = req.query;
+        console.log(req.query);
+
+        const findAdmin = await Admin.findOne({
+            where: {
+                id: admid
+            }
+        })
+
+        let whereCondition = {}
+        if (admid && findAdmin.isSuperAdmin === false) {
+            const findBranches = await Branch.findAll({
+                where: {
+                    AdminId: admid
+                }
+            });
+
+            const branchIds = findBranches.map(branch => branch.id);
+            whereCondition = {
+                '$ProductBranch.Branch.id$': branchIds
+            };
+        }
+
+        const totalDiscount = await Discount.count({
+            include: [
+                {
+                    model: ProductBranch,
+                    include:[
+                        {model: Product},
+                        {model: Branch}
+                    ]
+                }
+            ],
+            where: whereCondition,
+        });
         res.status(200).send({ totalDiscount })
     } catch (error) {
         console.error(error)
@@ -86,15 +119,6 @@ export const getTotalDiscount = async (req, res) => {
 export const addDiscount = async (req, res) => {
     try {
         const {type, value, min_purchase_amount, max_discount, productbranchid, amount } = req.body;
-        console.log(req.body);
-
-        let discount_amount = 0
-
-        if(value === 'percentage'){
-            discount_amount = amount / 100;
-        }else{
-            discount_amount = amount
-        }
 
         const findDiscount = await Discount.findOne({
             where: {
@@ -106,12 +130,36 @@ export const addDiscount = async (req, res) => {
             return res.status(400).send({ message: "Discount for this product already exist" })
         }
 
+        const findProduct = await ProductBranch.findOne({
+            where:{
+                id: productbranchid
+            },
+            include: [
+                {
+                    model: Product,
+                    attributes: ['price']
+                }
+            ]
+        })
+
+        let discount_amount = 0
+        let difference = 0;
+
+        if(value === 'percentage'){
+            discount_amount = amount / 100;
+            difference = findProduct.Product.price - (findProduct.Product.price - (findProduct.Product.price * discount_amount));
+        }else{
+            discount_amount = amount;
+            difference = findProduct.Product.price - (findProduct.Product.price - discount_amount);
+        }
+
         await Discount.create({
             type: type,
             value: value,
             min_purchase_amount: min_purchase_amount,
             max_discount: max_discount,
             amount: discount_amount,
+            difference: difference,
             ProductBranchId: productbranchid
         })
 

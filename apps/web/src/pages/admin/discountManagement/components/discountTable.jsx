@@ -19,11 +19,11 @@ export default function DiscountTable({
     handlePageChange,
     totalPages,
     handleSortBy }) {
-    const TABLE_HEAD = ["ID", "Product Name", "Type", "Value", "Discount Amount", "Min. Purchase", "Max. Discount", "Action"];
+    const TABLE_HEAD = ["ID", "Product Name", "Type", "Value", "Discount Amount", "Min. Purchase", "Max. Discount", "Difference", "Action"];
 
     return (
         <div className="w-screen md:w-5/6">
-            <Card className="h-full w-full">
+            <Card className="h-full w-full shadow-sm">
                 <CardBody className="overflow-scroll px-0 py-0">
                     <table className="mt-4 w-full min-w-max table-auto text-left">
                         <thead>
@@ -175,6 +175,17 @@ export default function DiscountTable({
                                                         className="font-normal"
                                                     >
                                                         <span style={{ fontWeight: 'bold' }}>{item.max_discount}</span>
+                                                    </Typography>
+                                                </div>
+                                            </td>
+                                            <td className={classes}>
+                                                <div className="flex flex-col">
+                                                    <Typography
+                                                        variant="small"
+                                                        color="blue-gray"
+                                                        className="font-normal"
+                                                    >
+                                                        <span style={{ fontWeight: 'bold' }}>{item.difference}</span>
                                                     </Typography>
                                                 </div>
                                             </td>
