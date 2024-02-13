@@ -411,46 +411,46 @@ export const getAllBranchProduct = async (req, res) => {
       };
     }
 
-    // if (cond && cond === 'disc') {
-    //   const allBranchProducts = await ProductBranch.findAndCountAll({
-    //     include: [
-    //       {
-    //         model: Product,
-    //       },
-    //       {
-    //         model: Branch,
-    //       },
-    //       {
-    //         model: Discount,
-    //       },
-    //     ],
-    //     where: {
-    //       [Op.and]: [whereCondition, { '$Discounts.id$': null }],
-    //     },
-    //   });
-    //   return res.status(200).send({ result: allBranchProducts });
-    // }
+    if (cond && cond === 'disc') {
+      const allBranchProducts = await ProductBranch.findAndCountAll({
+        include: [
+          {
+            model: Product,
+          },
+          {
+            model: Branch,
+          },
+          {
+            model: Discount,
+          },
+        ],
+        where: {
+          [Op.and]: [whereCondition, { '$Discounts.id$': null }],
+        },
+      });
+      return res.status(200).send({ result: allBranchProducts });
+    }
 
-    // const allBranchProducts = await ProductBranch.findAndCountAll({
-    //   include: [
-    //     {
-    //       model: Product,
-    //     },
-    //     {
-    //       model: Branch,
-    //     },
-    //   ],
-    //   where: whereCondition,
-    //   order: [[sortBy, sortOrder.toUpperCase()]],
-    //   limit: parseInt(limit),
-    //   offset: parseInt(offset),
-    // });
-    // const totalPages = Math.ceil(allBranchProducts.count / limit);
-    // return res
-    //   .status(200)
-    //   .send({ result: allBranchProducts, page, totalPages });
+    const allBranchProducts = await ProductBranch.findAndCountAll({
+      include: [
+        {
+          model: Product,
+        },
+        {
+          model: Branch,
+        },
+      ],
+      where: whereCondition,
+      order: [[sortBy, sortOrder.toUpperCase()]],
+      limit: parseInt(limit),
+      offset: parseInt(offset),
+    });
+    const totalPages = Math.ceil(allBranchProducts.count / limit);
+    return res
+      .status(200)
+      .send({ result: allBranchProducts, page, totalPages });
 
-    return res.status(200).send({ message: 'success' });
+    // return res.status(200).send({ message: 'success' });
   } catch (error) {
     console.error(error);
     return res.status(500).send({ message: error.message });
