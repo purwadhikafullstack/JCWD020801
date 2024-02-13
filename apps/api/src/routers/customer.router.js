@@ -19,6 +19,7 @@ import {
   userLoginWithGoogle,
   getTotalCustomer,
   getAllCustomer,
+  userDataCheck,
 } from '../controllers/customer.controller';
 import { verifyTokenAdmin } from '../middleware/admin/admin.auth';
 const { verifyToken } = require('../middleware/auth');
@@ -33,6 +34,7 @@ customerRouter.get('/forgot-password', findEmailForgotPassword);
 customerRouter.get('/email-reverification', userReverification);
 customerRouter.get('/total', verifyTokenAdmin, getTotalCustomer);
 customerRouter.get('/all', verifyTokenAdmin, getAllCustomer);
+customerRouter.get('/data-check', verifyToken, userDataCheck)
 
 // POST
 customerRouter.post('/register', userRegister);

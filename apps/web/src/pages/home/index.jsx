@@ -10,34 +10,41 @@ import { Footer } from '../footer';
 import homeLogin from '../../assets/home/home-login.jpg';
 import { Link } from 'react-router-dom';
 import { DiscountedProducts } from './components/discountedProducts';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import slide1 from '../../assets/home/img-slides-1.png';
 import slide2 from '../../assets/home/img-slides-2.png';
-// import slide3 from "../../assets/home/img-slides-3.jpg"
-import slide4 from "../../assets/home/img-slides-4.png"
-import slide7 from "../../assets/home/img-slides-7.png"
-import axios from "../../api/axios"
-import { GrocerySteps } from "./components/grocerySteps"
+import slide4 from '../../assets/home/img-slides-4.png';
+import slide7 from '../../assets/home/img-slides-7.png';
+import slide8 from '../../assets/home/banner_product.png';
+import axios from '../../api/axios';
+import { GrocerySteps } from './components/grocerySteps';
+import { setNearestBranchProduct } from '../../redux/productSlice';
+import { useGeoLocation } from '../../hooks/useGeoLocation';
 
 const imgSlides = [
   { url: slide7 },
+  { url: slide8 },
   { url: slide1 },
   { url: slide2 },
-  // { url: slide3 },
   { url: slide4 },
 ];
 
 export const HomePage = () => {
+  const dispatch = useDispatch();
   const customer = useSelector((state) => state.customer.value);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const { coordinates, loaded } = useSelector((state) => state.geolocation);
+  const { loaded, coordinates } = useGeoLocation();
   const [branchData, setBranchData] = useState(null);
 
-  const [nearestBranchProduct, setNearestBranchProduct] = useState([]);
+  const nearestBranchProduct = useSelector((state) => state.product.data)
+  // const [nearestBranchProduct, setNearestBranchProduct] = useState([]);
+  const [nearestBranchProductLength, setNearestBranchProductLength] = useState([]);
   const [nearestBranchProductDiscounted, setNearestBranchProductDiscounted] = useState([]);
   const [categoryId, setCategoryId] = useState(0);
   const [branchId, setBranchId] = useState();
+
+  
 
   //filter
   const [sort, setSort] = useState('createdAt')
@@ -50,7 +57,7 @@ export const HomePage = () => {
   const [pageLimit, setPageLimit] = useState(5);
 
   const handlePageLimit = () => {
-    if (nearestBranchProduct.length % 5 === 0) {
+    if (nearestBranchProductLength.length % 5 === 0) {
       setPageLimit(prevLimit => prevLimit + 5);
     }
   }
@@ -74,6 +81,7 @@ export const HomePage = () => {
   const fetchMainBranch = async () => {
     try {
       const response = await axios.get('branches/super-store');
+      console.log(response.data);
       setBranchData(response.data.result);
       fetchNearestBranchProduct(response.data.result.id);
       fetchNearestBranchProductDiscounted(response.data.result.id)
@@ -88,7 +96,9 @@ export const HomePage = () => {
       const response = await axios.get(
         `products/all?page=1&sortBy=${sort}&sortOrder=${order}&limit=${pageLimit}&branch_id=${branch_id}&category_id=${categoryId}`,
       );
-      setNearestBranchProduct(response.data.result.rows);
+      // setNearestBranchProduct(response.data.result.rows);
+      dispatch(setNearestBranchProduct(response.data.result.rows));
+      setNearestBranchProductLength(response.data.result.rows)
     } catch (err) {
       console.error(err);
     }
@@ -111,7 +121,7 @@ export const HomePage = () => {
   }, [pageLimit])
 
   useEffect(() => {
-    if (coordinates.lat === null && coordinates.lng === null) {
+    if (!loaded) {
       console.log('Location permission denied. Fetching data from main store.');
       fetchMainBranch();
     } else if (coordinates && loaded) {
@@ -172,8 +182,8 @@ export const HomePage = () => {
                   at Your Doorstep!
                 </h1>
               </div>
-              <span className="text-gray-600 max-w-[240px] text-[15px]">
-                get the best fresh foods, drinks, household goods, health care,
+              <span className="text-gray-600 md:max-w-[15rem] text-[15px]">
+                Get the best fresh foods, drinks, household goods, health care,
                 and many more
               </span>
             </div>
@@ -220,13 +230,14 @@ export const HomePage = () => {
           <IoIosArrowForward onClick={nextSlide} size={22} />
         </div>
       </div>
-      <ProductCards branchData={branchData} coordinates={coordinates} />
+      <ProductCards products={nearestBranchProduct} branchData={branchData} coordinates={coordinates} />
       <DiscountedProducts
         product={nearestBranchProductDiscounted}
         branchId={branchId}
       />
       <BrowseProducts
-        product={nearestBranchProduct}
+        products={nearestBranchProduct}
+        productsLength={nearestBranchProductLength}
         categoryList={categoryList}
         setCategoryId={setCategoryId}
         handleFilter={handleFilter}

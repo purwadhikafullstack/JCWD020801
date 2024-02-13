@@ -4,7 +4,7 @@ import LoginAdmin from './pages/admin/loginAdmin';
 import AdminManagement from './pages/admin/adminManagement';
 import CustomerManagement from './pages/admin/customerManagement';
 import Overview from './pages/admin/overview';
-import Home from './pages/home/Home';
+// import Home from './pages/home/Home';
 import Required from './components/required';
 import { useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
@@ -24,7 +24,6 @@ import { UserRegister } from './pages/userRegister';
 import { AccountVerification } from './pages/accountVerification';
 import { UserResetPassword } from './pages/userResetPassword';
 import { UserUpdateEmail } from './pages/userUpdateEmail';
-// import { setData } from './redux/customercustomerSliceSlice';
 import { setData } from './redux/customerSlice';
 import AdminRequired from './components/adminRequired';
 import { StoreManagement } from './pages/admin/storeManagement';
@@ -34,7 +33,6 @@ import { CheckoutPage } from './pages/checkout';
 import { ProductCatalogue } from './pages/productCatalogue';
 import AdminErrorPage from './pages/admin/components/adminErrorPage';
 import StockManagement from './pages/admin/stockManagement';
-import { useGeoLocation } from './hooks/useGeoLocation';
 import { ProductDetail } from './pages/productDetail';
 import DiscountManagement from './pages/admin/discountManagement';
 import { Admin404 } from './pages/404admin';
@@ -42,24 +40,21 @@ import { About } from './pages/about';
 import ReportManagement from './pages/admin/reportManagement';
 
 const router = createBrowserRouter([
-  { path: "/", element: <Home /> },
-  { path: "/login-admin", element: <LoginAdmin></LoginAdmin> },
-  { path: "/admin-verification/:token", element: <AdminVerification /> },
-  { path: "/admin-reset-password/:token", element: <AdminResetPassword /> },
-  { path: "/login-admin", element: <LoginAdmin></LoginAdmin> },
-  { path: "/admin-verification/:token", element: <AdminVerification /> },
-  { path: "/admin-reset-password/:token", element: <AdminResetPassword /> },
-  { path: "/home", element: <HomePage /> },
-  { path: "/signin", element: <UserSignIn /> },
-  { path: "/register", element: <UserRegister /> },
-  { path: "/verify/:token", element: <AccountVerification /> },
-  { path: "/user-reset-password/:token", element: <UserResetPassword /> },
-  { path: "/user-update-email/:token", element: <UserUpdateEmail /> },
-  { path: "/store-locator", element: <StoreLocator /> },
-  { path: "/catalogue/:category_id?/:search?", element: <ProductCatalogue /> },
-  { path: "/product-detail/:id?/:branch_id?", element: <ProductDetail /> },
-  { path: "/about", element: <About /> },
-  { path: "/404-admin", element: <Admin404 /> },
+  //Untuk yang tidak butuh token
+  { path: '/', element: <HomePage /> },
+  { path: '/login-admin', element: <LoginAdmin></LoginAdmin> },
+  { path: '/admin-verification/:token', element: <AdminVerification /> },
+  { path: '/admin-reset-password/:token', element: <AdminResetPassword /> },
+  { path: '/signin', element: <UserSignIn /> },
+  { path: '/register', element: <UserRegister /> },
+  { path: '/verify/:token', element: <AccountVerification /> },
+  { path: '/user-reset-password/:token', element: <UserResetPassword /> },
+  { path: '/user-update-email/:token', element: <UserUpdateEmail /> },
+  { path: '/store-locator', element: <StoreLocator /> },
+  { path: '/catalogue/:category_id?/:search?', element: <ProductCatalogue /> },
+  { path: '/product-detail/:id?/:branch_id?', element: <ProductDetail /> },
+  { path: '/about', element: <About /> },
+  { path: '/404-admin', element: <Admin404 /> },
   {
     element: <Required />,
     children: [
@@ -95,7 +90,7 @@ function App() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
 
-  useGeoLocation();
+  // useGeoLocation();
 
   const keepLoginAdmin = async () => {
     try {

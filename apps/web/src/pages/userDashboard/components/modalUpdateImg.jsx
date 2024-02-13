@@ -1,5 +1,5 @@
 import { Dialog, DialogBody } from "@material-tailwind/react"
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import PropTypes from 'prop-types';
 import { SyncLoader } from 'react-spinners';
 import axios from '../../../api/axios'

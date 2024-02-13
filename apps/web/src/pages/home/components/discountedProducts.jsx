@@ -6,6 +6,7 @@ import KeenSlider from 'keen-slider';
 import { useScroll, useTransform, motion } from 'framer-motion';
 import axios from '../../../api/axios';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const cardsData = [
     {
@@ -59,6 +60,11 @@ export const DiscountedProducts = ({ product, branchId }) => {
     const [keenSlider, setKeenSlider] = useState(null);
     const sliderRef = useRef(null);
 
+    const handleLinkClick = () => {
+        // window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo({ top: 0 });
+    }
+
     const { scrollYProgress } = useScroll()
     const y = useTransform(scrollYProgress, [0, 1], [0, -1000])
 
@@ -86,13 +92,13 @@ export const DiscountedProducts = ({ product, branchId }) => {
                 breakpoints: {
                     '(min-width: 0px)': {
                         slides: {
-                            perView: 2,
+                            perView: 2.25,
                             spacing: 8,
                         },
                     },
                     '(min-width: 640px)': {
                         slides: {
-                            perView: 2,
+                            perView: 2.25,
                             spacing: 16,
                         },
                     },
@@ -145,7 +151,7 @@ export const DiscountedProducts = ({ product, branchId }) => {
             <section className="relative my-[16px] mx-[10px] md:mx-[32px] lg:mx-[160px] bg-[#EBF6F3] rounded-2xl overflow-hidden z-10">
                 <motion.svg
                     style={{ y }}
-                    className=" absolute h-[17rem] md:h-[18rem] w-max -left-[6rem] -bottom-[3rem] md:-bottom-[8rem] opacity-40"
+                    className=" absolute h-[17rem] md:h-[18rem] w-max -left-[6rem] bottom-[7rem] lg:-bottom-[0rem] md:-bottom-[8rem] opacity-40"
                     width="39"
                     height="40"
                     viewBox="0 0 39 40"
@@ -217,7 +223,7 @@ export const DiscountedProducts = ({ product, branchId }) => {
                 </motion.svg>
                 <motion.svg
                     style={{ y }}
-                    className=" absolute h-[18.5rem] w-max -right-[5rem] -bottom-[28rem] opacity-40"
+                    className=" absolute h-[18.5rem] w-max -right-[5rem] -bottom-[20rem] opacity-40"
                     xmlns="http://www.w3.org/2000/svg"
                     width="120"
                     height="119"
@@ -301,9 +307,9 @@ export const DiscountedProducts = ({ product, branchId }) => {
                             </p>
                         </div>
                         <div className="flex items-center justify-between gap-5 w-full md:w-max mt-5 px-1.5 md:px-0">
-                            <span className="font-semibold text-[#469A84] hover:underline underline-offset-2 cursor-pointer ">
+                            <Link to={'/catalogue'} onClick={handleLinkClick} className="font-semibold text-[#469A84] hover:underline underline-offset-2 cursor-pointer ">
                                 View all
-                            </span>
+                            </Link>
                             <div className="flex gap-3">
                                 <button
                                     aria-label="Previous slide"

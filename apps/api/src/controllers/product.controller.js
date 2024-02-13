@@ -36,7 +36,7 @@ export const addProduct = async (req, res) => {
     });
 
     await ProductImage.create({
-      image: `${process.env.BASE_URL_API}/public/products/${req.file?.filename}`,
+      image: `${process.env.BASE_URL_API}public/products/${req.file?.filename}`,
       ProductId: result.id,
     });
 
@@ -212,7 +212,7 @@ export const editProduct = async (req, res) => {
       }
 
       await ProductImage.create({
-        image: `${process.env.BASE_URL_API}/public/products/${req.file?.filename}`,
+        image: `${process.env.BASE_URL_API}public/products/${req.file?.filename}`,
         ProductId: id,
       });
     }
@@ -411,44 +411,46 @@ export const getAllBranchProduct = async (req, res) => {
       };
     }
 
-    if (cond && cond === 'disc') {
-      const allBranchProducts = await ProductBranch.findAndCountAll({
-        include: [
-          {
-            model: Product,
-          },
-          {
-            model: Branch,
-          },
-          {
-            model: Discount,
-          },
-        ],
-        where: {
-          [Op.and]: [whereCondition, { '$Discounts.id$': null }],
-        },
-      });
-      return res.status(200).send({ result: allBranchProducts });
-    }
+    // if (cond && cond === 'disc') {
+    //   const allBranchProducts = await ProductBranch.findAndCountAll({
+    //     include: [
+    //       {
+    //         model: Product,
+    //       },
+    //       {
+    //         model: Branch,
+    //       },
+    //       {
+    //         model: Discount,
+    //       },
+    //     ],
+    //     where: {
+    //       [Op.and]: [whereCondition, { '$Discounts.id$': null }],
+    //     },
+    //   });
+    //   return res.status(200).send({ result: allBranchProducts });
+    // }
 
-    const allBranchProducts = await ProductBranch.findAndCountAll({
-      include: [
-        {
-          model: Product,
-        },
-        {
-          model: Branch,
-        },
-      ],
-      where: whereCondition,
-      order: [[sortBy, sortOrder.toUpperCase()]],
-      limit: parseInt(limit),
-      offset: parseInt(offset),
-    });
-    const totalPages = Math.ceil(allBranchProducts.count / limit);
-    return res
-      .status(200)
-      .send({ result: allBranchProducts, page, totalPages });
+    // const allBranchProducts = await ProductBranch.findAndCountAll({
+    //   include: [
+    //     {
+    //       model: Product,
+    //     },
+    //     {
+    //       model: Branch,
+    //     },
+    //   ],
+    //   where: whereCondition,
+    //   order: [[sortBy, sortOrder.toUpperCase()]],
+    //   limit: parseInt(limit),
+    //   offset: parseInt(offset),
+    // });
+    // const totalPages = Math.ceil(allBranchProducts.count / limit);
+    // return res
+    //   .status(200)
+    //   .send({ result: allBranchProducts, page, totalPages });
+
+    return res.status(200).send({ message: 'success' });
   } catch (error) {
     console.error(error);
     return res.status(500).send({ message: error.message });
@@ -621,7 +623,7 @@ export const getProductBranchById = async (req, res) => {
           discounted_price =
             findBranchProduct.Product.price -
             findBranchProduct.Product.price *
-            findBranchProduct.Discounts[0].amount;
+              findBranchProduct.Discounts[0].amount;
           percentage =
             (findBranchProduct.Discounts[0].amount * 100).toString() + '%';
         } else {
@@ -632,7 +634,7 @@ export const getProductBranchById = async (req, res) => {
             Math.round(
               (findBranchProduct.Discounts[0].amount /
                 findBranchProduct.Product.price) *
-              100,
+                100,
             ).toString() + '%';
         }
         findBranchProduct.dataValues.percentage = percentage;
@@ -688,12 +690,10 @@ export const updateStockBranchProduct = async (req, res) => {
     });
 
     if (!findStockHistory) {
-      return res
-        .status(404)
-        .send({
-          message:
-            "This product doesn't have stock history, please re-input this product",
-        });
+      return res.status(404).send({
+        message:
+          "This product doesn't have stock history, please re-input this product",
+      });
     }
 
     let difference = 0;
@@ -799,17 +799,15 @@ export const getProductStockHistory = async (req, res) => {
       final_stock = row.finalStock;
     });
 
-    res
-      .status(200)
-      .send({
-        result: findStockHistory,
-        totalDataChanges,
-        total_increment,
-        total_decrement,
-        final_stock,
-        page,
-        totalPages,
-      });
+    res.status(200).send({
+      result: findStockHistory,
+      totalDataChanges,
+      total_increment,
+      total_decrement,
+      final_stock,
+      page,
+      totalPages,
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).send({ message: error.message });

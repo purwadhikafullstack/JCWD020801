@@ -1,12 +1,13 @@
-import { useEffect, useState } from "react";
-import { Navbar } from "../navbar"
-import { AnimatePresence, motion } from "framer-motion";
-import { ProductCatalogueData } from "./components/productCatalogueData";
-import { Footer } from "../footer";
-import { useSelector } from "react-redux";
-import axios from "../../api/axios";
-import { formatDistance } from "../../functions/functions";
-import { Link, useParams } from "react-router-dom";
+import { useEffect, useState } from 'react';
+import { Navbar } from '../navbar';
+import { AnimatePresence, motion } from 'framer-motion';
+import { ProductCatalogueData } from './components/productCatalogueData';
+import { Footer } from '../footer';
+// import { useSelector } from "react-redux";
+import axios from '../../api/axios';
+import { formatDistance } from '../../functions/functions';
+import { Link, useParams } from 'react-router-dom';
+import { useGeoLocation } from '../../hooks/useGeoLocation';
 
 const filterItems = [
     { title: 'Relevance', sort: 'createdAt', order: 'desc' },
@@ -17,19 +18,20 @@ const filterItems = [
 ];
 
 export const ProductCatalogue = () => {
-    const [selectedCategory, setSelectedCategory] = useState(null);
-    const [isSortOpen, setIsSortOpen] = useState(false)
-    const [isCategoryOpen, setIsCategoryOpen] = useState(false)
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [isSortOpen, setIsSortOpen] = useState(false);
+  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
 
-    const { coordinates, loaded } = useSelector((state) => state.geolocation);
-    const [branchData, setBranchData] = useState(null);
-    const [count, setCount] = useState(0)
+  // const { coordinates, loaded } = useSelector((state) => state.geolocation);
+  const { loaded, coordinates } = useGeoLocation();
+  const [branchData, setBranchData] = useState(null);
+  const [count, setCount] = useState(0);
 
-    const params = useParams()
-    const [categoryList, setCategoryList] = useState([])
-    const [categoryId, setCategoryId] = useState(params.category_id);
-    const [searhValue, setSearchValue] = useState(params.search)
-    const [branchId, setBranchId] = useState();
+  const params = useParams();
+  const [categoryList, setCategoryList] = useState([]);
+  const [categoryId, setCategoryId] = useState(params.category_id);
+  const [searhValue, setSearchValue] = useState(params.search);
+  const [branchId, setBranchId] = useState();
 
     const [nearestBranchProduct, setNearestBranchProduct] = useState([])
     const [pageLimit, setPageLimit] = useState(10);
@@ -64,18 +66,20 @@ export const ProductCatalogue = () => {
         }
     }
 
-    const fetchNearestBranch = async () => {
-        if (loaded) {
-            try {
-                const response = await axios.post(`branches/get-nearest?latitude=${coordinates.lat}&longitude=${coordinates.lng}&limit=1`);
-                setBranchData(response.data.result[0])
-                fetchNearestBranchProduct(response.data.result[0].id)
-                setBranchId(response.data.result[0].id)
-            } catch (error) {
-                console.log(error);
-            }
-        }
-    };
+  const fetchNearestBranch = async () => {
+    if (loaded) {
+      try {
+        const response = await axios.post(
+          `branches/get-nearest?latitude=${coordinates.lat}&longitude=${coordinates.lng}&limit=1`,
+        );
+        setBranchData(response.data.result[0]);
+        fetchNearestBranchProduct(response.data.result[0].id);
+        setBranchId(response.data.result[0].id);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
 
     const fetchMainBranch = async () => {
         try {
@@ -88,43 +92,42 @@ export const ProductCatalogue = () => {
         }
     }
 
-    useEffect(() => {
-        if (coordinates.lat && coordinates.lng) {
-            fetchNearestBranch();
-        } else {
-            fetchMainBranch();
-        }
-
-    }, [coordinates?.lat, coordinates?.lng, categoryId, searhValue]);
-
-    useEffect(() => {
-        const handleResize = () => {
-            const screenWidth = window.innerWidth;
-
-            if (screenWidth < 768) {
-                setIsCategoryOpen(false);
-            } else {
-                setIsCategoryOpen(true);
-            }
-        };
-
-        handleResize();
-        window.addEventListener('resize', handleResize);
-
-        return () => window.removeEventListener('resize', handleResize);
-    }, [])
-
-    const getCategory = async () => {
-        try {
-            const response = await axios.get(`/categories/all?all=true}`)
-            setCategoryList(response.data.result.rows)
-        } catch (err) {
-            console.error(err)
-        }
+  useEffect(() => {
+    if (coordinates.lat && coordinates.lng) {
+      fetchNearestBranch();
+    } else {
+      fetchMainBranch();
     }
-    useEffect(() => {
-        getCategory();
-    }, [])
+  }, [coordinates?.lat, coordinates?.lng, categoryId, searhValue]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const screenWidth = window.innerWidth;
+
+      if (screenWidth < 768) {
+        setIsCategoryOpen(false);
+      } else {
+        setIsCategoryOpen(true);
+      }
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const getCategory = async () => {
+    try {
+      const response = await axios.get(`/categories/all?all=true}`);
+      setCategoryList(response.data.result.rows);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  useEffect(() => {
+    getCategory();
+  }, []);
 
     useEffect(() => {
         setCategoryId(params.category_id)

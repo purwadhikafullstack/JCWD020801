@@ -1,11 +1,11 @@
 import { Dialog, DialogBody, DialogHeader } from "@material-tailwind/react"
 import PropTypes from 'prop-types';
-import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
 import { SyncLoader } from 'react-spinners'
 import { useState } from "react";
+import axios from "../../../api/axios";
 
 export const ModalUserReverify = ({ modalOpen2, handleModalOpen2, }) => {
     const [isLoading, setIsLoading] = useState(false)
@@ -13,7 +13,7 @@ export const ModalUserReverify = ({ modalOpen2, handleModalOpen2, }) => {
     const handleSubmit = async (values) => {
         try {
             setIsLoading(true);
-            const response = await axios.get(`http://localhost:8000/api/customer/email-reverification?email=${values.email}`)
+            const response = await axios.get(`customer/email-reverification?email=${values.email}`)
             console.log(response);
             setIsLoading(false);
             toast.success(response.data.message, {
@@ -55,7 +55,7 @@ export const ModalUserReverify = ({ modalOpen2, handleModalOpen2, }) => {
                     </svg>
 
                 </div>
-                <span className="text-[15px] text-gray-600 w-[80%] text-center">
+                <span className="text-[15px] text-gray-700 w-[80%] text-center">
                     We&apos;ll resend the verification link to your email address
                 </span>
                 <form onSubmit={formik.handleSubmit} className="w-full">

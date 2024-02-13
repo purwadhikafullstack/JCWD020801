@@ -2,7 +2,7 @@ import { Dialog, DialogBody, DialogFooter } from "@material-tailwind/react"
 import emailBanner from "../../../assets/userRegister/email-verify-2.2.png"
 import PropTypes from 'prop-types';
 
-export const ModalEmailVerification = ({ modalOpen, setModalOpen }) => {
+export const ModalEmailVerification = ({ modalOpen, setModalOpen, registeredEmail }) => {
     return (
         <>
             <Dialog size="sm" open={modalOpen} className="px-3 pb-3 pt-5 flex flex-col items-center">
@@ -13,7 +13,7 @@ export const ModalEmailVerification = ({ modalOpen, setModalOpen }) => {
                     <h3 className="text-[24px] text-[#28302A] font-bold">Email Verification</h3>
                     <div className="flex flex-col gap-2 items-center">
                         <span className="text-[15px] text-gray-600 md:w-[90%] text-center font-normal">
-                            we&apos;ve sent an email to <span className="text-[#00A67C]">email.com</span> to confirm the validity of your email address.<br />
+                            we&apos;ve sent an email to <span className="text-[#00A67C]">{registeredEmail}</span> to confirm the validity of your email address.<br />
                         </span>
                         <span className="text-[14.5px] text-gray-600 font-normal text-center mt-1">Email verification will be expired in 1 hour</span>
                     </div>
@@ -32,6 +32,7 @@ export const ModalEmailVerification = ({ modalOpen, setModalOpen }) => {
 
 ModalEmailVerification.propTypes = {
     modalOpen: PropTypes.bool.isRequired,
-    setModalOpen: PropTypes.func.isRequired
+    setModalOpen: PropTypes.func.isRequired,
+    registeredEmail: PropTypes.string,
 }
 

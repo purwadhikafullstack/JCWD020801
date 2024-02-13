@@ -53,7 +53,7 @@ export const createAdmin = async (req, res) => {
         name: name,
         username: username,
         email: email,
-        link: `${process.env.BASE_URL}/admin-verification/${token}`,
+        link: `${process.env.BASE_URL}admin-verification/${token}`,
       });
 
       await transporter.sendMail({
@@ -145,7 +145,7 @@ export const updateAdmin = async (req, res) => {
       updateFields.password = hashPassword;
     }
     if (req.file) {
-      updateFields.profile_picture = `${process.env.BASE_URL_API}/public/admin_pp/${req.file?.filename}`
+      updateFields.profile_picture = `${process.env.BASE_URL_API}public/admin_pp/${req.file?.filename}`
     }
     const [updatedCount] = await Admin.update(
       updateFields, {
@@ -312,7 +312,7 @@ export const forgotPassword = async (req, res) => {
       const tempCompile = await handlebars.compile(data);
       const tempResult = tempCompile({
         email: email,
-        link: `${process.env.BASE_URL}/admin-reset-password/${token}`,
+        link: `${process.env.BASE_URL}admin-reset-password/${token}`,
       });
 
       await transporter.sendMail({

@@ -64,9 +64,9 @@ export default function AdminProfileForm({ adminData }) {
         },
     });
     return (
-        <div className="flex flex-col p-8 bg-white shadow-sm rounded-3xl w-96 h-auto items-center">
+        <div className="flex flex-col p-8 bg-white shadow-sm rounded-3xl w-max md:w-max h-auto items-center">
             <form onSubmit={formik.handleSubmit}>
-                <div className="flex flex-col gap-4 w-full">
+                <div className="flex flex-col gap-4 w-[80vw] md:w-max">
                     <Typography variant="h3">Edit profile</Typography>
                     <Typography className="-mb-2" variant="h6">Name</Typography>
                     <Input name="name" autoComplete="new" label="name"

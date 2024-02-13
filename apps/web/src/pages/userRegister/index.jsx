@@ -23,12 +23,11 @@ export const UserRegister = () => {
     const [modalOpen, setModalOpen] = useState(false)
     const [modalErrorOpen, setModalErrorOpen] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
+    const [registeredEmail, setRegisteredEmail] = useState('')
 
     const handleGoogleRegister = async () => {
         try {
             const userData = await registerWithGoogle();
-            // console.log(userData);
-
             const response = await axios.post('customer/register-google', { googleUserData: userData })
             localStorage.setItem('token', response.data.token)
             dispatch(setData(response.data.result))
@@ -41,7 +40,7 @@ export const UserRegister = () => {
                     position: 'top-center',
                 },
             );
-            navigate('/home')
+            navigate('/')
         } catch (error) {
             console.log("Error from handle Google Register Front-end", error);
             toast.error(error.response.data.message, {
@@ -53,9 +52,10 @@ export const UserRegister = () => {
     const handleSubmit = async (values) => {
         try {
             setIsLoading(true);
-            await axios.post('http://localhost:8000/api/customer/register', values);
+            await axios.post('customer/register', values);
             setIsLoading(false)
-            console.log(values);
+            // console.log(values);
+            setRegisteredEmail(values.email)
             setModalOpen(true)
         } catch (error) {
             console.log(error);
@@ -86,7 +86,7 @@ export const UserRegister = () => {
         validationSchema: userRegisterSchema,
         onSubmit: (values) => {
             handleSubmit(values);
-            formik.resetForm();
+            // formik.resetForm();
         }
     });
 
@@ -262,7 +262,7 @@ export const UserRegister = () => {
                 </div >
             </section >
             {/* ----- Modal Render -----  */}
-            <ModalEmailVerification modalOpen={modalOpen} setModalOpen={setModalOpen} />
+            <ModalEmailVerification modalOpen={modalOpen} setModalOpen={setModalOpen} registeredEmail={registeredEmail} />
             <ModalError modalErrorOpen={modalErrorOpen} setModalErrorOpen={setModalErrorOpen} />
         </>
     );

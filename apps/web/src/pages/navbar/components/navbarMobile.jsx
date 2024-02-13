@@ -1,11 +1,11 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import PropTypes from 'prop-types';
-
 import appLogoSm from "../../../assets/lemon-logo.svg";
 import crossIcon from "../../../assets/navbar/cross.svg";
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { storeLastVisitedPage } from '../../../functions/storeLastVisitedPage';
+import personIcon from "../../../assets/userDashboard/person.svg"
 
 export const NavbarMobile = ({ isOpen, toggleMenu, isOpenCategory, toggleMenuCategory, categoryList }) => {
     const customer = useSelector((state) => state.customer.value);
@@ -99,12 +99,12 @@ export const NavbarMobile = ({ isOpen, toggleMenu, isOpenCategory, toggleMenuCat
                         <Link to={'/catalogue'} onClick={handleLinkClick}>
                             <h3 className="text-[17px] font-medium text-white">Catalogue</h3>
                         </Link>
-                        <Link to={'/home'} onClick={handleLinkClick}>
+                        <Link to={'/'} onClick={handleLinkClick}>
                             <h3 className="text-[17px] font-medium text-white">Home</h3>
                         </Link>
-                        <div>
+                        <Link to={'/about'} onClick={handleLinkClick}>
                             <h3 className="text-[17px] font-medium text-white">About Us</h3>
-                        </div>
+                        </Link>
                         <Link to={'/store-locator'} onClick={handleLinkClick}>
                             <h3 className="text-[17px] font-medium text-white">
                                 Find a Store
@@ -112,16 +112,16 @@ export const NavbarMobile = ({ isOpen, toggleMenu, isOpenCategory, toggleMenuCat
                         </Link>
                     </div>
                     {/* account */}
-                    <div className="mt-3 flex w-full gap-4 border-t pt-4">
+                    <div className="mt-3 flex w-full items-center gap-4 border-t pt-4">
                         {!customer.id && (
                             <>
                                 <svg
-                                    className="mb-[0.1rem]"
-                                    width="26"
-                                    height="26"
+                                    // width="26"
+                                    // height="26"
                                     viewBox="0 0 24 24"
                                     fill="none"
                                     xmlns="http://www.w3.org/2000/svg"
+                                    className="h-[1.2rem] w-[1.2rem] mb-[0.1rem]"
                                 >
                                     <path
                                         d="M4.1665 21.875V20.8334C4.1665 17.3816 6.96472 14.5834 10.4165 14.5834H14.5832C18.0349 14.5834 20.8332 17.3816 20.8332 20.8334V21.875"
@@ -141,9 +141,9 @@ export const NavbarMobile = ({ isOpen, toggleMenu, isOpenCategory, toggleMenuCat
                                         Sign in
                                     </span>
                                     <span className="text-white">or</span>
-                                    <span className="cursor-pointer text-white underline underline-offset-2">
+                                    <Link to={'/register'} className="cursor-pointer text-white underline underline-offset-2">
                                         Create account
-                                    </span>
+                                    </Link>
                                 </div>
                             </>
                         )}
@@ -151,11 +151,17 @@ export const NavbarMobile = ({ isOpen, toggleMenu, isOpenCategory, toggleMenuCat
                         {customer.id && (
                             <div className="w-full flex justify-between items-center">
                                 <div className="flex gap-4 items-center">
-                                    <img
-                                        src={customer.profile_picture}
-                                        alt=""
-                                        className="h-9 w-9 object-cover rounded-full"
-                                    />
+                                    {customer.profile_picture ? (
+                                        <img
+                                            src={customer.profile_picture}
+                                            alt=""
+                                            className="h-9 w-9 object-cover rounded-full"
+                                        />
+                                    ) : (
+                                        <div className="flex items-center justify-center rounded-full bg-[#E4E6E7] h-9 w-9">
+                                            <img src={personIcon} alt="" className="ml-[1px]" />
+                                        </div>
+                                    )}
                                     <span className="text-white text-[17px] font-medium">
                                         {customer.firstname}
                                     </span>

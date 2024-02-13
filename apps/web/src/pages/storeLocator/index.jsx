@@ -7,17 +7,15 @@ import { StoreLocatorMap } from "./components/storeLocatorMap";
 import { Footer } from "../footer";
 import { Link } from "react-router-dom";
 import { AnimatePresence, motion } from 'framer-motion';
-import { useSelector } from "react-redux";
+import { useGeoLocation } from "../../hooks/useGeoLocation";
 
 export const StoreLocator = () => {
-    const { coordinates, loaded } = useSelector((state) => state.geolocation);
+    const { loaded, coordinates } = useGeoLocation()
 
     const [branchData, setBranchData] = useState([]);
     const [selectedStore, setSelectedStore] = useState(null)
     const [searchQuery, setSearchQuery] = useState('')
     const [listExpand, setListExpand] = useState(false)
-
-    console.log(branchData);
 
     const handleStoreClick = (index) => {
         setSelectedStore(filteredBranchData()[index]);
@@ -54,11 +52,11 @@ export const StoreLocator = () => {
         <>
             <Navbar />
             {/* <section className="mx-[16px] md:mx-[32px] lg:mx-[160px] mb-[4rem]"> */}
-            <section className="relative md:mx-[32px] lg:mx-[160px] lg:pb-[4rem]">
+            <section className="relative lg:mx-[160px] lg:pb-[4rem]">
                 {/* Breadcrumb */}
                 <div className="flex w-max items-center justify-center gap-1.5 rounded-lg bg-none pl-1.5 text-[14px] font-medium text-gray-500 my-2 lg:my-3">
                     <Link
-                        to={'/home'}
+                        to={'/'}
                         className="cursor-pointer hover:underline hover:text-[#858585] underline-offset-2"
                     >
                         Home
@@ -146,17 +144,21 @@ export const StoreLocator = () => {
                                                 <span className="text-[#212121] font-semibold">
                                                     {item?.name}
                                                 </span>
-                                                {item?.distance < 25000 && (
-                                                    <span className="text-[14px] text-gray-500 font-medium">
-                                                        {formatDistance(item.distance)} away
-                                                    </span>
+                                                {item?.distance && (
+                                                    <>
+                                                        {item?.distance < 25000 && (
+                                                            <span className="text-[14px] text-gray-500 font-medium">
+                                                                {formatDistance(item.distance)} away
+                                                            </span>
+                                                        )}
+                                                    </>
                                                 )}
                                             </div>
                                             <span className="text-[14px] line-clamp-2 mt-[0.4rem] font-normal text-gray-600">
                                                 {item?.address}
                                             </span>
                                             {/* <span className="text-[14px] mt-[0.1rem] font-normal text-[#757575]">{item.phone}</span> */}
-                                            <button className="hidden lg:block rounded-full px-3.5 py-1.5 w-max text-[13px] font-normal text-[#00A67C] transition delay-100 ease-in-out border border-[#00A67C] hover:bg-[#00A67C] hover:text-white mt-[0.8rem]">
+                                            <button className="hidden md:block rounded-full px-3.5 py-1.5 w-max text-[13px] font-normal text-[#00A67C] transition delay-100 ease-in-out border border-[#00A67C] hover:bg-[#00A67C] hover:text-white mt-[0.8rem]">
                                                 View on Map
                                             </button>
                                         </div>
