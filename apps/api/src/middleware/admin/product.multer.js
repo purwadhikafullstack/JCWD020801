@@ -1,10 +1,12 @@
 const multer = require("multer");
+const path = require('path');
 
 module.exports = {
   multerUpload: () => {
     const storage = multer.diskStorage({
       destination: (req, file, cb) => {
-        cb(null, "./src/public/products");
+        // cb(null, "./src/public/products");
+        cb(null, path.join(__dirname, `../../public/products`));
       },
       filename: (req, file, cb) => {
         cb(
@@ -35,7 +37,8 @@ module.exports = {
   multerUploadProfile: () => {
     const storage = multer.diskStorage({
       destination: (req, file, cb) => {
-        cb(null, "./src/public/admin_pp");
+        // cb(null, "./src/public/admin_pp");
+        cb(null, path.join(__dirname, `../../public/admin_pp`));
       },
       filename: (req, file, cb) => {
         cb(
