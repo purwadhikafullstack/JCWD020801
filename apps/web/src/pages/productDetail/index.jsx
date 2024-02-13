@@ -12,8 +12,11 @@ import { toast } from "react-toastify"
 export const ProductDetail = () => {
   const params = useParams();
   const [productData, setProductData] = useState();
+  console.log("product data", productData);
   const [productImages, setProductImages] = useState();
   const [mainImage, setMainImage] = useState();
+  const [productId, setProductId] = useState()
+
   const handleMainImage = (image) => {
     setMainImage(image)
   }
@@ -77,9 +80,9 @@ export const ProductDetail = () => {
   const getProductImage = async () => {
     try {
       const response = await axios.get(`products/images-all/${params.id}`);
-      console.log(response);
       setProductImages(response.data?.imageProduct);
       setMainImage(response?.data?.imageProduct[0]?.image)
+      setProductId(response?.data?.imageProduct[0]?.ProductId)
     } catch (err) {
       console.error(err);
     }
