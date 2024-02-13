@@ -34,20 +34,37 @@ export default function ModalAddDiscount({ openModalAdd, handleOpenAdd, handleRe
 
     const handleSubmit = async (data) => {
         try {
-            setIsLoading(true)
-            const response = await axios.post("products/discount", data, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            setIsLoading(false)
-            toast.success(response.data.message, {
-                position: "top-center",
-                hideProgressBar: true,
-                theme: "colored"
-            });
-            handleOpenAdd();
-            handleRefreshTable();
+            if (!data.code) {
+                setIsLoading(true)
+                const response = await axios.post("products/discount", data, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                setIsLoading(false)
+                toast.success(response.data.message, {
+                    position: "top-center",
+                    hideProgressBar: true,
+                    theme: "colored"
+                });
+                handleOpenAdd();
+                handleRefreshTable();
+            } else {
+                setIsLoading(true)
+                const response = await axios.post("vouchers/", data, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                setIsLoading(false)
+                toast.success(response.data.message, {
+                    position: "top-center",
+                    hideProgressBar: true,
+                    theme: "colored"
+                });
+                handleOpenAdd();
+                handleRefreshTable();
+            }
         } catch (err) {
             setIsLoading(false)
             toast.error(err.response.data.message, { position: "top-center" });
@@ -59,17 +76,17 @@ export default function ModalAddDiscount({ openModalAdd, handleOpenAdd, handleRe
         formik.resetForm()
     }
 
-    const RegisterSchema = Yup.object(
-        {
-            type: Yup.string().required("Type is required."),
-            value: Yup.string().required("Value is required."),
-            amount: Yup.string().required("Amount is required."),
-            // code: Yup.string().required("Code is required."),
-            productbranchid: Yup.string().required("Product is required."),
-            min_purchase_amount: Yup.string().required("Min Purchase Amount is required."),
-            max_discount: Yup.string().required("Max Discount is required."),
-        }
-    );
+    // const RegisterSchema = Yup.object(
+    //     {
+    //         type: Yup.string().required("Type is required."),
+    //         value: Yup.string().required("Value is required."),
+    //         amount: Yup.string().required("Amount is required."),
+    //         // code: Yup.string().required("Code is required."),
+    //         productbranchid: Yup.string().required("Product is required."),
+    //         min_purchase_amount: Yup.string().required("Min Purchase Amount is required."),
+    //         max_discount: Yup.string().required("Max Discount is required."),
+    //     }
+    // );
 
     const formik = useFormik({
         initialValues: {
@@ -83,7 +100,7 @@ export default function ModalAddDiscount({ openModalAdd, handleOpenAdd, handleRe
             start_date: '',
             end_date: ''
         },
-        validationSchema: RegisterSchema,
+        // validationSchema: RegisterSchema,
         onSubmit: (values, action) => {
             console.log("Ini values", values);
             handleSubmit(values);
@@ -159,7 +176,7 @@ export default function ModalAddDiscount({ openModalAdd, handleOpenAdd, handleRe
                                                             error={formik.touched.productbranchid && Boolean(formik.errors.productbranchid)}
                                                         >
                                                             {branchProductData?.map((item, index) => (
-                                                                <Option key={index} value={item.id}>{item.Product?.name} | Price: Rp.{item.Product?.price}</Option>
+                                                                <Option key={index} value={item.id}>{item.Product?.name} | Price: Rp.{item.Product?.price} | Branch.{item.Branch?.name}</Option>
                                                             ))}
                                                         </Select>
                                                         {formik.touched.productbranchid && formik.errors.productbranchid ? (
@@ -212,17 +229,17 @@ export default function ModalAddDiscount({ openModalAdd, handleOpenAdd, handleRe
                                                         </Typography>
                                                         {discountValue === 'percentage' ?
                                                             <Input name="amount" type="number" autoComplete="new" min={1} max={100} label="Amount in (%)" size="lg"
-                                                            onChange={(e) => {
-                                                                let value = parseInt(e.target.value, 10);
-                                                                if (isNaN(value)) {
-                                                                    value = '';
-                                                                } else if (value < 1) {
-                                                                    value = 1;
-                                                                } else if (value > 100) {
-                                                                    value = 100;
-                                                                }
-                                                                formik.setFieldValue("amount", value);
-                                                            }}
+                                                                onChange={(e) => {
+                                                                    let value = parseInt(e.target.value, 10);
+                                                                    if (isNaN(value)) {
+                                                                        value = '';
+                                                                    } else if (value < 1) {
+                                                                        value = 1;
+                                                                    } else if (value > 100) {
+                                                                        value = 100;
+                                                                    }
+                                                                    formik.setFieldValue("amount", value);
+                                                                }}
                                                                 value={formik.values.amount}
                                                                 error={formik.touched.amount && Boolean(formik.errors.amount)} /> :
                                                             <Input name="amount" type="number" autoComplete="new" label="Amount" size="lg"
@@ -259,7 +276,7 @@ export default function ModalAddDiscount({ openModalAdd, handleOpenAdd, handleRe
                                                                 {formik.errors.max_discount}
                                                             </div>
                                                         ) : null}
-                                                        
+
                                                     </>
                                                     :
                                                     <>
@@ -320,17 +337,17 @@ export default function ModalAddDiscount({ openModalAdd, handleOpenAdd, handleRe
                                                         </Typography>
                                                         {discountValue === 'percentage' ?
                                                             <Input name="amount" type="number" autoComplete="new" min={1} max={100} label="Amount in (%)" size="lg"
-                                                            onChange={(e) => {
-                                                                let value = parseInt(e.target.value, 10);
-                                                                if (isNaN(value)) {
-                                                                    value = '';
-                                                                } else if (value < 1) {
-                                                                    value = 1;
-                                                                } else if (value > 100) {
-                                                                    value = 100;
-                                                                }
-                                                                formik.setFieldValue("amount", value);
-                                                            }}
+                                                                onChange={(e) => {
+                                                                    let value = parseInt(e.target.value, 10);
+                                                                    if (isNaN(value)) {
+                                                                        value = '';
+                                                                    } else if (value < 1) {
+                                                                        value = 1;
+                                                                    } else if (value > 100) {
+                                                                        value = 100;
+                                                                    }
+                                                                    formik.setFieldValue("amount", value);
+                                                                }}
                                                                 value={formik.values.amount}
                                                                 error={formik.touched.amount && Boolean(formik.errors.amount)} /> :
                                                             <Input name="amount" type="number" autoComplete="new" label="Amount" size="lg"
@@ -343,6 +360,20 @@ export default function ModalAddDiscount({ openModalAdd, handleOpenAdd, handleRe
                                                                 {formik.errors.amount}
                                                             </div>
                                                         ) : null}
+                                                        <Typography className="-mb-2" variant="h6">
+                                                            Start date
+                                                        </Typography>
+                                                        <Input name="start_date" type="date" autoComplete="new" label="Start date" size="lg"
+                                                            onChange={formik.handleChange}
+                                                            value={formik.values.start_date}
+                                                            error={formik.touched.start_date && Boolean(formik.errors.start_date)} />
+                                                        <Typography className="-mb-2" variant="h6">
+                                                            End date
+                                                        </Typography>
+                                                        <Input name="end_date" type="date" autoComplete="new" label="End date" size="lg"
+                                                            onChange={formik.handleChange}
+                                                            value={formik.values.end_date}
+                                                            error={formik.touched.end_date && Boolean(formik.errors.end_date)} />
                                                     </>
                                                 }
                                             </CardBody>
@@ -356,7 +387,7 @@ export default function ModalAddDiscount({ openModalAdd, handleOpenAdd, handleRe
                                 <Button disabled={isLoading} onClick={handleClose} variant="text" fullWidth>
                                     Cancel
                                 </Button>
-                                <Button disabled={isLoading} type="submit" style={{ backgroundColor: '#41907a' }} variant="filled" fullWidth>
+                                <Button disabled={isLoading || branchProductData.length === 0 && true} type="submit" style={{ backgroundColor: '#41907a' }} variant="filled" fullWidth>
                                     {isLoading ? <div className="flex justify-center items-center">
                                         <SyncLoader color="#c0cac2" size={9} /></div> : <>Add</>}
                                 </Button>

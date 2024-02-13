@@ -65,7 +65,11 @@ export default function LoginAdmin() {
             }
         } catch (err) {
             setIsLoading(false)
-            toast.error(err.response.data.message, { position: "top-center" });
+            toast.error(err.response.data.message, {
+                position: "top-center",
+                hideProgressBar: true,
+                theme: "colored"
+            });
         }
     };
 
@@ -141,7 +145,7 @@ export default function LoginAdmin() {
                                 </div>
                             ) : null}
                         </div>
-                        <div className="flex flex-row items-center justify-between">
+                        <div className="flex flex-row items-center justify-between gap-2">
                             <Checkbox
                                 label={
                                     <Typography
@@ -155,7 +159,7 @@ export default function LoginAdmin() {
                                 containerProps={{ className: "-ml-2.5" }}
                                 onClick={handleRememberMe}
                             />
-                            <div onClick={handleOpen} className="cursor-pointer">Forgot Password</div>
+                            <div onClick={handleOpen} className="text-sm md:text-[15px] cursor-pointer">Forgot Password</div>
                         </div>
                         <Button disabled={isLoading} type="submit" style={{ backgroundColor: '#41907a' }} variant="filled" className="mt-6 rounded-full" fullWidth>
                             {isLoading ? <div className="flex justify-center items-center">

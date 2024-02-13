@@ -1,5 +1,7 @@
 import CustomerVoucher from '../models/customervoucher.model'
 import Voucher from '../models/voucher.model'
+import { Op } from "sequelize";
+import moment from 'moment'
 
 export const addVoucher = async (req, res) => {
     try {
@@ -60,5 +62,60 @@ export const getCustomerVoucher = async (req, res) => {
     } catch (error) {
         console.error(error);
         return res.status(400).send({ message: error.message })
+    }
+}
+
+export const getAllVoucher = async (req, res) => {
+    try {
+        const {all, page, sortBy, sortOrder = 'asc', search = '' } = req.query;
+        const limit = 5;
+        const offset = (page - 1) * limit;
+
+        if(!all){
+            const allVouchers = await Voucher.findAndCountAll({
+                where: {
+                    code: {
+                        [Op.like]: `%${search}%`
+                    }
+                },
+                order: [[sortBy, sortOrder.toUpperCase()]],
+                limit: parseInt(limit),
+                offset: parseInt(offset),
+            });
+
+            allVouchers.rows.forEach(row => {
+                row.dataValues.formattedStartDate = moment(row.start_date).format('MMMM Do YYYY, h:mm:ss a');
+                row.dataValues.formattedEndDate = moment(row.end_date).format('MMMM Do YYYY, h:mm:ss a');
+            });
+    
+            const totalPages = Math.ceil(allVouchers.count / limit);
+            return res.status(200).send({ result: allVouchers, page, totalPages })
+        }
+    } catch (error) {
+        console.error(error)
+        return res.status(500).send({ message: error.message })
+    }
+}
+
+export const deleteVoucher = async (req, res) => {
+    try {
+        const id = req.params.id
+        const findVoucher = await Voucher.findOne({
+            where: {
+                id: id
+            }
+        })
+        if (!findVoucher) {
+            return res.status(404).send({ message: "Voucher data not found" })
+        }
+        await Voucher.destroy({
+            where: {
+                id: id,
+            },
+        });
+        return res.status(200).send({ message: "Voucher deleted" })
+    } catch (error) {
+        console.error(error)
+        return res.status(500).send({ message: error.message })
     }
 }

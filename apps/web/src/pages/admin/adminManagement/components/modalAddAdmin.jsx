@@ -42,6 +42,7 @@ export default function ModalAddAdmin({ openModalAdd, handleOpenAdd, handleRefre
                 theme: "colored"
             });
             handleRefreshTable();
+            handleClose();
             getAdminData(currentPage);
         } catch (err) {
             setIsLoading(false)

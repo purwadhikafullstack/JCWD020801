@@ -27,10 +27,6 @@ const { multerUpload } = require('../middleware/multer');
 const customerRouter = Router();
 
 // GET
-customerRouter.get('/', async (req, res) => {
-  const result = await getAllUser();
-  res.json({ result });
-});
 customerRouter.get('/user-signin', userLogin);
 customerRouter.get('/keep-login', verifyToken, keepLogin);
 customerRouter.get('/reset-password', verifyToken, resetPassword);

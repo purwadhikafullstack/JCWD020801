@@ -60,7 +60,7 @@ export const sidebarData = [
     },
     {
         title: "Reports",
-        path: "/",
+        path: "/report-management",
         icon: <VscGraphLine className="h-5 w-5" />
     },
 ]

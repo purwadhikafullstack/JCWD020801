@@ -4,9 +4,11 @@ import { TableHeader } from "../components/tableHeader";
 import { useDebounce } from "use-debounce";
 import CategoryTable from "./components/categoryTable";
 import axios from "../../../api/axios";
+import { toast } from 'react-toastify';
 import { handleSortBy, handleReset, updateURL } from "../components/adminUtils";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+
 import ModalAddCategory from "./components/modalAddCategory";
 import ModalDelete from "../components/modalDelete";
 import ModalEditCategory from "./components/modalEditCategory";
@@ -81,6 +83,15 @@ export default function CategoryManagement() {
             setTotalPages(response.data?.totalPages)
         } catch (err) {
             console.log(err);
+            toast.error(err.response.data.message, {
+                position: "top-center",
+                hideProgressBar: true,
+                theme: "colored"
+            });
+            if (err.response.data.relogin === true) {
+                localStorage.removeItem("admtoken")
+                navigate('/login-admin')
+            }
         }
     }
 
@@ -115,8 +126,9 @@ export default function CategoryManagement() {
             <AdminSidebar subMenuStatus={true} />
             <div className="flex flex-col h-screen p-5 gap-3 bg-[#edf7f4] w-full items-center">
                 <TableHeader
-                    title={tabValueFromChild === 0 ? 'Category Management' : 'Sub category Management'}
+                    title={tabValueFromChild === 0 ? 'Category Management' : 'Subcategory Management'}
                     description={'The current list of categories.'}
+                    page={'category-management'}
                     handleOpenAdd={handleOpenAdd}
                     showAddButton={adminDataRedux.isSuperAdmin === true ? true : false}
                     addButtonText={tabValueFromChild === 0 ? 'category' : 'sub category'}

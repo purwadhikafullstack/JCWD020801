@@ -18,7 +18,7 @@ export default function CategoryTable({ tabValueFromChild, handleDelete, handleE
 
     return (
         <div className="w-screen md:w-5/6">
-            <Card className="h-full w-full">
+            <Card className="h-full w-full shadow-sm">
                 <CardBody className="overflow-auto px-0 py-0">
                     <table className="mt-4 w-full min-w-max table-auto text-left">
                         <thead>

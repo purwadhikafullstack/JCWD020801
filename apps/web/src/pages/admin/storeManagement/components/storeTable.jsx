@@ -89,10 +89,10 @@ export const StoreTable = ({ branchData, handlePageChange, currentPage, totalPag
                                     <td>
                                         <div className="flex flex-col pl-3">
                                             <span className="text-[#263238] text-[14px]">
-                                                {item.Admin.name}
+                                                {item.Admin?.name}
                                             </span>
                                             <span className="text-[14px] text-gray-500">
-                                                {truncateString(item.Admin.email, 15)}
+                                                {truncateString(item.Admin?.email, 15)}
                                             </span>
                                         </div>
                                     </td>

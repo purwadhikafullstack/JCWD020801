@@ -9,10 +9,13 @@ import { useDebounce } from 'use-debounce';
 import axios from "../../../api/axios";
 import { TableHeader } from "../components/tableHeader";
 import { useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
 import { roleCheck, handleSortBy, handleReset, updateURL } from "../components/adminUtils";
+
 
 export default function AdminManagement() {
     const [adminData, setAdminData] = useState([]);
+    const [allAdminData, setAllAdminData] = useState([])
     const [clickedData, setClickedData] = useState([]);
     const [refreshTable, setRefreshTable] = useState(false)
     const handleRefreshTable = () => setRefreshTable(!refreshTable)
@@ -58,8 +61,38 @@ export default function AdminManagement() {
             updateURL(navigate, page, sort, order, search)
         } catch (err) {
             console.log(err);
+            toast.error(err.response.data.message, {
+                position: "top-center",
+                hideProgressBar: true,
+                theme: "colored"
+            });
+            if (err.response.data.relogin === true) {
+                localStorage.removeItem("admtoken")
+                navigate('/login-admin')
+            }
         }
     }
+
+    const getAllAdminData = async () => {
+        try {
+            const response = await axios.get(`admins/no-pagination`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            const csvData = response.data.result.map(item => {
+                const branches = item.Branches.map(branch => branch.name).join(', ');
+                return { ...item, branchName: branches };
+            });
+            setAllAdminData(csvData)
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    useEffect(() => {
+        getAllAdminData();
+    }, [])
 
     useEffect(() => {
         roleCheck(navigate, adminDataRedux?.isSuperAdmin)
@@ -79,8 +112,10 @@ export default function AdminManagement() {
                         description={'The current list of registered admins.'}
                         showAddButton={true}
                         addButtonText={'admin'}
+                        page={'admin-management'}
                         handleOpenAdd={handleOpenAdd}
                         handleReset={handleResetButtonClick}
+                        csvData={allAdminData}
                         searchValue={searchValue}
                         setSearchValue={setSearchValue} />
                     <AdminTable

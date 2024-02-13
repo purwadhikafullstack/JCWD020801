@@ -2,31 +2,24 @@ import Product from '../models/product.model';
 import ProductImage from '../models/productimage.model';
 import Category from '../models/category.model';
 import SubCategory from '../models/subcategory.model';
-import ProductBranch from '../models/productbranch.model';
-import Branch from '../models/branch.model';
-import { Op } from 'sequelize';
+import ProductBranch from '../models/productbranch.model'
+import Branch from '../models/branch.model'
+import { Op } from "sequelize";
 import StockHistory from '../models/stockhistory.model';
-import moment from 'moment';
+import moment from 'moment'
 import Discount from '../models/discount.model';
 import Admin from '../models/admin.model';
-require('dotenv').config();
+import sequelize from 'sequelize'
+require("dotenv").config();
 
 export const addProduct = async (req, res) => {
   try {
-    const {
-      name,
-      description,
-      price,
-      weight,
-      category_id,
-      subcategory_id,
-      stock,
-      branch_id,
-    } = req.body;
+    const {name, description, price, weight, category_id, subcategory_id, stock, branch_id} = req.body;
 
     const findProduct = await Product.findOne({
       where: {
         name: name,
+        isDeleted: false
       },
     });
 
@@ -43,13 +36,13 @@ export const addProduct = async (req, res) => {
     });
 
     await ProductImage.create({
-      image: `${process.env.BASE_URL_API}/public/products/${req.file?.filename}`,
+      image: `${process.env.BASE_URL_API}public/products/${req.file?.filename}`,
       ProductId: result.id,
     });
 
     if (stock && branch_id) {
       const product_branch_result = await ProductBranch.create({
-        stock: stock,
+        stock: stock ? stock : 0,
         BranchId: branch_id,
         ProductId: result.id,
       });
@@ -86,27 +79,53 @@ export const addProduct = async (req, res) => {
 
 export const getAllProducts = async (req, res) => {
   try {
-    const {
-      page,
-      sortBy,
-      sortOrder = 'asc',
-      search = '',
-      category,
-    } = req.query;
+    let {page, sortBy, sortOrder = 'asc', search = '', category, all} = req.query;
 
-    const limit = 6;
+    const limit = 8;
     const offset = (page - 1) * limit;
+    
     let whereCondition = {
       isDeleted: {
         [Op.not]: true,
       },
     };
 
+    if(all){
+      const allProducts = await Product.findAll({
+        include:[
+          {
+            model: Category
+          },
+          {
+            model:SubCategory
+          }
+        ],
+        where:{
+          isDeleted: false
+        }
+      })
+      return res.status(200).send({ result: allProducts});
+    }
+
     if (category != 0) {
       whereCondition = {
         ...whereCondition,
         '$Category.id$': category,
       };
+    }
+
+    if(sortBy === 'active'){
+      whereCondition = {
+        ...whereCondition,
+        isDisabled: false,
+      };
+      sortBy = 'createdAt'      
+    }else if(sortBy === 'disabled'){
+      whereCondition = {
+        ...whereCondition,
+        isDisabled: true,
+      };
+      sortBy = 'createdAt'
     }
 
     if (search) {
@@ -144,19 +163,7 @@ export const getAllProducts = async (req, res) => {
 
 export const editProduct = async (req, res) => {
   try {
-    const {
-      id,
-      name,
-      description,
-      price,
-      weight,
-      stock,
-      category_id,
-      subcategory_id,
-      isDisabled,
-      branch_id,
-      updatedBy,
-    } = req.body;
+    const { id, name, description, price, weight, stock, category_id, subcategory_id, isDisabled, branch_id, updatedBy} = req.body;
 
     const updateFields = {
       ...(name && { name }),
@@ -193,6 +200,23 @@ export const editProduct = async (req, res) => {
       }
     }
 
+    if(req.file?.filename){
+      const product_images = await ProductImage.findAll({
+        where:{
+          ProductId: id
+        }
+      })
+
+      if(product_images.length >= 3){
+        return res.status(400).send({ message: "Can't have more than 3 images" });
+      }
+
+      await ProductImage.create({
+        image: `${process.env.BASE_URL_API}public/products/${req.file?.filename}`,
+        ProductId: id,
+      });
+    }
+
     const findBranchProduct = await ProductBranch.findAll({
       where: {
         BranchId: branch_id,
@@ -201,9 +225,7 @@ export const editProduct = async (req, res) => {
     });
 
     if (findBranchProduct.length > 0) {
-      return res
-        .status(404)
-        .send({ message: 'This product is already assigned to this branch' });
+      return res.status(404).send({ message: 'This product is already assigned to this branch' });
     }
 
     if (branch_id && stock) {
@@ -297,6 +319,46 @@ export const getProductImages = async (req, res) => {
   }
 };
 
+export const getProductImages2 = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const imageProduct = await ProductImage.findAll({
+      where: {
+        ProductId: id,
+      },
+    });
+    res.status(200).send({ imageProduct });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({ message: error.message });
+  }
+};
+
+export const deleteProductImage = async (req, res) => {
+  try{
+    const {id, product_id} = req.query;
+    const imageProduct = await ProductImage.findAll({
+      where: {
+        ProductId: product_id,
+      },
+    });
+
+    if(imageProduct.length === 1){
+      return res.status(400).send({ message: "One image is required" });
+    }
+    await ProductImage.destroy({
+      where:{
+        id: id
+      }
+    })
+
+    return res.status(200).send({ message: 'Image has been deleted' });
+  }catch(error){
+    console.error(error);
+    return res.status(500).send({ message: error.message });
+  }
+}
+
 export const getAllBranchProduct = async (req, res) => {
   try {
     const {
@@ -306,6 +368,7 @@ export const getAllBranchProduct = async (req, res) => {
       sortOrder = 'asc',
       search = '',
       admid,
+      branch_id
     } = req.query;
 
     const limit = 6;
@@ -329,6 +392,12 @@ export const getAllBranchProduct = async (req, res) => {
       whereCondition = {
         BranchId: branchIds,
       };
+    }
+
+    if(branch_id){
+      whereCondition = {
+        BranchId: branch_id
+      }
     }
 
     if (search) {
@@ -390,16 +459,9 @@ export const getAllBranchProduct = async (req, res) => {
 
 export const getAllBranchProductCustomer = async (req, res) => {
   try {
-    const {
-      page,
-      sortBy,
-      sortOrder = 'asc',
-      search = '',
-      branch_id,
-      category_id,
-    } = req.query;
+    const {limit, page, sortBy, sortOrder = 'asc', search = '', branch_id, category_id, discounted} = req.query;
+    console.log("QUERY", req.query);
 
-    const limit = 6;
     const offset = (page - 1) * limit;
 
     let whereCondition = {
@@ -426,10 +488,24 @@ export const getAllBranchProductCustomer = async (req, res) => {
       };
     }
 
+    let include_model_discount ={}
+
+    if (discounted) {
+      include_model_discount = {
+        model: Discount,
+        required: true
+      }
+    }else{
+      include_model_discount = {
+        model: Discount
+      }
+    }
+
     const allBranchProducts = await ProductBranch.findAndCountAll({
       include: [
         {
           model: Product,
+          required: true,
           where: {
             isDeleted: false,
             isDisabled: false,
@@ -443,15 +519,23 @@ export const getAllBranchProductCustomer = async (req, res) => {
             },
           ],
         },
-        {
-          model: Discount,
-        },
+        include_model_discount,
         {
           model: Branch,
+          required: true,
         },
       ],
       where: whereCondition,
-      order: [[sortBy, sortOrder.toUpperCase()]],
+      order: [
+        sortBy === 'name' && !discounted ?
+        [sequelize.literal("`Product.name`"), sortOrder.toUpperCase()]
+        : sortBy === 'price' && !discounted ?
+        [sequelize.literal("`Product.price`"), sortOrder.toUpperCase()]
+        : discounted && discounted === 'true' ?
+        [Discount, 'difference', 'DESC']
+        :
+        [[sortBy, sortOrder.toUpperCase()]]
+      ],
       limit: parseInt(limit),
       offset: parseInt(offset),
     });

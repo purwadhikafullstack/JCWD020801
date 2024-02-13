@@ -10,10 +10,13 @@ import { useSelector } from "react-redux";
 import ModalEditStock from "./components/modalEditStock";
 import ModalStockHistory from "./components/modalStockHistory";
 import ModalDelete from "../components/modalDelete";
+import { toast } from 'react-toastify';
 
 export default function StockManagement() {
     const [productBranchData, setProductBranchData] = useState([]);
     const [clickedData, setClickedData] = useState([]);
+    const [branchId, setBranchId] = useState('');
+    const handleFilterByBranch = (value) => {setBranchId(value); setCurrentPage(1) }
     const [refreshTable, setRefreshTable] = useState(false)
     const handleRefreshTable = () => setRefreshTable(!refreshTable);
     const adminDataRedux = useSelector((state) => state.admin.value);
@@ -44,12 +47,12 @@ export default function StockManagement() {
         handleSortBy(columnName, setSortBy, orderChange, setSortOrder, setOrderChange);
     };
     const handleResetButtonClick = () => {
-        handleReset(setSortBy, setOrderChange, setSortOrder, setSearchValue);
+        handleReset(setSortBy, setOrderChange, setSortOrder, setSearchValue, setBranchId);
     };
 
     const getBranchProductData = async (page, sort, order, search) => {
         try {
-            const response = await axios.get(`products/branch-product?page=${page}&sortBy=${sort}&sortOrder=${order}&search=${search}&admid=${adminDataRedux.id}`, {
+            const response = await axios.get(`products/branch-product?page=${page}&sortBy=${sort}&sortOrder=${order}&search=${search}&admid=${adminDataRedux.id}&branch_id=${branchId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -59,6 +62,15 @@ export default function StockManagement() {
             setTotalPages(response.data?.totalPages)
         } catch (err) {
             console.log(err);
+            toast.error(err.response.data.message, {
+                position: "top-center",
+                hideProgressBar: true,
+                theme: "colored"
+            });
+            if (err.response.data.relogin === true) {
+                localStorage.removeItem("admtoken")
+                navigate('/login-admin')
+            }
         }
     }
 
@@ -66,7 +78,7 @@ export default function StockManagement() {
         if(adminDataRedux.id){
             getBranchProductData(currentPage, sortBy.toLowerCase(), sortOrder, debouncedSearchValue)
         }
-    }, [adminDataRedux.id, currentPage, sortBy, sortOrder, debouncedSearchValue, refreshTable])
+    }, [adminDataRedux.id, currentPage, sortBy, sortOrder, debouncedSearchValue, branchId, refreshTable])
 
     return (
         <div className="flex flex-col lg:flex-row">
@@ -74,11 +86,14 @@ export default function StockManagement() {
             <div className="flex flex-col h-screen p-5 gap-3 bg-[#edf7f4] w-full items-center">
                 <TableHeader
                     title={'Stock Management'}
-                    description={'Manage stock of product'}
+                    description={'Manage stock of products'}
                     showAddButton={false}
                     searchValue={searchValue}
                     handleReset={handleResetButtonClick}
-                    setSearchValue={setSearchValue} />
+                    setSearchValue={setSearchValue}
+                    page={'stock'}
+                    handleFilterByBranch={handleFilterByBranch}
+                    csvData={productBranchData} />
                 <StockTable
                     handleEdit={handleEdit}
                     handleHistory={handleHistory}
