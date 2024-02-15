@@ -57,6 +57,7 @@ export default function StockManagement() {
                     Authorization: `Bearer ${token}`,
                 },
             });
+            console.log("response", response);
             updateURL(navigate, page, sort, order, search)
             setProductBranchData(response.data?.result.rows)
             setTotalPages(response.data?.totalPages)

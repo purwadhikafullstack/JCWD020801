@@ -95,6 +95,10 @@ export default function AdminManagement() {
     }, [])
 
     useEffect(() => {
+        getAllAdminData();
+    }, [])
+
+    useEffect(() => {
         roleCheck(navigate, adminDataRedux?.isSuperAdmin)
     }, [adminDataRedux])
 
