@@ -43,8 +43,8 @@ export default function StockManagement() {
     const handlePageChange = (newPage) => {
         setCurrentPage(newPage);
     };
-    const handleSortByColumn = (columnName) => {
-        handleSortBy(columnName, setSortBy, orderChange, setSortOrder, setOrderChange);
+    const handleSortByColumn = (columnName, page = 'stock') => {
+        handleSortBy(columnName, setSortBy, orderChange, setSortOrder, setOrderChange, page);
     };
     const handleResetButtonClick = () => {
         handleReset(setSortBy, setOrderChange, setSortOrder, setSearchValue, setBranchId);
@@ -57,7 +57,6 @@ export default function StockManagement() {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            console.log("response", response);
             updateURL(navigate, page, sort, order, search)
             setProductBranchData(response.data?.result.rows)
             setTotalPages(response.data?.totalPages)

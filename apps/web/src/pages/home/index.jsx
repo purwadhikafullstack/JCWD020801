@@ -96,8 +96,12 @@ export const HomePage = () => {
       const response = await axios.get(
         `products/all?page=1&sortBy=${sort}&sortOrder=${order}&limit=${pageLimit}&branch_id=${branch_id}&category_id=${categoryId}`,
       );
+      const responseAll = await axios.get(
+        `products/all?page=1&sortBy=${sort}&limit=&sortOrder=${order}&branch_id=${branch_id}`,
+      );
+      console.log("PRODUCT ALL", responseAll);
       // setNearestBranchProduct(response.data.result.rows);
-      dispatch(setNearestBranchProduct(response.data.result.rows));
+      dispatch(setNearestBranchProduct(responseAll.data.result.rows));
       setNearestBranchProductLength(response.data.result.rows)
     } catch (err) {
       console.error(err);

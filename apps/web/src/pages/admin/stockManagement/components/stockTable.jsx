@@ -32,7 +32,7 @@ export default function StockTable({
                                     <th
                                         key={head}
                                         onClick={() => { handleSortBy(head) }}
-                                        className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                                        className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 hover:bg-[#dff1ec]"
                                     >
                                         <Typography
                                             variant="small"
@@ -77,7 +77,10 @@ export default function StockTable({
                                                         color="blue-gray"
                                                         className="font-normal"
                                                     >
-                                                        {item.Product.name}
+                                                        {item.Product.name.length > 30 ?
+                                                            `${item.Product.name.substring(0, 30)}...` :
+                                                            item.Product.name
+                                                        }
                                                     </Typography>
                                                     <Tooltip
                                                         content={

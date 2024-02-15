@@ -67,7 +67,11 @@ export default function ModalAddDiscount({ openModalAdd, handleOpenAdd, handleRe
             }
         } catch (err) {
             setIsLoading(false)
-            toast.error(err.response.data.message, { position: "top-center" });
+            toast.error(err.response.data.message, {
+                position: "top-center",
+                hideProgressBar: true,
+                theme: "colored"
+            });
         }
     };
 
@@ -75,18 +79,6 @@ export default function ModalAddDiscount({ openModalAdd, handleOpenAdd, handleRe
         handleOpenAdd()
         formik.resetForm()
     }
-
-    // const RegisterSchema = Yup.object(
-    //     {
-    //         type: Yup.string().required("Type is required."),
-    //         value: Yup.string().required("Value is required."),
-    //         amount: Yup.string().required("Amount is required."),
-    //         // code: Yup.string().required("Code is required."),
-    //         productbranchid: Yup.string().required("Product is required."),
-    //         min_purchase_amount: Yup.string().required("Min Purchase Amount is required."),
-    //         max_discount: Yup.string().required("Max Discount is required."),
-    //     }
-    // );
 
     const formik = useFormik({
         initialValues: {
@@ -100,9 +92,7 @@ export default function ModalAddDiscount({ openModalAdd, handleOpenAdd, handleRe
             start_date: '',
             end_date: ''
         },
-        // validationSchema: RegisterSchema,
         onSubmit: (values, action) => {
-            console.log("Ini values", values);
             handleSubmit(values);
             action.resetForm();
         },

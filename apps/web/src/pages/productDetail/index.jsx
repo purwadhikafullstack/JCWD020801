@@ -131,7 +131,7 @@ export const ProductDetail = () => {
                     onClick={() => handleMainImage(item.image)}
                     key={item.id}
                     src={item.image}
-                    className="h-[3.4rem] w-[3.4rem] object-cover rounded-xl border border-[#D1D5D8]"
+                    className="h-[3.4rem] w-[3.4rem] object-cover rounded-xl border border-[#D1D5D8] cursor-pointer"
                   ></img>
                 ))}
               </div>
@@ -188,7 +188,7 @@ export const ProductDetail = () => {
               )}
             </div>
             {/* Title */}
-            <h2 className="mt-3 text-[24px] lg:text-[27px] font-semibold tracking-tight">
+            <h2 className="mt-3 text-[24px] lg:text-[27px] font-semibold tracking-tight max-w-2xl">
               {productData?.Product?.name}
             </h2>
             <div className="flex flex-col gap-[0.5rem] mt-[1.2rem]">
@@ -233,7 +233,7 @@ export const ProductDetail = () => {
                 </span>
               ) : (
                 <span className="font-medium text-[#067627] text-[16px]">
-                  stock kosong
+                  stock empty
                 </span>
               )}
             </div>
@@ -241,7 +241,7 @@ export const ProductDetail = () => {
               <span className="font-medium text-[15px] text-gray-800 ">
                 Product Description
               </span>
-              <p className="mt-[0.4rem] text-gray-600 text-[15px]">
+              <p className="mt-[0.4rem] text-gray-600 text-[15px] max-w-3xl">
                 {productData?.Product?.description}
               </p>
             </div>

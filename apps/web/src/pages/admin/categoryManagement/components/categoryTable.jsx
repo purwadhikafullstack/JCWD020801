@@ -13,7 +13,7 @@ import { PencilIcon, TrashIcon, ChevronUpDownIcon } from "@heroicons/react/24/so
 import { useSelector } from "react-redux";
 
 export default function CategoryTable({ tabValueFromChild, handleDelete, handleEdit, categoryData, currentPage, handlePageChange, totalPages, handleSortBy }) {
-    const TABLE_HEAD = ["ID", "Name", "CreatedAt", "UpdatedAt", "Actions"]
+    const TABLE_HEAD = ["ID", "Name", "CreatedAt", "UpdatedAt", "Action"]
     const adminDataRedux = useSelector((state) => state.admin.value);
 
     return (
@@ -27,7 +27,7 @@ export default function CategoryTable({ tabValueFromChild, handleDelete, handleE
                                     <th
                                         key={head}
                                         onClick={() => { handleSortBy(head) }}
-                                        className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50"
+                                        className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-[#dff1ec]"
                                     >
                                         <Typography
                                             variant="small"

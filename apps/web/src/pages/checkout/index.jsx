@@ -20,7 +20,7 @@ export const CheckoutPage = () => {
   const carts = useSelector((state) => state.cart.data);
   const products = useSelector((state) => state.product.data);
   const orderId = useSelector((state) => state.cart.order_id);
-  
+
   const [isPaymentOpen, setIsPaymentOpen] = useState(false);
   const [productImage, setProductImage] = useState();
   const customer = useSelector((state) => state.customer.value);
@@ -28,7 +28,31 @@ export const CheckoutPage = () => {
     (total, item) => total + item.price * item.quantity,
     0,
   );
-  const discount = 3000;
+  const [discount, setDiscount] = useState(0);
+
+  const handleDiscount = (cart) => {
+    cart?.map((item) => {
+      const product = products.find(
+        (product) => product.ProductId === item.id,
+      );
+
+      let temp_discount = 0;
+      let i = 1;
+      if (product.hasDiscount) {
+        while (temp_discount < product.Discounts[0].max_discount && i <= item.quantity) {
+          const discountAmount = product?.Discounts[0].difference;
+          if (temp_discount + discountAmount <= product.Discounts[0].max_discount) {
+            setDiscount(prevTotalDiscount => prevTotalDiscount + discountAmount);
+            temp_discount += discountAmount;
+            i++;
+          } else {
+            break;
+          }
+        }
+        temp_discount = 0;
+      }
+    })
+  }
 
   const [selectedDeliveryCost, setSelectedDeliveryCost] = useState(0);
 
@@ -53,6 +77,7 @@ export const CheckoutPage = () => {
 
   useEffect(() => {
     getProductImages();
+    handleDiscount(carts)
     const snapScript = 'https://app.sandbox.midtrans.com/snap/snap.js';
 
     const clientKey = import.meta.env.VITE_MIDTRANS_CLIENT_KEY;
@@ -73,18 +98,16 @@ export const CheckoutPage = () => {
     try {
       const data = {
         id: orderId,
-        total: total - discount,
+        total: total + selectedDeliveryCost - discount,
       };
 
       const response = await axios.patch('/order', data);
-      console.log(response);
+      // console.log(response);
       window.snap.pay(response.data.token);
     } catch (error) {
       console.log(error);
     }
   };
-
-  // const delivery = 24000;
 
   return (
     <div>
@@ -269,7 +292,7 @@ export const CheckoutPage = () => {
                     <div className="flex items-center justify-between">
                       <h4 className="font-medium text-gray-600">Subtotal</h4>
                       <h4 className="font-semibold tracking-tight text-gray-900">
-                        Rp. {convertToIDR(total)}
+                        {convertToIDR(total)}
                       </h4>
                     </div>
                     <div className="flex items-center justify-between">
@@ -281,15 +304,16 @@ export const CheckoutPage = () => {
                     <div className="flex items-center justify-between">
                       <h4 className="font-medium text-[#4eb197]">Discount</h4>
                       <h4 className="font-semibold tracking-tight text-[#4eb197]">
-                        Rp. - {convertToIDR(discount)}
+                        {discount
+                          ? `- ${convertToIDR(discount)}`
+                          : discount}
                       </h4>
                     </div>
                   </div>
                   <div className="border-t border-[#dcdcdc] flex items-center justify-between pt-[1rem]">
                     <h4 className="font-semibold text-[18px]">Total</h4>
                     <h4 className="font-bold text-[18px]">
-                      {convertToIDR(total + selectedDeliveryCost - discount)} 
-                      
+                      Rp{convertToIDR(total + selectedDeliveryCost - discount)}
                     </h4>
                   </div>
                   <button
@@ -330,8 +354,7 @@ export const CheckoutPage = () => {
                   <div className="flex gap-[0.5rem]">
                     <span className="text-[17px] font-medium">Total:</span>
                     <span className="text-[16.5px] font-normal">
-                      {convertToIDR(total + selectedDeliveryCost - discount)}{' '}
-                      total
+                      {convertToIDR(total + selectedDeliveryCost - discount)}
                     </span>
                   </div>
                 </div>
@@ -411,7 +434,9 @@ export const CheckoutPage = () => {
                     <div className="flex items-center justify-between">
                       <h4 className="font-medium text-[#4eb197]">Discount</h4>
                       <h4 className="font-semibold tracking-tight text-[#4eb197]">
-                        Rp. - {convertToIDR(discount)}
+                        {discount
+                          ? `Rp. - ${convertToIDR(discount)}`
+                          : discount}
                       </h4>
                     </div>
                   </div>

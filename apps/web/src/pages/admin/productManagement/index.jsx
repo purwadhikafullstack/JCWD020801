@@ -65,7 +65,6 @@ export default function ProductManagement() {
         setSortOrder(order);
     };
     const handleResetButtonClick = () => {
-        // handleReset(setSortBy, setOrderChange, setSortOrder, setSearchValue, refreshTable);
         setSearchValue('')
         setFilterByCategory(0)
         setCurrentPage(1)
@@ -160,7 +159,7 @@ export default function ProductManagement() {
                         ))}
                     </Select>
                 </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 items-center">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
                     {productData?.map((item, index) => (
                         !item.isDeleted && (
                             <ProductCard

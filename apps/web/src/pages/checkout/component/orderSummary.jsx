@@ -32,6 +32,7 @@ export const OrderSummary = ({
             const product = products.find(
               (product) => product.ProductId === item.id,
             );
+
             const prodImage = productImage?.find(
               (prod) => prod?.ProductId === item.id,
             );
@@ -53,7 +54,7 @@ export const OrderSummary = ({
                   </span>
                   <div className="flex gap-2 mt-[0.3rem]">
                     <span className="text-[14px] font-medium text-gray-600">
-                      {convertToIDR(product?.Product?.price)}
+                        {convertToIDR(product?.Product?.price)}
                     </span>
                     {/* <span className="text-[14px] font-medium text-gray-600">x 3</span> */}
                   </div>

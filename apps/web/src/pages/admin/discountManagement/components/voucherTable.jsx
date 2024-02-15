@@ -19,7 +19,7 @@ export default function VoucherTable({
     handlePageChange,
     totalPages,
     handleSortBy }) {
-    const TABLE_HEAD = ["ID", "Code", "Type", "Value", "Discount Amount", "Start Date", "End Data", "Action"];
+    const TABLE_HEAD = ["ID", "Code", "Type", "Value", "Discount Amount", "Start Date", "End Date", "Action"];
 
     return (
         <div className="w-screen md:w-5/6">
@@ -32,7 +32,7 @@ export default function VoucherTable({
                                     <th
                                         key={head}
                                         onClick={() => { handleSortBy(head) }}
-                                        className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                                        className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 hover:bg-[#dff1ec]"
                                     >
                                         <Typography
                                             variant="small"
