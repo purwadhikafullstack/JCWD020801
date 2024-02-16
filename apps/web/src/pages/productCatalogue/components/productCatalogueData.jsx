@@ -65,7 +65,7 @@ export const ProductCatalogueData = ({ product, branchId, handlePageLimit }) => 
                                     <img
                                         src={stockAvail}
                                         alt=""
-                                        className="h-3 h-3 pt-[0.1rem]"
+                                        className="h-3 pt-[0.1rem]"
                                     />
                                     <span className="text-[#067627] font-medium text-[13px] md:text-[14px]">
                                         stock:{' '}
@@ -86,9 +86,11 @@ export const ProductCatalogueData = ({ product, branchId, handlePageLimit }) => 
                 ))}
             </section>
             {/* Pagination */}
-            <div className="flex items-center justify-center gap-2 mt-[1.4rem] md:mt-[1.8rem]">
-            <button onClick={handlePageLimit} className="text-[#898989] rounded-lg border border-[#E0E0E0] p-1.5 hover:shadow-sm disabled:cursor-not-allowed disabled:opacity-[0.65] transition ease-in-out delay-100 ">Load more</button>
-            </div>
+            {product.length > 0 && (
+                <div className="flex items-center justify-center gap-2 mt-[1.4rem] md:mt-[1.8rem]">
+                    <button onClick={handlePageLimit} className="text-[#898989] rounded-lg border border-[#E0E0E0] p-1.5 hover:shadow-sm disabled:cursor-not-allowed disabled:opacity-[0.65] transition ease-in-out delay-100 ">Load more</button>
+                </div>
+            )}
         </>
     )
 }

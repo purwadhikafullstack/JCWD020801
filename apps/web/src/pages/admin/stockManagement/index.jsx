@@ -43,8 +43,8 @@ export default function StockManagement() {
     const handlePageChange = (newPage) => {
         setCurrentPage(newPage);
     };
-    const handleSortByColumn = (columnName) => {
-        handleSortBy(columnName, setSortBy, orderChange, setSortOrder, setOrderChange);
+    const handleSortByColumn = (columnName, page = 'stock') => {
+        handleSortBy(columnName, setSortBy, orderChange, setSortOrder, setOrderChange, page);
     };
     const handleResetButtonClick = () => {
         handleReset(setSortBy, setOrderChange, setSortOrder, setSearchValue, setBranchId);

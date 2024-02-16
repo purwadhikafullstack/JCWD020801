@@ -6,18 +6,18 @@ import {
     Chip,
     CardFooter,
     Avatar,
-    Input
 } from "@material-tailwind/react";
 import { MdContentCopy } from "react-icons/md";
 import { FcGoogle } from "react-icons/fc";
 import { toast } from 'react-toastify';
+import { ChevronUpDownIcon } from "@heroicons/react/24/solid";
 
 export default function CustomerTable({
     customerData,
     currentPage,
     handlePageChange,
     totalPages,
-    handleSortByColumn }) {
+    handleSortBy }) {
     const TABLE_HEAD = ["First Name", "Last Name", "Email", "Referral Code", "Status", "Gender", "Phone Number"];
 
     const copyToClipboard = (text) => {
@@ -36,17 +36,21 @@ export default function CustomerTable({
                     <table className="mt-4 w-full min-w-max table-auto text-left">
                         <thead>
                             <tr>
-                                {TABLE_HEAD.map((head) => (
+                                {TABLE_HEAD.map((head, index) => (
                                     <th
                                         key={head}
-                                        className="border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                                        className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 hover:bg-[#dff1ec]"
+                                        onClick={() => { handleSortBy(head) }}
                                     >
                                         <Typography
                                             variant="small"
                                             color="blue-gray"
-                                            className="font-bold leading-none opacity-70"
+                                            className="flex font-bold leading-none opacity-70"
                                         >
                                             {head}
+                                            {index !== TABLE_HEAD.length - 1 && (
+                                                <ChevronUpDownIcon strokeWidth={2} className="h-4 w-4" />
+                                            )}
                                         </Typography>
                                     </th>
                                 ))}

@@ -4,10 +4,13 @@ import * as Yup from "yup";
 import axios from "../../../../api/axios";
 import { useState } from "react";
 import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import { setDataAdmin } from "../../../../redux/adminSlice";
 
 export default function AdminProfileForm({ adminData }) {
     const [selectedFile, setSelectedFile] = useState(null);
     const token = localStorage.getItem("admtoken")
+    const dispatch = useDispatch();
 
     const handleFileChange = (event) => {
         setSelectedFile(event.target.files[0]);
@@ -15,16 +18,13 @@ export default function AdminProfileForm({ adminData }) {
 
     const handleSubmit = async (data) => {
         try {
-            for (var pair of data.entries()) {
-                console.log(pair[0] + ', ' + pair[1]);
-            }
             const response = await axios.patch('admins/', data, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     Authorization: `Bearer ${token}`,
                 },
             })
-            window.location.reload();
+            keepLoginAdmin();
             toast.success(response.data.message, {
                 position: "top-center",
                 hideProgressBar: true,
@@ -63,6 +63,24 @@ export default function AdminProfileForm({ adminData }) {
             action.resetForm();
         },
     });
+
+    const keepLoginAdmin = async () => {
+        try {
+          const response = await axios.get('admins/keep-login', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          dispatch(setDataAdmin(response.data.result));
+        } catch (err) {
+          toast.error(err.response.data.message, {
+            position: "top-center",
+            hideProgressBar: true,
+            theme: "colored"
+          });
+        }
+      };
+
     return (
         <div className="flex flex-col p-8 bg-white shadow-sm rounded-3xl w-max md:w-max h-auto items-center">
             <form onSubmit={formik.handleSubmit}>

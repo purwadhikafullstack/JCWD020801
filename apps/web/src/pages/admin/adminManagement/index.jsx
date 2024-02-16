@@ -42,8 +42,8 @@ export default function AdminManagement() {
     const handlePageChange = (newPage) => {
         setCurrentPage(newPage);
     };
-    const handleSortByColumn = (columnName) => {
-        handleSortBy(columnName, setSortBy, orderChange, setSortOrder, setOrderChange);
+    const handleSortByColumn = (columnName, page = 'admin') => {
+        handleSortBy(columnName, setSortBy, orderChange, setSortOrder, setOrderChange, page);
     };
     const handleResetButtonClick = () => {
         handleReset(setSortBy, setOrderChange, setSortOrder, setSearchValue);
@@ -60,7 +60,7 @@ export default function AdminManagement() {
             setTotalPages(response.data?.totalPages)
             updateURL(navigate, page, sort, order, search)
         } catch (err) {
-            console.log(err);
+            console.error(err);
             toast.error(err.response.data.message, {
                 position: "top-center",
                 hideProgressBar: true,
@@ -89,6 +89,10 @@ export default function AdminManagement() {
             console.log(err);
         }
     }
+
+    useEffect(() => {
+        getAllAdminData();
+    }, [])
 
     useEffect(() => {
         getAllAdminData();

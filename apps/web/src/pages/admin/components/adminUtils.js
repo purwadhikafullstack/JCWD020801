@@ -37,17 +37,40 @@ export default function admTokenCheck() {
 // const [orderChange, setOrderChange] = useState(false)
 // const [sortBy, setSortBy] = useState('createdAt');
 
-export const handleSortBy = (columnName, setSortBy, orderChange, setSortOrder, setOrderChange) => {
+export const handleSortBy = (columnName, setSortBy, orderChange, setSortOrder, setOrderChange, page) => {
     if (columnName !== 'Action') {
-        if (columnName === 'Product Name') {
+        if (columnName === 'Product Name' && page != 'discount') {
             setSortBy('ProductId')
-        } else if (columnName === 'Branch') {
+        }else if(columnName === 'Product Name' && page === 'discount'){
+            setSortBy('Product.name')
+        } else if (columnName === 'Branch' && page != 'admin' && page != 'stock') {
+            setSortBy('BranchId')
+        }else if (columnName === 'Branch' && page === 'admin') {
+            setSortBy('Branch.name')
+        }else if (columnName === 'Branch' && page === 'stock') {
             setSortBy('BranchId')
         } else if (columnName === 'Min. Purchase') {
             setSortBy('min_purchase_amount')
         } else if (columnName === 'Max. Discount') {
             setSortBy('max_discount')
-        } else {
+        }else if (columnName === 'Discount Amount') {
+            setSortBy('amount')
+        }else if (columnName === 'Start Date' && page === 'voucher') {
+            setSortBy('start_date')
+        }else if (columnName === 'End Date' && page === 'voucher') {
+            setSortBy('amount')
+        }else if (columnName === 'First Name' && page === 'customer-management') {
+            setSortBy('firstname')
+        }else if (columnName === 'Last Name' && page === 'customer-management') {
+            setSortBy('lastname')
+        }else if (columnName === 'Referral Code' && page === 'customer-management') {
+            setSortBy('referral_code')
+        }else if (columnName === 'Status' && page === 'customer-management') {
+            setSortBy('isDeleted')
+        }
+        else if (columnName === 'Phone Number' && page === 'customer-management') {
+            setSortBy('phoneNumber')
+        }else {
             setSortBy(columnName);
         }
         const sortOrder = orderChange ? 'asc' : 'desc';

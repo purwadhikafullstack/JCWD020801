@@ -6,6 +6,7 @@ import jwt from 'jsonwebtoken';
 import fs from 'fs';
 import { transporter } from '../middleware/admin/admin.transporter';
 import handlebars from 'handlebars';
+import sequelize from 'sequelize'
 import moment from 'moment'
 require('dotenv').config();
 
@@ -76,6 +77,7 @@ export const createAdmin = async (req, res) => {
 export const getAllAdmin = async (req, res) => {
   try {
     const { page, sortBy, sortOrder = 'asc', search = '' } = req.query;
+    
     const limit = 5;
     const offset = (page - 1) * limit;
 
@@ -94,7 +96,12 @@ export const getAllAdmin = async (req, res) => {
       attributes: {
         exclude: ['password'],
       },
-      order: [[sortBy, sortOrder.toUpperCase()]],
+      order: [
+        sortBy === 'branch.name' ?
+        [Branch, 'name', sortOrder.toUpperCase()]
+        :
+        [[sortBy, sortOrder.toUpperCase()]]
+      ],
       limit: parseInt(limit),
       offset: parseInt(offset),
     });

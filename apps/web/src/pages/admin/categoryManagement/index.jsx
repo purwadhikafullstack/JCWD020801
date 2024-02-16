@@ -78,6 +78,7 @@ export default function CategoryManagement() {
                     Authorization: `Bearer ${token}`,
                 },
             });
+            console.log("ctg", response);
             updateURL(navigate, page, sort, order, search)
             setCategoryData(response.data?.result.rows)
             setTotalPages(response.data?.totalPages)
