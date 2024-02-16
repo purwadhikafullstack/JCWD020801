@@ -90,7 +90,7 @@ export default function ModalAddProduct({ openModalAdd, handleOpenAdd, handleRef
         } catch (err) {
             setIsLoading(false)
             console.log(err);
-            toast.error(err.response.data.message, { position: "top-center" });
+            toast.error('Image required', {position: "top-center", hideProgressBar: true, theme: "colored"});
         }
     };
 
@@ -124,7 +124,11 @@ export default function ModalAddProduct({ openModalAdd, handleOpenAdd, handleRef
             formData.append("subcategory_id", values.subcategory_id)
             formData.append("branch_id", values.branch_id)
             formData.append("image1", selectedFile)
-            handleSubmit(formData);
+            if(selectedFile === null){
+                toast.error('Image required', {position: "top-center", hideProgressBar: true, theme: "colored"});
+            }else{
+                handleSubmit(formData);
+            }
             action.resetForm();
         },
     });

@@ -38,7 +38,7 @@ export default function AdminTable({ handleDelete, handleEdit, adminData, curren
                                     <th
                                         key={head}
                                         onClick={() => { handleSortBy(head) }}
-                                        className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50"
+                                        className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-[#dff1ec]"
                                     >
                                         <Typography
                                             variant="small"

@@ -5,6 +5,7 @@ import Product from "../models/product.model";
 import Branch from "../models/branch.model";
 import { Op } from "sequelize";
 import Admin from "../models/admin.model";
+import sequelize from 'sequelize'
 
 export const getAllDiscount = async (req, res) => {
     try {
@@ -53,7 +54,12 @@ export const getAllDiscount = async (req, res) => {
                 }
             ],
             where: whereCondition,
-            order: [[sortBy, sortOrder.toUpperCase()]],
+            order: [
+                sortBy === 'product.name' ?
+                [ProductBranch, Product, 'name', sortOrder.toUpperCase()]
+                :
+                [[sortBy, sortOrder.toUpperCase()]]
+            ],
             limit: parseInt(limit),
             offset: parseInt(offset),
         });
@@ -147,9 +153,15 @@ export const addDiscount = async (req, res) => {
 
         if(value === 'percentage'){
             discount_amount = amount / 100;
+            if (amount < 0 || amount > 100) {
+                return res.status(400).send({ message: "The percentage discount must be between 0 and 100." });
+            }
             difference = findProduct.Product.price - (findProduct.Product.price - (findProduct.Product.price * discount_amount));
         }else{
             discount_amount = amount;
+            if(discount_amount > findProduct.Product.price){
+                return res.status(400).send({ message: "The discount amount cannot exceed the original price." })
+            }
             difference = findProduct.Product.price - (findProduct.Product.price - discount_amount);
         }
 

@@ -212,7 +212,7 @@ export const BrowseProducts = ({
                         className="text-gray-600 text-[15px] font-medium py-1 px-5 hover:bg-[#F0FAF7] cursor-pointer transition ease-in-out delay-100 hover:text-[#3A826E]"
                         onClick={() => {handleFilter(item.sort, item.order)}}
                       >
-                        {item.name}
+                        {item.title}
                       </motion.span>
                     ))}
                   </motion.div>

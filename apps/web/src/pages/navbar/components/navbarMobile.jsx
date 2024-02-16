@@ -88,6 +88,7 @@ export const NavbarMobile = ({ isOpen, toggleMenu, isOpenCategory, toggleMenuCat
                                                 animate={{ opacity: 1, x: 0 }}
                                                 transition={{ duration: 0.3, delay: index * 0.1 }} // Adjust the delay duration
                                                 className="text-white"
+                                                onClick={() => navigate(`/catalogue/${item.id}`)}
                                             >
                                                 {item.name}
                                             </motion.span>
@@ -96,7 +97,7 @@ export const NavbarMobile = ({ isOpen, toggleMenu, isOpenCategory, toggleMenuCat
                                 )}
                             </AnimatePresence>
                         </div>
-                        <Link to={'/catalogue'} onClick={handleLinkClick}>
+                        <Link to={`/catalogue/0/`} onClick={handleLinkClick}>
                             <h3 className="text-[17px] font-medium text-white">Catalogue</h3>
                         </Link>
                         <Link to={'/'} onClick={handleLinkClick}>

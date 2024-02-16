@@ -15,7 +15,7 @@ import VoucherTable from "./components/voucherTable";
 export default function DiscountManagement() {
     //TAB
     const [tabValueFromChild, setTabValueFromChild] = useState(0);
-    const handleTabChangeInParent = (value) => { setTabValueFromChild(value) };
+    const handleTabChangeInParent = (value) => {  setTabValueFromChild(value); setSortBy('createdAt'); setSortByVoucher('createdAt') };
 
     const [discountData, setDiscountData] = useState([]);
     const [voucherData, setVoucherData] = useState([])
@@ -45,8 +45,8 @@ export default function DiscountManagement() {
     const handlePageChange = (newPage) => {
         setCurrentPage(newPage);
     };
-    const handleSortByColumn = (columnName) => {
-        handleSortBy(columnName, setSortBy, orderChange, setSortOrder, setOrderChange);
+    const handleSortByColumn = (columnName, page = 'discount') => {
+        handleSortBy(columnName, setSortBy, orderChange, setSortOrder, setOrderChange, page);
     };
     const handleResetButtonClick = () => {
         handleReset(setSortBy, setOrderChange, setSortOrder, setSearchValue, refreshTable);
@@ -63,8 +63,8 @@ export default function DiscountManagement() {
     const handlePageChangeVoucher = (newPage) => {
         setCurrentPageVoucher(newPage);
     };
-    const handleSortByColumnVoucher = (columnName) => {
-        handleSortBy(columnName, setSortByVoucher, orderChangeVoucher, setSortOrderVoucher, setOrderChangeVoucher);
+    const handleSortByColumnVoucher = (columnName, page = 'voucher') => {
+        handleSortBy(columnName, setSortByVoucher, orderChangeVoucher, setSortOrderVoucher, setOrderChangeVoucher, page);
     };
     const handleResetButtonClickVoucher = () => {
         handleReset(setSortByVoucher, setOrderChangeVoucher, setSortOrderVoucher, setSearchValueVoucher, refreshTable);
@@ -103,7 +103,7 @@ export default function DiscountManagement() {
             });
             updateURL(navigate, page, sort, order, search)
             setVoucherData(response.data?.result.rows)
-            setTotalPages(response.data?.totalPages)
+            setTotalPagesVoucher(response.data?.totalPages)
         } catch (err) {
             console.log(err);
             toast.error(err.response.data.message, {
@@ -116,9 +116,9 @@ export default function DiscountManagement() {
 
     useEffect(() => {
         if (tabValueFromChild === 1) {
-            getVoucherData(currentPageVoucher, sortBy.toLowerCase(), sortOrderVoucher, debouncedSearchValueVoucher)
+            getVoucherData(currentPageVoucher, sortByVoucher.toLowerCase(), sortOrderVoucher, debouncedSearchValueVoucher)
         }
-        getVoucherData(currentPageVoucher, sortBy.toLowerCase(), sortOrderVoucher, debouncedSearchValueVoucher)
+        getVoucherData(currentPageVoucher, sortByVoucher.toLowerCase(), sortOrderVoucher, debouncedSearchValueVoucher)
     }, [currentPageVoucher, debouncedSearchValueVoucher, sortOrderVoucher, sortByVoucher, refreshTable, tabValueFromChild])
 
     useEffect(() => {

@@ -18,20 +18,21 @@ const filterItems = [
 ];
 
 export const ProductCatalogue = () => {
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [isSortOpen, setIsSortOpen] = useState(false);
-  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+    const [selectedCategory, setSelectedCategory] = useState(null);
+    const [isSortOpen, setIsSortOpen] = useState(false);
+    const [isCategoryOpen, setIsCategoryOpen] = useState(false);
 
-  // const { coordinates, loaded } = useSelector((state) => state.geolocation);
-  const { loaded, coordinates } = useGeoLocation();
-  const [branchData, setBranchData] = useState(null);
-  const [count, setCount] = useState(0);
+    // const { coordinates, loaded } = useSelector((state) => state.geolocation);
+    const { loaded, coordinates } = useGeoLocation();
+    const [branchData, setBranchData] = useState(null);
+    const [count, setCount] = useState(0);
 
-  const params = useParams();
-  const [categoryList, setCategoryList] = useState([]);
-  const [categoryId, setCategoryId] = useState(params.category_id);
-  const [searhValue, setSearchValue] = useState(params.search);
-  const [branchId, setBranchId] = useState();
+    const params = useParams();
+    const [categoryList, setCategoryList] = useState([]);
+    const [categoryId, setCategoryId] = useState(params.category_id);
+    const [subCategoryId, setSubCategoryId] = useState(0);
+    const [searhValue, setSearchValue] = useState(params.search);
+    const [branchId, setBranchId] = useState();
 
     const [nearestBranchProduct, setNearestBranchProduct] = useState([])
     const [pageLimit, setPageLimit] = useState(10);
@@ -53,11 +54,11 @@ export const ProductCatalogue = () => {
     const fetchNearestBranchProduct = async (branch_id) => {
         try {
             if (searhValue) {
-                const response = await axios.get(`products/all?page=1&sortBy=${sort}&sortOrder=${order}&limit=${pageLimit}&branch_id=${branch_id}&category_id=${categoryId}&search=${searhValue}`)
+                const response = await axios.get(`products/all?page=1&sortBy=${sort}&sortOrder=${order}&limit=${pageLimit}&branch_id=${branch_id}&category_id=${categoryId}&subcategory_id=${subCategoryId}&search=${searhValue}`)
                 setNearestBranchProduct(response.data.result.rows)
                 setCount(response.data.result.count)
             } else {
-                const response = await axios.get(`products/all?page=1&sortBy=${sort}&sortOrder=${order}&limit=${pageLimit}&branch_id=${branch_id}&category_id=${categoryId}&search=`)
+                const response = await axios.get(`products/all?page=1&sortBy=${sort}&sortOrder=${order}&limit=${pageLimit}&branch_id=${branch_id}&category_id=${categoryId}&subcategory_id=${subCategoryId}&search=`)
                 setNearestBranchProduct(response.data.result.rows)
                 setCount(response.data.result.count)
             }
@@ -66,20 +67,20 @@ export const ProductCatalogue = () => {
         }
     }
 
-  const fetchNearestBranch = async () => {
-    if (loaded) {
-      try {
-        const response = await axios.post(
-          `branches/get-nearest?latitude=${coordinates.lat}&longitude=${coordinates.lng}&limit=1`,
-        );
-        setBranchData(response.data.result[0]);
-        fetchNearestBranchProduct(response.data.result[0].id);
-        setBranchId(response.data.result[0].id);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  };
+    const fetchNearestBranch = async () => {
+        if (loaded) {
+            try {
+                const response = await axios.post(
+                    `branches/get-nearest?latitude=${coordinates.lat}&longitude=${coordinates.lng}&limit=1`,
+                );
+                setBranchData(response.data.result[0]);
+                fetchNearestBranchProduct(response.data.result[0].id);
+                setBranchId(response.data.result[0].id);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    };
 
     const fetchMainBranch = async () => {
         try {
@@ -92,46 +93,47 @@ export const ProductCatalogue = () => {
         }
     }
 
-  useEffect(() => {
-    if (coordinates.lat && coordinates.lng) {
-      fetchNearestBranch();
-    } else {
-      fetchMainBranch();
-    }
-  }, [coordinates?.lat, coordinates?.lng, categoryId, searhValue]);
+    useEffect(() => {
+        if (coordinates.lat && coordinates.lng) {
+            fetchNearestBranch();
+        } else {
+            fetchMainBranch();
+        }
+    }, [coordinates?.lat, coordinates?.lng, categoryId, subCategoryId, searhValue]);
 
-  useEffect(() => {
-    const handleResize = () => {
-      const screenWidth = window.innerWidth;
+    useEffect(() => {
+        const handleResize = () => {
+            const screenWidth = window.innerWidth;
 
-      if (screenWidth < 768) {
-        setIsCategoryOpen(false);
-      } else {
-        setIsCategoryOpen(true);
-      }
+            if (screenWidth < 768) {
+                setIsCategoryOpen(false);
+            } else {
+                setIsCategoryOpen(true);
+            }
+        };
+
+        handleResize();
+        window.addEventListener('resize', handleResize);
+
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    const getCategory = async () => {
+        try {
+            const response = await axios.get(`/categories/all?all=true}`);
+            setCategoryList(response.data.result.rows);
+        } catch (err) {
+            console.error(err);
+        }
     };
-
-    handleResize();
-    window.addEventListener('resize', handleResize);
-
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  const getCategory = async () => {
-    try {
-      const response = await axios.get(`/categories/all?all=true}`);
-      setCategoryList(response.data.result.rows);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-  useEffect(() => {
-    getCategory();
-  }, []);
+    useEffect(() => {
+        getCategory();
+    }, []);
 
     useEffect(() => {
         setCategoryId(params.category_id)
         setSearchValue(params.search)
+        setSubCategoryId(0)
     }, [params])
 
     useEffect(() => {
@@ -212,7 +214,8 @@ export const ProductCatalogue = () => {
                                     onClick={() => setIsCategoryOpen(!isCategoryOpen)}
                                     className="flex justify-between items-center pt-3 lg:border-t lg:border-[#e4e4e4] cursor-pointer lg:cursor-default"
                                 >
-                                    <h4 className="font-semibold lg:underline underline-offset-2 mx-[0.8rem]">
+                                    <h4 className="font-semibold lg:underline underline-offset-2 mx-[0.8rem] cursor-pointer"
+                                        onClick={() => { setSearchValue(''); setCategoryId(0); setSubCategoryId(0) }}>
                                         All Category
                                     </h4>
                                     <div className="lg:hidden">
@@ -262,6 +265,7 @@ export const ProductCatalogue = () => {
                                                                     )
                                                                     setCategoryId(item.id)
                                                                     setSearchValue('')
+                                                                    setSubCategoryId(0)
                                                                 }}
                                                             >
                                                                 {item.name}
@@ -302,7 +306,8 @@ export const ProductCatalogue = () => {
                                                                     {item.SubCategories?.map((sub, index) => (
                                                                         <div
                                                                             key={index}
-                                                                            className="first:mt-1 last:mb-1 py-[0.3rem] px-[1.8rem] text-[#009771] font-medium cursor-pointer"
+                                                                            className="first:mt-1 last:mb-1 py-[0.3rem] px-[1.8rem] text-[#009771] font-medium cursor-pointer hover:bg-[#F0FAF7]"
+                                                                            onClick={() => { setSubCategoryId(sub.id); setSearchValue(''); setCategoryId(0) }}
                                                                         >
                                                                             {sub.name}
                                                                         </div>
@@ -390,7 +395,7 @@ export const ProductCatalogue = () => {
                                                         <motion.span
                                                             key={index}
                                                             className="w-full text-gray-600 text-[14.5px] font-medium py-1 px-5 hover:bg-gray-100 cursor-pointer transition ease-in-out delay-100 hover:text-gray-700"
-                                                            onClick={() => {handleFilter(item.sort, item.order)}}
+                                                            onClick={() => { handleFilter(item.sort, item.order) }}
                                                         >
                                                             {item.title}
                                                         </motion.span>

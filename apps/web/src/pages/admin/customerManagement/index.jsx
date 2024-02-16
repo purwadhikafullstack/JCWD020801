@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import AdminSidebar from "../components/sidebarAdminDashboard";
 import { TableHeader } from "../components/tableHeader";
 import CustomerTable from "./components/customerTable";
-import { handleSortBy, updateURL } from "../components/adminUtils";
+import { handleReset, handleSortBy, updateURL } from "../components/adminUtils";
 import { useDebounce } from 'use-debounce';
 import axios from "../../../api/axios";
 import { toast } from 'react-toastify';
@@ -28,8 +28,8 @@ export default function CustomerManagement() {
     const handlePageChange = (newPage) => {
         setCurrentPage(newPage);
     };
-    const handleSortByColumn = (columnName) => {
-        handleSortBy(columnName, setSortBy, orderChange, setSortOrder, setOrderChange);
+    const handleSortByColumn = (columnName, page = 'customer-management') => {
+        handleSortBy(columnName, setSortBy, orderChange, setSortOrder, setOrderChange, page);
     };
     const handleResetButtonClick = () => {
         handleReset(setSortBy, setOrderChange, setSortOrder, setSearchValue);
@@ -77,6 +77,7 @@ export default function CustomerManagement() {
                     title={'Customer Management'}
                     description={'The current list of registered customers.'}
                     showAddButton={false}
+                    handleReset={handleResetButtonClick}
                     searchValue={searchValue}
                     setSearchValue={setSearchValue}
                     page={'customer-management'}

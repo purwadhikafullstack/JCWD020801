@@ -459,8 +459,7 @@ export const getAllBranchProduct = async (req, res) => {
 
 export const getAllBranchProductCustomer = async (req, res) => {
   try {
-    const {limit, page, sortBy, sortOrder = 'asc', search = '', branch_id, category_id, discounted} = req.query;
-    console.log("QUERY", req.query);
+    const {limit, page, sortBy, sortOrder = 'asc', search = '', branch_id, category_id, subcategory_id, discounted} = req.query;
 
     const offset = (page - 1) * limit;
 
@@ -474,6 +473,11 @@ export const getAllBranchProductCustomer = async (req, res) => {
       whereCondition = {
         ...whereCondition,
         '$Product.CategoryId$': category_id,
+      };
+    }else if(subcategory_id && subcategory_id != 0){
+      whereCondition = {
+        ...whereCondition,
+        '$Product.SubCategoryId$': subcategory_id,
       };
     }
 
@@ -536,7 +540,7 @@ export const getAllBranchProductCustomer = async (req, res) => {
         :
         [[sortBy, sortOrder.toUpperCase()]]
       ],
-      limit: parseInt(limit),
+      limit: limit ? parseInt(limit) : null,
       offset: parseInt(offset),
     });
     const totalPages = Math.ceil(allBranchProducts.count / limit);

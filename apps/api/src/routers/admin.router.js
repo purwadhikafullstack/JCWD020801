@@ -17,7 +17,7 @@ import {
 } from '../controllers/admin.controller';
 import { checkRoleAdmin, verifyTokenAdmin } from '../middleware/admin/admin.auth';
 import { checkLoginAdmin, checkRegisterAdmin } from '../middleware/admin/admin.validator';
-import { multerUploadProfile } from '../middleware/admin/product.multer';
+import { multerUploadProfile } from '../middleware/admin/admin.multer';
 
 const adminRouter = Router();
 

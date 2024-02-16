@@ -50,6 +50,8 @@ export const getAllCategory = async (req, res) => {
         const offset = (page - 1) * limit;
 
         if(!all){
+            const countAllCategory = await Category.count();
+
             const allCategory = await Category.findAndCountAll({
                 where: {
                     name: {
@@ -67,7 +69,7 @@ export const getAllCategory = async (req, res) => {
                 row.dataValues.formattedUpdatedAt = moment(row.updatedAt).format('MMMM Do YYYY, h:mm:ss a');
             });
     
-            const totalPages = Math.ceil(allCategory.count / limit);
+            const totalPages = Math.ceil(countAllCategory / limit);
             return res.status(200).send({ result: allCategory, page, totalPages })
         }
         const allCategory = await Category.findAndCountAll({

@@ -32,7 +32,7 @@ export default function DiscountTable({
                                     <th
                                         key={head}
                                         onClick={() => { handleSortBy(head) }}
-                                        className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4"
+                                        className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 hover:bg-[#dff1ec]"
                                     >
                                         <Typography
                                             variant="small"
@@ -77,13 +77,16 @@ export default function DiscountTable({
                                                         color="blue-gray"
                                                         className="font-normal"
                                                     >
-                                                        {item.ProductBranch?.Product?.name}
+                                                        {item.ProductBranch?.Product?.name.length > 30 ?
+                                                            `${item.ProductBranch?.Product?.name.substring(0, 30)}...` :
+                                                            item.ProductBranch?.Product?.name
+                                                        }
                                                     </Typography>
                                                     <Tooltip
                                                         content={
                                                             <div className="w-80">
                                                                 <Typography color="white" className="font-medium">
-                                                                   {item.Product?.name}
+                                                                    {item.Product?.name}
                                                                 </Typography>
                                                                 <Typography
                                                                     variant="small"
@@ -100,7 +103,7 @@ export default function DiscountTable({
                                                         animate={{
                                                             mount: { scale: 1, y: 0 },
                                                             unmount: { scale: 0, y: 25 },
-                                                          }}
+                                                        }}
                                                     >
                                                         <svg
                                                             xmlns="http://www.w3.org/2000/svg"
@@ -148,10 +151,10 @@ export default function DiscountTable({
                                                         color="blue-gray"
                                                         className="font-normal"
                                                     >
-                                                        {item.value === 'percentage' ? 
-                                                        <span style={{ fontWeight: 'bold' }}>{item.amount * 100}%</span>
-                                                        :
-                                                        <span style={{ fontWeight: 'bold' }}>{item.amount}</span>
+                                                        {item.value === 'percentage' ?
+                                                            <span style={{ fontWeight: 'bold' }}>{item.amount * 100}%</span>
+                                                            :
+                                                            <span style={{ fontWeight: 'bold' }}>{item.amount}</span>
                                                         }
                                                     </Typography>
                                                 </div>
